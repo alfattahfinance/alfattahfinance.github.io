@@ -23,19 +23,30 @@ window.tambahSantri = async function () {
         return;
     }
 
-    await addDoc(collection(db, "santri"), {
-        nama,
-        kelas,
-        wali
-    });
+    try {
 
-    document.getElementById("nama").value = "";
-    document.getElementById("kelas").value = "";
-    document.getElementById("wali").value = "";
+        await addDoc(collection(db, "santri"), {
+            nama,
+            kelas,
+            wali
+        });
 
-    tampilkan();
+        document.getElementById("nama").value = "";
+        document.getElementById("kelas").value = "";
+        document.getElementById("wali").value = "";
 
-    alert("Santri berhasil ditambahkan.");
+        tampilkan();
+
+        alert("Santri berhasil ditambahkan.");
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Gagal menyimpan data ke Firebase.");
+
+    }
+
 };
 
 
@@ -43,47 +54,58 @@ async function tampilkan() {
 
     daftarSantri.innerHTML = "";
 
-    const snapshot = await getDocs(collection(db, "santri"));
+    try {
 
-    if (snapshot.empty) {
+        const snapshot = await getDocs(collection(db, "santri"));
+
+        if (snapshot.empty) {
+
+            daftarSantri.innerHTML =
+                "<li class='list-group-item'>Belum ada data santri.</li>";
+
+            return;
+        }
+
+        snapshot.forEach((item) => {
+
+            const s = item.data();
+
+            daftarSantri.innerHTML += `
+
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <strong>${s.nama}</strong><br>
+
+                    ${s.kelas}<br>
+
+                    ${s.wali || "-"}
+
+                </div>
+
+                <button
+                    class="btn btn-danger btn-sm"
+                    onclick="hapusSantri('${item.id}')">
+
+                    Hapus
+
+                </button>
+
+            </li>
+
+            `;
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
 
         daftarSantri.innerHTML =
-            "<li class='list-group-item'>Belum ada data santri.</li>";
+            "<li class='list-group-item text-danger'>Gagal memuat data.</li>";
 
-        return;
     }
-
-    snapshot.forEach((item) => {
-
-        const s = item.data();
-
-        daftarSantri.innerHTML += `
-
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-
-            <div>
-
-                <strong>${s.nama}</strong><br>
-
-                ${s.kelas}<br>
-
-                ${s.wali || "-"}
-
-            </div>
-
-            <button
-                class="btn btn-danger btn-sm"
-                onclick="hapusSantri('${item.id}')">
-
-                Hapus
-
-            </button>
-
-        </li>
-
-        `;
-
-    });
 
 }
 
@@ -92,8 +114,18 @@ window.hapusSantri = async function(id){
 
     if(!confirm("Yakin ingin menghapus santri ini?")) return;
 
-    await deleteDoc(doc(db,"santri",id));
+    try {
 
-    tampilkan();
+        await deleteDoc(doc(db, "santri", id));
+
+        tampilkan();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Gagal menghapus data.");
+
+    }
 
 }
