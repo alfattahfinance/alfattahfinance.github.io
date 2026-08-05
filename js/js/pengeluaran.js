@@ -1,143 +1,170 @@
 import { db } from "./firebase-config.js";
 
-
 import {
-collection,
-addDoc,
-getDocs,
-serverTimestamp,
-query,
-orderBy
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    collection,
+    addDoc,
+    getDocs,
+    deleteDoc,
+    doc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
+const daftarPengeluaran = document.getElementById("daftarPengeluaran");
 
+// ==========================
+// Tampilkan Pengeluaran
+// ==========================
+async function tampilkanPengeluaran() {
 
+    daftarPengeluaran.innerHTML = "";
 
-// Simpan pengeluaran
+    try {
 
-window.simpanPengeluaran = async function(){
+        const snapshot = await getDocs(collection(db, "expenses"));
 
+        if (snapshot.empty) {
 
-const jenis =
-document.getElementById("jenis").value;
+            daftarPengeluaran.innerHTML =
+                "<li class='list-group-item'>Belum ada pengeluaran.</li>";
 
+            return;
 
-const keterangan =
-document.getElementById("keterangan").value;
+        }
 
+        snapshot.forEach((item) => {
 
-const jumlah =
-document.getElementById("jumlah").value;
+            const data = item.data();
 
+            daftarPengeluaran.innerHTML += `
 
-const satuan =
-document.getElementById("satuan").value;
+            <li class="list-group-item d-flex justify-content-between align-items-center">
 
+                <div>
 
+                    <strong>${data.jenis}</strong><br>
 
-if(
-jenis==="" ||
-keterangan==="" ||
-jumlah===""
-){
+                    ${data.keterangan}<br>
 
-alert("Data belum lengkap");
+                    ${data.satuan == "Liter"
+                        ? data.jumlah + " Liter"
+                        : "Rp " + Number(data.jumlah).toLocaleString("id-ID")
+                    }
 
-return;
+                </div>
+
+                <button
+                    class="btn btn-danger btn-sm"
+                    onclick="hapusPengeluaran('${item.id}')">
+
+                    Hapus
+
+                </button>
+
+            </li>
+
+            `;
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Gagal memuat pengeluaran.");
+
+    }
 
 }
-
-
-
-await addDoc(
-collection(db,"expenses"),
-{
-
-jenis:jenis,
-
-keterangan:keterangan,
-
-jumlah:Number(jumlah),
-
-satuan:satuan,
-
-tanggal:serverTimestamp()
-
-}
-);
-
-
-
-alert("Pengeluaran berhasil disimpan");
-
-
-
-document.getElementById("keterangan").value="";
-
-document.getElementById("jumlah").value="";
-
-
 
 tampilkanPengeluaran();
 
 
+// ==========================
+// Simpan Pengeluaran
+// ==========================
+window.simpanPengeluaran = async function () {
+
+    const jenis = document.getElementById("jenis").value;
+    const keterangan = document.getElementById("keterangan").value.trim();
+    const jumlah = document.getElementById("jumlah").value;
+
+    if (jenis === "" || keterangan === "" || jumlah === "") {
+
+        alert("Lengkapi data pengeluaran.");
+
+        return;
+
+    }
+
+    const sekarang = new Date();
+
+    let data = {
+
+        jenis: jenis,
+
+        keterangan: keterangan,
+
+        jumlah: Number(jumlah),
+
+        bulan: sekarang.getMonth() + 1,
+
+        tahun: sekarang.getFullYear(),
+
+        tanggal: serverTimestamp()
+
+    };
+
+    if (jenis === "Beras") {
+
+        data.satuan = "Liter";
+
+    } else {
+
+        data.satuan = "Rupiah";
+
+    }
+
+    try {
+
+        await addDoc(collection(db, "expenses"), data);
+
+        document.getElementById("keterangan").value = "";
+        document.getElementById("jumlah").value = "";
+
+        tampilkanPengeluaran();
+
+        alert("Pengeluaran berhasil disimpan.");
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Gagal menyimpan pengeluaran.");
+
+    }
 
 };
 
 
+// ==========================
+// Hapus Pengeluaran
+// ==========================
+window.hapusPengeluaran = async function (id) {
 
+    if (!confirm("Yakin ingin menghapus?")) return;
 
+    try {
 
+        await deleteDoc(doc(db, "expenses", id));
 
-// Tampilkan riwayat
+        tampilkanPengeluaran();
 
-async function tampilkanPengeluaran(){
+    } catch (error) {
 
+        console.error(error);
 
-const list =
-document.getElementById("riwayat");
+        alert("Gagal menghapus.");
 
+    }
 
-list.innerHTML="";
-
-
-
-const data =
-await getDocs(
-collection(db,"expenses")
-);
-
-
-
-data.forEach((doc)=>{
-
-
-const item=doc.data();
-
-
-
-list.innerHTML += `
-
-<li class="list-group-item">
-
-<b>${item.jenis}</b><br>
-
-${item.keterangan}<br>
-
-${item.jumlah.toLocaleString("id-ID")} ${item.satuan}
-
-</li>
-
-`;
-
-
-
-});
-
-
-
-}
-
-
-
-tampilkanPengeluaran();
+};
