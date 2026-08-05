@@ -9,6 +9,14 @@ body{
     font-family:Arial, Helvetica, sans-serif;
 }
 
+.container{
+    max-width:500px;
+}
+
+.bg-success{
+    background:#0f5c2e !important;
+}
+
 .text-success{
     color:#0f5c2e !important;
 }
@@ -19,12 +27,13 @@ body{
 
 .card{
     border:none;
-    border-radius:18px;
-    transition:0.2s;
+    border-radius:20px;
+    transition:0.25s;
 }
 
 .card:hover{
     transform:translateY(-4px);
+    box-shadow:0 10px 20px rgba(0,0,0,.15);
 }
 
 .card i{
