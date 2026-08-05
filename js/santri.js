@@ -1,8 +1,19 @@
-let daftar = JSON.parse(localStorage.getItem("santri")) || [];
+import { db } from "./firebase-config.js";
+
+import {
+    collection,
+    addDoc,
+    getDocs,
+    deleteDoc,
+    doc
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+
+const daftarSantri = document.getElementById("daftarSantri");
 
 tampilkan();
 
-function tambahSantri() {
+window.tambahSantri = async function () {
+
     const nama = document.getElementById("nama").value.trim();
     const kelas = document.getElementById("kelas").value.trim();
     const wali = document.getElementById("wali").value.trim();
@@ -12,46 +23,77 @@ function tambahSantri() {
         return;
     }
 
-    daftar.push({ nama, kelas, wali });
-
-    localStorage.setItem("santri", JSON.stringify(daftar));
+    await addDoc(collection(db, "santri"), {
+        nama,
+        kelas,
+        wali
+    });
 
     document.getElementById("nama").value = "";
     document.getElementById("kelas").value = "";
     document.getElementById("wali").value = "";
 
     tampilkan();
-}
 
-function tampilkan() {
-    const daftarSantri = document.getElementById("daftarSantri");
+    alert("Santri berhasil ditambahkan.");
+};
+
+
+async function tampilkan() {
+
     daftarSantri.innerHTML = "";
 
-    if (daftar.length === 0) {
+    const snapshot = await getDocs(collection(db, "santri"));
+
+    if (snapshot.empty) {
+
         daftarSantri.innerHTML =
             "<li class='list-group-item'>Belum ada data santri.</li>";
+
         return;
     }
 
-    daftar.forEach((s, index) => {
-        daftarSantri.innerHTML += `
-            <li class="list-group-item d-flex justify-content-between">
-                <div>
-                    <strong>${s.nama}</strong><br>
-                    ${s.kelas}<br>
-                    ${s.wali}
-                </div>
+    snapshot.forEach((item) => {
 
-                <button class="btn btn-danger btn-sm" onclick="hapusSantri(${index})">
-                    Hapus
-                </button>
-            </li>
+        const s = item.data();
+
+        daftarSantri.innerHTML += `
+
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <strong>${s.nama}</strong><br>
+
+                ${s.kelas}<br>
+
+                ${s.wali || "-"}
+
+            </div>
+
+            <button
+                class="btn btn-danger btn-sm"
+                onclick="hapusSantri('${item.id}')">
+
+                Hapus
+
+            </button>
+
+        </li>
+
         `;
+
     });
+
 }
 
-function hapusSantri(index) {
-    daftar.splice(index, 1);
-    localStorage.setItem("santri", JSON.stringify(daftar));
+
+window.hapusSantri = async function(id){
+
+    if(!confirm("Yakin ingin menghapus santri ini?")) return;
+
+    await deleteDoc(doc(db,"santri",id));
+
     tampilkan();
+
 }
