@@ -61,7 +61,7 @@ body{
 
 .menu{
     width:90%;
-    margin:auto;
+    margin:20px auto;
     display:grid;
     grid-template-columns:repeat(2,1fr);
     gap:15px;
@@ -72,20 +72,12 @@ body{
     color:#0f5c2e;
     border:none;
     border-radius:18px;
-    padding:25px 10px;
+    padding:25px 15px;
     font-size:16px;
     font-weight:bold;
     box-shadow:0 5px 15px rgba(0,0,0,.08);
-    transition:.2s;
 }
 
 .menu button:active{
     transform:scale(.97);
-}
-
-.footer{
-    text-align:center;
-    margin:30px;
-    color:#888;
-    font-size:13px;
 }
