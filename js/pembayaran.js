@@ -60,7 +60,7 @@ window.simpanPembayaran = async function(){
 
         jenis: jenis,
 
-        nominal: Number(nominal),
+        nominal: Angka(nominal),
 
         tanggal: serverTimestamp()
 
