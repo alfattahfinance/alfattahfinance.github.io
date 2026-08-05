@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -10,60 +11,95 @@
 
 </head>
 
+
 <body class="bg-light">
+
 
 <nav class="navbar navbar-dark bg-success">
 <div class="container">
-<span class="navbar-brand">💰 Pembayaran Santri</span>
+<span class="navbar-brand">
+💰 Pembayaran Santri
+</span>
 </div>
 </nav>
 
 
+
 <div class="container mt-4">
 
-<div class="card p-4 shadow">
 
-<h4 class="mb-3">Input Pembayaran</h4>
+<div class="card shadow p-4">
+
+
+<h4 class="mb-3">
+Input Pembayaran
+</h4>
 
 
 <label>Nama Santri</label>
+
 <select id="santri" class="form-control mb-3">
-<option>Pilih Santri</option>
+
+<option value="">
+Pilih Santri
+</option>
+
 </select>
 
 
 
 <label>Jenis Pembayaran</label>
+
 <select id="jenis" class="form-control mb-3"
 onchange="pilihPembayaran()">
 
-<option value="">Pilih</option>
-<option value="Syahriyyah">Syahriyyah - Rp80.000</option>
-<option value="Kas">Kas - Rp30.000</option>
-<option value="Beras">Beras</option>
+<option value="">
+Pilih
+</option>
+
+<option value="Syahriyyah">
+Syahriyyah
+</option>
+
+<option value="Kas">
+Kas
+</option>
+
+<option value="Beras">
+Beras
+</option>
 
 </select>
 
+
+
 <div id="berasPilihan" style="display:none">
 
-<label>Pembayaran Beras</label>
+
+<label>Metode Beras</label>
 
 <select id="tipeBeras" class="form-control mb-3"
 onchange="aturBeras()">
 
+
 <option value="uang">
-Uang Rp120.000
+💵 Uang
 </option>
 
+
 <option value="beras">
-Beras 10 Liter
+🌾 Beras (Liter)
 </option>
+
 
 </select>
 
+
 </div>
 
-<label>Nominal Pembayaran</label>
+
+
+<label>Nominal</label>
 
 <input 
 type="number"
@@ -73,73 +109,282 @@ placeholder="Masukkan nominal">
 
 
 
+<button onclick="simpanPembayaran()"
+class="btn btn-success w-100">
 
-
-<button class="btn btn-success w-100">
 Simpan Pembayaran
+
 </button>
 
 
-</div>
 
 </div>
+
+
+
+
+<div class="card shadow p-4 mt-4">
+
+<h5>
+📜 Riwayat Pembayaran
+</h5>
+
+
+<ul id="riwayat"
+class="list-group">
+
+</ul>
+
+
+</div>
+
+
+
+</div>
+
+
 
 
 
 <script>
 
+
+// Ambil data santri
+
+let daftarSantri =
+JSON.parse(localStorage.getItem("santri")) || [];
+
+
+
+let pembayaran =
+JSON.parse(localStorage.getItem("pembayaran")) || [];
+
+
+
+
+// isi dropdown santri
+
+let select =
+document.getElementById("santri");
+
+
+
+daftarSantri.forEach((item)=>{
+
+
+let option =
+document.createElement("option");
+
+
+option.value =
+item.nama;
+
+
+option.textContent =
+item.nama;
+
+
+select.appendChild(option);
+
+
+});
+
+
+
+
+
 function pilihPembayaran(){
 
-let jenis=document.getElementById("jenis").value;
 
-let nominal=document.getElementById("nominal");
+let jenis =
+document.getElementById("jenis").value;
 
-let beras=document.getElementById("berasPilihan");
+
+let nominal =
+document.getElementById("nominal");
+
+
+let beras =
+document.getElementById("berasPilihan");
+
 
 
 if(jenis=="Syahriyyah"){
 
 nominal.value=80000;
+
 beras.style.display="none";
 
 }
+
+
 
 else if(jenis=="Kas"){
 
 nominal.value=30000;
+
 beras.style.display="none";
 
 }
 
+
+
 else if(jenis=="Beras"){
 
+nominal.value="";
+
 beras.style.display="block";
-nominal.value=120000;
 
 }
 
+
+
 }
+
 
 
 
 function aturBeras(){
 
-let tipe=document.getElementById("tipeBeras").value;
 
-let nominal=document.getElementById("nominal");
+let tipe =
+document.getElementById("tipeBeras").value;
+
+
+let nominal =
+document.getElementById("nominal");
+
 
 
 if(tipe=="uang"){
 
+nominal.type="number";
+
 nominal.value=120000;
 
-}else{
+}
 
-nominal.value=0;
+
+else{
+
+
+nominal.type="number";
+
+nominal.value="";
+
+nominal.placeholder="Masukkan jumlah liter";
+
 
 }
 
+
 }
+
+
+
+
+
+function simpanPembayaran(){
+
+
+let nama =
+document.getElementById("santri").value;
+
+
+let jenis =
+document.getElementById("jenis").value;
+
+
+let nominal =
+document.getElementById("nominal").value;
+
+
+
+if(nama=="" || jenis=="" || nominal==""){
+
+alert("Data belum lengkap");
+
+return;
+
+}
+
+
+
+pembayaran.push({
+
+nama:nama,
+
+jenis:jenis,
+
+nominal:nominal,
+
+tanggal:
+new Date().toLocaleDateString("id-ID")
+
+
+});
+
+
+
+localStorage.setItem(
+"pembayaran",
+JSON.stringify(pembayaran)
+);
+
+
+
+alert("Pembayaran berhasil disimpan");
+
+
+tampilkanRiwayat();
+
+
+}
+
+
+
+
+
+function tampilkanRiwayat(){
+
+
+let box =
+document.getElementById("riwayat");
+
+
+box.innerHTML="";
+
+
+
+pembayaran.forEach((item)=>{
+
+
+box.innerHTML += `
+
+<li class="list-group-item">
+
+<b>${item.nama}</b><br>
+
+${item.jenis}<br>
+
+Rp ${Number(item.nominal).toLocaleString("id-ID")}<br>
+
+<small>${item.tanggal}</small>
+
+</li>
+
+`;
+
+
+});
+
+
+}
+
+
+
+tampilkanRiwayat();
+
 
 </script>
 
