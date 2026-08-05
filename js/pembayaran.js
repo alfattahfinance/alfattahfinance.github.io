@@ -10,6 +10,7 @@ import {
 
 
 // Ambil data santri dari Firebase
+
 const selectSantri = document.getElementById("santri");
 
 
@@ -17,14 +18,18 @@ async function tampilkanSantri(){
 
     const querySnapshot = await getDocs(collection(db, "santri"));
 
+
     querySnapshot.forEach((doc)=>{
 
         const santri = doc.data();
 
+
         const option = document.createElement("option");
 
         option.value = santri.nama;
+
         option.textContent = santri.nama;
+
 
         selectSantri.appendChild(option);
 
@@ -37,34 +42,83 @@ tampilkanSantri();
 
 
 
+
+
 // Simpan pembayaran ke Firebase
 
 window.simpanPembayaran = async function(){
 
+
     const nama = document.getElementById("santri").value;
+
     const jenis = document.getElementById("jenis").value;
-    const nominal = document.getElementById("nominal").value;
+
+    const nilai = document.getElementById("nominal").value;
 
 
-    if(nama==="" || jenis==="" || nominal===""){
+
+    if(nama==="" || jenis==="" || nilai===""){
 
         alert("Data pembayaran belum lengkap.");
+
         return;
 
     }
 
 
-    await addDoc(collection(db,"payments"),{
+
+    let dataPembayaran = {
 
         nama_santri: nama,
 
         jenis: jenis,
 
-        nominal: Angka(nominal),
-
         tanggal: serverTimestamp()
 
-    });
+    };
+
+
+
+    // Jika pembayaran uang
+
+    if(jenis === "Syahriyyah" || jenis === "Kas"){
+
+
+        dataPembayaran.nominal = Number(nilai);
+
+        dataPembayaran.satuan = "Rupiah";
+
+
+    }
+
+
+
+    // Jika pembayaran beras
+
+    else if(jenis === "Beras"){
+
+
+        dataPembayaran.jumlah = Number(nilai);
+
+        dataPembayaran.satuan = "Liter";
+
+
+        dataPembayaran.nominal = 0;
+
+
+    }
+
+
+
+
+    await addDoc(
+
+        collection(db,"payments"),
+
+        dataPembayaran
+
+    );
+
 
 
 
