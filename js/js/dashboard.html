@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard Pondok</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+body {
+    background:#f5f6fa;
+}
+
+.card-stat {
+    border-radius:15px;
+    border:none;
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
+
+.icon {
+    font-size:30px;
+}
+
+.dashboard-title {
+    font-weight:bold;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-dark bg-success">
+<div class="container">
+<span class="navbar-brand">
+🏫 Ribath Madrasah Al-Fattah
+</span>
+</div>
+</nav>
+
+
+<div class="container mt-4">
+
+
+<h3 class="dashboard-title mb-4">
+📊 Dashboard
+</h3>
+
+
+<!-- Statistik -->
+
+<div class="row g-3">
+
+
+<div class="col-md-3 col-6">
+<div class="card card-stat p-3">
+<div class="icon">👨‍🎓</div>
+<h6>Total Santri</h6>
+<h3 id="totalSantri">0</h3>
+</div>
+</div>
+
+
+<div class="col-md-3 col-6">
+<div class="card card-stat p-3">
+<div class="icon">💵</div>
+<h6>Pemasukan Hari Ini</h6>
+<h5 id="hariIni">Rp 0</h5>
+</div>
+</div>
+
+
+<div class="col-md-3 col-6">
+<div class="card card-stat p-3">
+<div class="icon">📅</div>
+<h6>Bulan Ini</h6>
+<h5 id="bulanIni">Rp 0</h5>
+</div>
+</div>
+
+
+<div class="col-md-3 col-6">
+<div class="card card-stat p-3">
+<div class="icon">💰</div>
+<h6>Total Semua</h6>
+<h5 id="totalSemua">Rp 0</h5>
+</div>
+</div>
+
+
+</div>
+
+
+<!-- Grafik -->
+
+<div class="card mt-4 p-3 card-stat">
+
+<h5>📈 Grafik Pemasukan</h5>
+
+<canvas id="incomeChart"></canvas>
+
+</div>
+
+
+
+<!-- Transaksi Terbaru -->
+
+<div class="card mt-4 p-3 card-stat">
+
+<h5>
+🧾 Transaksi Terbaru
+</h5>
+
+
+<div class="table-responsive">
+
+<table class="table">
+
+<thead>
+<tr>
+<th>Santri</th>
+<th>Jenis</th>
+<th>Jumlah</th>
+<th>Tanggal</th>
+</tr>
+</thead>
+
+
+<tbody id="transaksiTerbaru">
+
+<tr>
+<td colspan="4" class="text-center">
+Belum ada transaksi
+</td>
+</tr>
+
+</tbody>
+
+
+</table>
+
+</div>
+
+</div>
+
+
+
+</div>
+
+
+
+<!-- Chart -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<!-- Firebase -->
+<script type="module" src="js/dashboard.js"></script>
+
+
+</body>
+</html>
