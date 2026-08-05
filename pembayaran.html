@@ -4,60 +4,144 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Pembayaran</title>
+<title>Pembayaran Santri</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+
 </head>
 
-<body>
+<body class="bg-light">
 
-<div class="container py-4">
+<nav class="navbar navbar-dark bg-success">
+<div class="container">
+<span class="navbar-brand">💰 Pembayaran Santri</span>
+</div>
+</nav>
 
-<h2 class="text-success mb-4">💰 Pembayaran</h2>
 
-<div class="card p-3">
+<div class="container mt-4">
 
-<label class="mb-2">Nama Santri</label>
-<select id="santri" class="form-select mb-3">
+<div class="card p-4 shadow">
+
+<h4 class="mb-3">Input Pembayaran</h4>
+
+
+<label>Nama Santri</label>
+<select id="santri" class="form-control mb-3">
+<option>Pilih Santri</option>
 </select>
 
-<label class="mb-2">Jenis Pembayaran</label>
-<select id="jenis" class="form-select mb-3">
-<option>Syahriyyah</option>
-<option>kas</option>
-<option>beras</option>
-<option>semuanya</option>
+
+
+<label>Jenis Pembayaran</label>
+<select id="jenis" class="form-control mb-3"
+onchange="pilihPembayaran()">
+
+<option value="">Pilih</option>
+<option value="Syahriyyah">Syahriyyah - Rp80.000</option>
+<option value="Kas">Kas - Rp30.000</option>
+<option value="Beras">Beras</option>
+
 </select>
 
-<label class="mb-2">Nominal</label>
-<input id="nominal" type="number" class="form-control mb-3" placeholder="30000">
 
-<label class="beras">Nominal/liter</label>
-<input id="nominal/liter" type="number" class="form-control beras" placeholder="120000/10 liter">
 
-  
-<button class="btn btn-success w-100" onclick="simpanPembayaran()">
+<div id="berasPilihan" style="display:none">
+
+<label>Pembayaran Beras</label>
+
+<select id="tipeBeras" class="form-control mb-3"
+onchange="aturBeras()">
+
+<option value="uang">
+Uang Rp120.000
+</option>
+
+<option value="beras">
+Beras 10 Liter
+</option>
+
+</select>
+
+</div>
+
+
+
+<label>Nominal</label>
+
+<input id="nominal"
+class="form-control mb-3"
+readonly>
+
+
+<button class="btn btn-success w-100">
 Simpan Pembayaran
 </button>
 
-</div>
-
-<div class="card p-3 mt-3">
-
-<h5>Riwayat Pembayaran</h5>
-
-<ul id="riwayat" class="list-group"></ul>
 
 </div>
 
-<a href="index.html" class="btn btn-secondary mt-3 w-100">
-← Kembali ke Dashboard
-</a>
-
 </div>
 
-<script src="js/pembayaran.js"></script>
+
+
+<script>
+
+function pilihPembayaran(){
+
+let jenis=document.getElementById("jenis").value;
+
+let nominal=document.getElementById("nominal");
+
+let beras=document.getElementById("berasPilihan");
+
+
+if(jenis=="Syahriyyah"){
+
+nominal.value=80000;
+beras.style.display="none";
+
+}
+
+else if(jenis=="Kas"){
+
+nominal.value=30000;
+beras.style.display="none";
+
+}
+
+else if(jenis=="Beras"){
+
+beras.style.display="block";
+nominal.value=120000;
+
+}
+
+}
+
+
+
+function aturBeras(){
+
+let tipe=document.getElementById("tipeBeras").value;
+
+let nominal=document.getElementById("nominal");
+
+
+if(tipe=="uang"){
+
+nominal.value=120000;
+
+}else{
+
+nominal.value=0;
+
+}
+
+}
+
+</script>
+
 
 </body>
 </html>
