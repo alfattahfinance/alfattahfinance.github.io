@@ -1,5 +1,3 @@
-import { db } from "./firebase-config.js";
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -48,7 +46,7 @@ import { db } from "./firebase-config.js";
 
 </div>
 
-<script src="js/santri.js"></script>
+<script type="module" src="js/santri.js"></script>
 
 </body>
 </html>
