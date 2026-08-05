@@ -1,13 +1,9 @@
 import { db } from "./firebase-config.js";
 
-
 import {
-
-collection,
-getDocs
-
+    collection,
+    getDocs
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-
 
 
 
@@ -22,14 +18,16 @@ let tahun =
 Number(document.getElementById("tahun").value);
 
 
+let filterJenis =
+document.getElementById("jenisPengeluaran").value;
+
+
 
 let pemasukan = {
 
-Syahriyyah:0,
-
-Kas:0,
-
-Beras:0
+    Syahriyyah:0,
+    Kas:0,
+    Beras:0
 
 };
 
@@ -37,19 +35,24 @@ Beras:0
 
 let pengeluaran = {
 
-Syahriyyah:0,
-
-Kas:0,
-
-Beras:0
+    Syahriyyah:0,
+    Kas:0,
+    Beras:0,
+    Lainnya:0
 
 };
 
 
 
+let riwayat = [];
 
 
-// Ambil pembayaran
+
+
+// =====================
+// AMBIL PEMBAYARAN
+// =====================
+
 
 const bayar =
 await getDocs(
@@ -74,22 +77,50 @@ data.tanggal.toDate();
 
 
 if(
-tanggal.getMonth()==bulan &&
-tanggal.getFullYear()==tahun
+tanggal.getMonth() === bulan &&
+tanggal.getFullYear() === tahun
 ){
 
 
-if(data.jenis=="Beras"){
+if(data.jenis==="Beras"){
 
-pemasukan.Beras += Number(data.jumlah || 0);
+
+pemasukan.Beras +=
+Number(data.jumlah || 0);
+
 
 }
+
 
 else{
 
-pemasukan[data.jenis] += Number(data.nominal || 0);
+
+pemasukan[data.jenis] +=
+Number(data.nominal || 0);
+
 
 }
+
+
+
+riwayat.push({
+
+nama:data.nama_santri,
+
+jenis:data.jenis,
+
+jumlah:
+data.jenis==="Beras"
+?
+data.jumlah+" Liter"
+:
+"Rp "+Number(data.nominal).toLocaleString("id-ID"),
+
+tipe:"Masuk"
+
+
+});
+
 
 
 }
@@ -105,7 +136,10 @@ pemasukan[data.jenis] += Number(data.nominal || 0);
 
 
 
-// Ambil pengeluaran
+// =====================
+// AMBIL PENGELUARAN
+// =====================
+
 
 const keluar =
 await getDocs(
@@ -117,7 +151,7 @@ collection(db,"expenses")
 keluar.forEach((doc)=>{
 
 
-let data=doc.data();
+let data = doc.data();
 
 
 
@@ -130,31 +164,86 @@ data.tanggal.toDate();
 
 
 if(
-tanggal.getMonth()==bulan &&
-tanggal.getFullYear()==tahun
+tanggal.getMonth() === bulan &&
+tanggal.getFullYear() === tahun
 ){
 
 
 
-if(data.satuan=="Liter"){
+// filter jenis
 
-pengeluaran.Beras += Number(data.jumlah);
+if(
+filterJenis !== "Semua" &&
+data.jenis !== filterJenis
+){
 
+return;
+
+}
+
+
+
+if(data.satuan==="Liter"){
+
+
+pengeluaran.Beras +=
+Number(data.jumlah);
+
+
+}
+
+
+
+else{
+
+
+if(pengeluaran[data.jenis] !== undefined){
+
+pengeluaran[data.jenis] +=
+Number(data.jumlah);
 
 }
 
 else{
 
-pengeluaran[data.jenis] += Number(data.jumlah);
-
-
-}
-
+pengeluaran.Lainnya +=
+Number(data.jumlah);
 
 }
 
 
 }
+
+
+
+
+
+riwayat.push({
+
+nama:data.keterangan,
+
+jenis:data.jenis,
+
+jumlah:
+data.satuan==="Liter"
+?
+data.jumlah+" Liter"
+:
+"Rp "+Number(data.jumlah).toLocaleString("id-ID"),
+
+tipe:"Keluar"
+
+
+});
+
+
+
+}
+
+
+
+}
+
 
 
 });
@@ -163,63 +252,208 @@ pengeluaran[data.jenis] += Number(data.jumlah);
 
 
 
+
+
+// =====================
+// TOTAL
+// =====================
+
+
 let totalMasuk =
+
 pemasukan.Syahriyyah+
+
 pemasukan.Kas;
 
 
 
 let totalKeluar =
+
 pengeluaran.Syahriyyah+
-pengeluaran.Kas;
+
+pengeluaran.Kas+
+
+pengeluaran.Lainnya;
 
 
 
 document.getElementById("pemasukan").innerHTML =
-"Rp "+totalMasuk.toLocaleString("id-ID");
+
+"Rp "+
+totalMasuk.toLocaleString("id-ID");
 
 
 
 document.getElementById("pengeluaran").innerHTML =
-"Rp "+totalKeluar.toLocaleString("id-ID");
+
+"Rp "+
+totalKeluar.toLocaleString("id-ID");
 
 
 
 document.getElementById("saldo").innerHTML =
-"Rp "+(totalMasuk-totalKeluar).toLocaleString("id-ID");
+
+"Rp "+
+(totalMasuk-totalKeluar)
+.toLocaleString("id-ID");
 
 
 
 
 
-document.getElementById("rekap").innerHTML = "";
+
+
+// =====================
+// REKAP
+// =====================
+
+
+let tabel = "";
 
 
 ["Syahriyyah","Kas","Beras"].forEach(jenis=>{
 
 
-let masuk=pemasukan[jenis];
+let masuk =
+pemasukan[jenis];
 
-let keluar=pengeluaran[jenis];
+
+let keluar =
+pengeluaran[jenis];
 
 
-document.getElementById("rekap").innerHTML += `
+
+tabel += `
 
 <tr>
 
 <td>${jenis}</td>
 
-<td>${jenis=="Beras" ? masuk+" Liter" : "Rp "+masuk.toLocaleString("id-ID")}</td>
 
-<td>${jenis=="Beras" ? keluar+" Liter" : "Rp "+keluar.toLocaleString("id-ID")}</td>
+<td>
 
-<td>${jenis=="Beras" ? (masuk-keluar)+" Liter" : "Rp "+(masuk-keluar).toLocaleString("id-ID")}</td>
+${
+jenis==="Beras"
+
+?
+masuk+" Liter"
+
+:
+
+"Rp "+
+masuk.toLocaleString("id-ID")
+
+}
+
+</td>
+
+
+
+<td>
+
+${
+jenis==="Beras"
+
+?
+keluar+" Liter"
+
+:
+
+"Rp "+
+keluar.toLocaleString("id-ID")
+
+}
+
+</td>
+
+
+
+
+<td>
+
+${
+jenis==="Beras"
+
+?
+(masuk-keluar)+" Liter"
+
+:
+
+"Rp "+
+(masuk-keluar)
+.toLocaleString("id-ID")
+
+}
+
+</td>
+
 
 </tr>
 
 `;
 
+
+
 });
 
 
-}
+
+document.getElementById("rekap").innerHTML = tabel;
+
+
+
+
+
+
+
+
+// =====================
+// RIWAYAT
+// =====================
+
+
+let daftar = "";
+
+
+
+riwayat.forEach(item=>{
+
+
+daftar += `
+
+<div class="border rounded p-2 mb-2">
+
+
+<b>${item.nama}</b><br>
+
+
+${item.jenis}<br>
+
+
+${item.jumlah}<br>
+
+
+<span>
+
+${item.tipe}
+
+</span>
+
+
+</div>
+
+`;
+
+
+
+});
+
+
+
+document.getElementById("riwayat").innerHTML =
+
+daftar || "Belum ada transaksi.";
+
+
+
+};
