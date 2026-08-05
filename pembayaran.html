@@ -8,42 +8,52 @@
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-
 </head>
+
 <body>
 
 <div class="container py-4">
 
-<h2 class="text-success mb-4">
-💰 Pembayaran
-</h2>
+<h2 class="text-success mb-4">💰 Pembayaran</h2>
 
-<div class="card p-3 mb-3">
+<div class="card p-3">
 
-<input class="form-control mb-3" placeholder="Nama Santri">
+<label class="mb-2">Nama Santri</label>
+<select id="santri" class="form-select mb-3">
+</select>
 
-<select class="form-select mb-3">
+<label class="mb-2">Jenis Pembayaran</label>
+<select id="jenis" class="form-select mb-3">
 <option>Syahriyyah</option>
 <option>SPP</option>
 <option>Infaq</option>
 <option>Lainnya</option>
 </select>
 
-<input class="form-control mb-3" type="number" placeholder="Nominal">
+<label class="mb-2">Nominal</label>
+<input id="nominal" type="number" class="form-control mb-3" placeholder="50000">
 
-<input class="form-control mb-3" type="date">
-
-<button class="btn btn-success w-100">
+<button class="btn btn-success w-100" onclick="simpanPembayaran()">
 Simpan Pembayaran
 </button>
 
 </div>
 
-<a href="index.html" class="btn btn-secondary w-100">
+<div class="card p-3 mt-3">
+
+<h5>Riwayat Pembayaran</h5>
+
+<ul id="riwayat" class="list-group"></ul>
+
+</div>
+
+<a href="index.html" class="btn btn-secondary mt-3 w-100">
 ← Kembali ke Dashboard
 </a>
 
 </div>
+
+<script src="js/pembayaran.js"></script>
 
 </body>
 </html>
