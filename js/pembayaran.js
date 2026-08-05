@@ -1,72 +1,76 @@
-// Ambil data santri
-const daftarSantri = JSON.parse(localStorage.getItem("santri")) || [];
+// Import Firebase
+import { db } from "./firebase-config.js";
 
-// Ambil data pembayaran
-let pembayaran = JSON.parse(localStorage.getItem("pembayaran")) || [];
+import {
+    collection,
+    getDocs,
+    addDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-// Isi dropdown santri
+
+// Ambil data santri dari Firebase
 const selectSantri = document.getElementById("santri");
 
-daftarSantri.forEach((santri) => {
-    const option = document.createElement("option");
-    option.value = santri.nama;
-    option.textContent = santri.nama;
-    selectSantri.appendChild(option);
-});
 
-// Tampilkan riwayat saat halaman dibuka
-tampilkanRiwayat();
+async function tampilkanSantri(){
 
-function simpanPembayaran() {
+    const querySnapshot = await getDocs(collection(db, "santri"));
+
+    querySnapshot.forEach((doc)=>{
+
+        const santri = doc.data();
+
+        const option = document.createElement("option");
+
+        option.value = santri.nama;
+        option.textContent = santri.nama;
+
+        selectSantri.appendChild(option);
+
+    });
+
+}
+
+
+tampilkanSantri();
+
+
+
+// Simpan pembayaran ke Firebase
+
+window.simpanPembayaran = async function(){
 
     const nama = document.getElementById("santri").value;
     const jenis = document.getElementById("jenis").value;
     const nominal = document.getElementById("nominal").value;
 
-    if (nominal === "") {
-        alert("Masukkan nominal pembayaran.");
+
+    if(nama==="" || jenis==="" || nominal===""){
+
+        alert("Data pembayaran belum lengkap.");
         return;
+
     }
 
-    pembayaran.push({
-        nama,
-        jenis,
-        nominal,
-        tanggal: new Date().toLocaleDateString("id-ID")
-    });
 
-    localStorage.setItem("pembayaran", JSON.stringify(pembayaran));
+    await addDoc(collection(db,"payments"),{
 
-    document.getElementById("nominal").value = "";
+        nama_santri: nama,
 
-    tampilkanRiwayat();
+        jenis: jenis,
 
-    alert("Pembayaran berhasil disimpan.");
-}
+        nominal: Number(nominal),
 
-function tampilkanRiwayat() {
-
-    const riwayat = document.getElementById("riwayat");
-
-    riwayat.innerHTML = "";
-
-    if (pembayaran.length === 0) {
-        riwayat.innerHTML =
-        "<li class='list-group-item'>Belum ada pembayaran.</li>";
-        return;
-    }
-
-    pembayaran.forEach((item) => {
-
-        riwayat.innerHTML += `
-        <li class="list-group-item">
-            <strong>${item.nama}</strong><br>
-            ${item.jenis}<br>
-            Rp ${Number(item.nominal).toLocaleString("id-ID")}<br>
-            <small>${item.tanggal}</small>
-        </li>
-        `;
+        tanggal: serverTimestamp()
 
     });
 
-}
+
+
+    document.getElementById("nominal").value="";
+
+
+    alert("Pembayaran berhasil disimpan ke Firebase.");
+
+};
