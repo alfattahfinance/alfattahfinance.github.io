@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Pembayaran Santri</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
 
 </head>
 
@@ -16,11 +19,11 @@
 
 
 <nav class="navbar navbar-dark bg-success">
-<div class="container">
-<span class="navbar-brand">
-💰 Pembayaran Santri
-</span>
-</div>
+    <div class="container">
+        <span class="navbar-brand">
+            💰 Pembayaran Santri
+        </span>
+    </div>
 </nav>
 
 
@@ -28,17 +31,20 @@
 <div class="container mt-4">
 
 
-<div class="card shadow p-4">
+<!-- Form Pembayaran -->
 
+<div class="card shadow border-0 p-4">
 
 <h4 class="mb-3">
 Input Pembayaran
 </h4>
 
 
-<label>Nama Santri</label>
+<label class="mb-1">
+Nama Santri
+</label>
 
-<select id="santri" class="form-control mb-3">
+<select id="santri" class="form-select mb-3">
 
 <option value="">
 Pilih Santri
@@ -48,38 +54,63 @@ Pilih Santri
 
 
 
-<label>Jenis Pembayaran</label>
 
-<select id="jenis" class="form-control mb-3"
+<label class="mb-1">
+Jenis Pembayaran
+</label>
+
+<select id="jenis" 
+class="form-select mb-3"
 onchange="pilihPembayaran()">
 
+
 <option value="">
-Pilih
+Pilih Pembayaran
 </option>
+
+
+<option value="SPP">
+SPP
+</option>
+
 
 <option value="Syahriyyah">
 Syahriyyah
 </option>
 
+
+<option value="Infaq">
+Infaq
+</option>
+
+
 <option value="Kas">
 Kas
 </option>
+
 
 <option value="Beras">
 Beras
 </option>
 
+
 </select>
+
 
 
 
 <div id="berasPilihan" style="display:none">
 
 
-<label>Metode Beras</label>
+<label>
+Metode Beras
+</label>
 
-<select id="jenis" class="form-control mb-3"
+
+<select id="tipeBeras"
+class="form-select mb-3"
 onchange="aturBeras()">
+
 
 
 <option value="uang">
@@ -87,7 +118,7 @@ onchange="aturBeras()">
 </option>
 
 
-<option value="beras">
+<option value="liter">
 🌾 Beras (Liter)
 </option>
 
@@ -99,13 +130,19 @@ onchange="aturBeras()">
 
 
 
-<label>Nominal</label>
+
+<label>
+Nominal
+</label>
+
 
 <input 
 type="number"
 id="nominal"
 class="form-control mb-3"
 placeholder="Masukkan nominal">
+
+
 
 
 
@@ -117,13 +154,15 @@ Simpan Pembayaran
 </button>
 
 
-
 </div>
 
 
 
 
-<div class="card shadow p-4 mt-4">
+
+<!-- Riwayat -->
+
+<div class="card shadow border-0 p-4 mt-4">
 
 <h5>
 📜 Riwayat Pembayaran
@@ -131,13 +170,13 @@ Simpan Pembayaran
 
 
 <ul id="riwayat"
-class="list-group">
+class="list-group mt-3">
+
 
 </ul>
 
 
 </div>
-
 
 
 </div>
@@ -149,11 +188,8 @@ class="list-group">
 <script>
 
 
-// Ambil data santri
-
 let daftarSantri =
 JSON.parse(localStorage.getItem("santri")) || [];
-
 
 
 let pembayaran =
@@ -162,11 +198,10 @@ JSON.parse(localStorage.getItem("pembayaran")) || [];
 
 
 
-// isi dropdown santri
+// Dropdown santri
 
-let select =
+let selectSantri =
 document.getElementById("santri");
-
 
 
 daftarSantri.forEach((item)=>{
@@ -176,15 +211,12 @@ let option =
 document.createElement("option");
 
 
-option.value =
-item.nama;
+option.value=item.nama;
+
+option.textContent=item.nama;
 
 
-option.textContent =
-item.nama;
-
-
-select.appendChild(option);
+selectSantri.appendChild(option);
 
 
 });
@@ -209,24 +241,29 @@ document.getElementById("berasPilihan");
 
 
 
-if(jenis=="Syahriyyah"){
-
-nominal.value=80000;
-
 beras.style.display="none";
+
+
+
+if(jenis=="SPP"){
+
+nominal.value=50000;
 
 }
 
+
+else if(jenis=="Syahriyyah"){
+
+nominal.value=80000;
+
+}
 
 
 else if(jenis=="Kas"){
 
 nominal.value=30000;
 
-beras.style.display="none";
-
 }
-
 
 
 else if(jenis=="Beras"){
@@ -234,6 +271,13 @@ else if(jenis=="Beras"){
 nominal.value="";
 
 beras.style.display="block";
+
+}
+
+
+else{
+
+nominal.value="";
 
 }
 
@@ -258,21 +302,21 @@ document.getElementById("nominal");
 
 if(tipe=="uang"){
 
-nominal.type="number";
+
+nominal.placeholder="Masukkan nominal";
 
 nominal.value=120000;
 
-}
 
+}
 
 else{
 
 
-nominal.type="number";
-
 nominal.value="";
 
-nominal.placeholder="Masukkan jumlah liter";
+nominal.placeholder=
+"Masukkan jumlah liter";
 
 
 }
@@ -300,7 +344,7 @@ document.getElementById("nominal").value;
 
 
 
-if(nama=="" || jenis=="" || nominal==""){
+if(!nama || !jenis || !nominal){
 
 alert("Data belum lengkap");
 
@@ -312,15 +356,14 @@ return;
 
 pembayaran.push({
 
-nama:nama,
+nama,
 
-jenis:jenis,
+jenis,
 
-nominal:nominal,
+nominal,
 
 tanggal:
 new Date().toLocaleDateString("id-ID")
-
 
 });
 
@@ -356,25 +399,47 @@ box.innerHTML="";
 
 
 
+if(pembayaran.length===0){
+
+
+box.innerHTML=
+`
+<li class="list-group-item text-muted">
+Belum ada transaksi
+</li>
+`;
+
+return;
+
+}
+
+
+
 pembayaran.forEach((item)=>{
 
 
-box.innerHTML += `
+box.innerHTML +=
 
+`
 <li class="list-group-item">
 
-<b>${item.nama}</b><br>
+<b>${item.nama}</b>
 
-${item.jenis}<br>
+<br>
 
-Rp ${Number(item.nominal).toLocaleString("id-ID")}<br>
+${item.jenis}
+
+<br>
+
+Rp ${Number(item.nominal)
+.toLocaleString("id-ID")}
+
+<br>
 
 <small>${item.tanggal}</small>
 
 </li>
-
 `;
-
 
 });
 
@@ -385,11 +450,10 @@ Rp ${Number(item.nominal).toLocaleString("id-ID")}<br>
 
 tampilkanRiwayat();
 
-<link rel="stylesheet" href="css/style.css">
-  
 
 </script>
 
 
 </body>
+
 </html>
