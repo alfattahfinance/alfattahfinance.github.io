@@ -25,14 +25,18 @@
 <label class="mb-2">Jenis Pembayaran</label>
 <select id="jenis" class="form-select mb-3">
 <option>Syahriyyah</option>
-<option>SPP</option>
-<option>Infaq</option>
-<option>Lainnya</option>
+<option>kas</option>
+<option>beras</option>
+<option>semuanya</option>
 </select>
 
 <label class="mb-2">Nominal</label>
-<input id="nominal" type="number" class="form-control mb-3" placeholder="50000">
+<input id="nominal" type="number" class="form-control mb-3" placeholder="30000">
 
+<label class="beras">Nominal/liter</label>
+<input id="nominal/liter" type="number" class="form-control beras" placeholder="120000/10 liter">
+
+  
 <button class="btn btn-success w-100" onclick="simpanPembayaran()">
 Simpan Pembayaran
 </button>
