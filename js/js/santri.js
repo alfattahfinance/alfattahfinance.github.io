@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Data Santri</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+<div class="container py-4">
+
+    <h2 class="text-success mb-4">
+        👨‍🎓 Data Santri
+    </h2>
+
+    <div class="card p-3 mb-3">
+
+        <input id="nama" class="form-control mb-2" placeholder="Nama Santri">
+
+        <input id="kelas" class="form-control mb-2" placeholder="Kelas">
+
+        <input id="wali" class="form-control mb-3" placeholder="No. HP Wali">
+
+        <button onclick="tambahSantri()" class="btn btn-success w-100">
+            Tambah Santri
+        </button>
+
+    </div>
+
+    <div class="card p-3">
+
+        <h5 class="mb-3">Daftar Santri</h5>
+
+        <ul id="daftarSantri" class="list-group"></ul>
+
+    </div>
+
+    <a href="index.html" class="btn btn-secondary w-100 mt-3">
+        ← Kembali ke Dashboard
+    </a>
+
+</div>
+
+<script src="js/santri.js"></script>
+
+</body>
+</html>
