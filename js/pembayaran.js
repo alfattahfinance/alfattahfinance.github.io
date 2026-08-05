@@ -1,4 +1,3 @@
-// Import Firebase
 import { db } from "./firebase-config.js";
 
 import {
@@ -6,58 +5,59 @@ import {
     getDocs,
     addDoc,
     serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-
-
-// Ambil data santri dari Firebase
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 const selectSantri = document.getElementById("santri");
 
+// =========================
+// Tampilkan Data Santri
+// =========================
+async function tampilkanSantri() {
 
-async function tampilkanSantri(){
+    try {
 
-    const querySnapshot = await getDocs(collection(db, "santri"));
+        selectSantri.innerHTML =
+            '<option value="">Pilih Santri</option>';
 
+        const querySnapshot =
+            await getDocs(collection(db, "santri"));
 
-    querySnapshot.forEach((doc)=>{
+        querySnapshot.forEach((item) => {
 
-        const santri = doc.data();
+            const santri = item.data();
 
+            const option = document.createElement("option");
 
-        const option = document.createElement("option");
+            option.value = santri.nama;
+            option.textContent = santri.nama;
 
-        option.value = santri.nama;
+            selectSantri.appendChild(option);
 
-        option.textContent = santri.nama;
+        });
 
+    } catch (error) {
 
-        selectSantri.appendChild(option);
+        console.error(error);
 
-    });
+        alert("Gagal mengambil data santri.");
+
+    }
 
 }
-
 
 tampilkanSantri();
 
 
-
-
-
-// Simpan pembayaran ke Firebase
-
-window.simpanPembayaran = async function(){
-
+// =========================
+// Simpan Pembayaran
+// =========================
+window.simpanPembayaran = async function () {
 
     const nama = document.getElementById("santri").value;
-
     const jenis = document.getElementById("jenis").value;
-
     const nilai = document.getElementById("nominal").value;
 
-
-
-    if(nama==="" || jenis==="" || nilai===""){
+    if (nama === "" || jenis === "" || nilai === "") {
 
         alert("Data pembayaran belum lengkap.");
 
@@ -65,7 +65,7 @@ window.simpanPembayaran = async function(){
 
     }
 
-
+    const sekarang = new Date();
 
     let dataPembayaran = {
 
@@ -73,58 +73,53 @@ window.simpanPembayaran = async function(){
 
         jenis: jenis,
 
+        bulan: sekarang.getMonth() + 1,
+
+        tahun: sekarang.getFullYear(),
+
         tanggal: serverTimestamp()
 
     };
 
-
-
-    // Jika pembayaran uang
-
-    if(jenis === "Syahriyyah" || jenis === "Kas"){
-
+    // =========================
+    // Syahriyyah & Kas
+    // =========================
+    if (jenis === "Syahriyyah" || jenis === "Kas") {
 
         dataPembayaran.nominal = Number(nilai);
-
+        dataPembayaran.jumlah = 0;
         dataPembayaran.satuan = "Rupiah";
 
-
     }
 
-
-
-    // Jika pembayaran beras
-
-    else if(jenis === "Beras"){
-
-
-        dataPembayaran.jumlah = Number(nilai);
-
-        dataPembayaran.satuan = "Liter";
-
+    // =========================
+    // Beras
+    // =========================
+    else if (jenis === "Beras") {
 
         dataPembayaran.nominal = 0;
-
+        dataPembayaran.jumlah = Number(nilai);
+        dataPembayaran.satuan = "Liter";
 
     }
 
+    try {
 
+        await addDoc(
+            collection(db, "payments"),
+            dataPembayaran
+        );
 
+        document.getElementById("nominal").value = "";
 
-    await addDoc(
+        alert("Pembayaran berhasil disimpan.");
 
-        collection(db,"payments"),
+    } catch (error) {
 
-        dataPembayaran
+        console.error(error);
 
-    );
+        alert("Gagal menyimpan pembayaran.");
 
-
-
-
-    document.getElementById("nominal").value="";
-
-
-    alert("Pembayaran berhasil disimpan ke Firebase.");
+    }
 
 };
