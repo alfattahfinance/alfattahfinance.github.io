@@ -1,3 +1,5 @@
+import { db } from "./firebase-config.js";
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
