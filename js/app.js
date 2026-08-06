@@ -129,9 +129,8 @@ async function loadDashboard() {
     }
 
 }
-
-    // =======================
-// Dropdown Bulan & Tahun
+// =======================
+// Filter Bulan & Tahun
 // =======================
 
 function isiFilter() {
@@ -141,49 +140,41 @@ function isiFilter() {
 
     if (!bulan || !tahun) return;
 
+    // Isi Bulan
     const namaBulan = [
-        "Januari",
-        "Februari",
-        "Maret",
-        "April",
-        "Mei",
-        "Juni",
-        "Juli",
-        "Agustus",
-        "September",
-        "Oktober",
-        "November",
-        "Desember"
+        "Januari","Februari","Maret","April","Mei","Juni",
+        "Juli","Agustus","September","Oktober","November","Desember"
     ];
 
     bulan.innerHTML = "";
 
     namaBulan.forEach((nama, index) => {
 
-        bulan.innerHTML += `
-            <option value="${index}">
-                ${nama}
-            </option>
-        `;
+        bulan.innerHTML += `<option value="${index}">${nama}</option>`;
 
     });
 
+    // Isi Tahun
     tahun.innerHTML = "";
 
     const tahunSekarang = new Date().getFullYear();
 
     for (let i = tahunSekarang - 2; i <= tahunSekarang + 2; i++) {
 
-        tahun.innerHTML += `
-            <option value="${i}">
-                ${i}
-            </option>
-        `;
+        tahun.innerHTML += `<option value="${i}">${i}</option>`;
 
     }
 
     bulan.value = new Date().getMonth();
     tahun.value = tahunSekarang;
+
+    // Saat filter berubah, hitung ulang dashboard
+    bulan.addEventListener("change", loadDashboard);
+    tahun.addEventListener("change", loadDashboard);
+
+}
+
+isiFilter();
 
 }
 
