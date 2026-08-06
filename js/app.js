@@ -1,3 +1,7 @@
+// ===============================
+// Dashboard Syahriyyah App
+// ===============================
+
 import { db } from "./firebase-config.js";
 
 import {
@@ -5,25 +9,59 @@ import {
     getDocs
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
-console.log("Dashboard berhasil dimuat!");
 
-// =======================
-// Dashboard
-// =======================
+// ===============================
+// Format Rupiah
+// ===============================
+
+function rupiah(nilai) {
+
+    return "Rp " + Number(nilai).toLocaleString("id-ID");
+
+}
+
+
+// ===============================
+// Load Dashboard
+// ===============================
 
 async function loadDashboard() {
 
     try {
 
-        // =======================
-        // TOTAL SANTRI
-        // =======================
+        let totalSantri = 0;
 
-        const santriSnapshot = await getDocs(
-            collection(db, "santri")
-        );
+        let totalMasuk = 0;
 
-        const totalSantri = santriSnapshot.size;
+        let totalKeluar = 0;
+
+        let berasMasuk = 0;
+
+        let berasKeluar = 0;
+
+        const pemasukan = {
+            Syahriyyah: 0,
+            Kas: 0,
+            Beras: 0,
+            Lainnya: 0
+        };
+
+        const pengeluaran = {
+            Syahriyyah: 0,
+            Kas: 0,
+            Beras: 0,
+            Lainnya: 0
+        };
+
+
+        // ===============================
+        // Total Santri
+        // ===============================
+
+        const santriSnapshot =
+            await getDocs(collection(db, "santri"));
+
+        totalSantri = santriSnapshot.size;
 
         if (document.getElementById("totalSantri")) {
 
@@ -32,16 +70,13 @@ async function loadDashboard() {
 
         }
 
-        // =======================
-        // PEMASUKAN
-        // =======================
 
-        let totalMasuk = 0;
-        let berasMasuk = 0;
+        // ===============================
+        // Data Pembayaran
+        // ===============================
 
-        const pembayaranSnapshot = await getDocs(
-            collection(db, "payments")
-        );
+        const pembayaranSnapshot =
+            await getDocs(collection(db, "payments"));
 
         pembayaranSnapshot.forEach((doc) => {
 
@@ -51,24 +86,36 @@ async function loadDashboard() {
 
                 berasMasuk += Number(data.jumlah || 0);
 
+                pemasukan.Beras += Number(data.jumlah || 0);
+
             } else {
 
-                totalMasuk += Number(data.nominal || 0);
+                const nominal =
+                    Number(data.nominal || 0);
+
+                totalMasuk += nominal;
+
+                if (pemasukan[data.jenis] !== undefined) {
+
+                    pemasukan[data.jenis] += nominal;
+
+                } else {
+
+                    pemasukan.Lainnya += nominal;
+
+                }
 
             }
 
         });
 
-        // =======================
-        // PENGELUARAN
-        // =======================
 
-        let totalKeluar = 0;
-        let berasKeluar = 0;
+        // ===============================
+        // Data Pengeluaran
+        // ===============================
 
-        const pengeluaranSnapshot = await getDocs(
-            collection(db, "expenses")
-        );
+        const pengeluaranSnapshot =
+            await getDocs(collection(db, "expenses"));
 
         pengeluaranSnapshot.forEach((doc) => {
 
@@ -78,38 +125,53 @@ async function loadDashboard() {
 
                 berasKeluar += Number(data.jumlah || 0);
 
+                pengeluaran.Beras += Number(data.jumlah || 0);
+
             } else {
 
-                totalKeluar += Number(data.jumlah || 0);
+                const jumlah =
+                    Number(data.jumlah || 0);
+
+                totalKeluar += jumlah;
+
+                if (pengeluaran[data.jenis] !== undefined) {
+
+                    pengeluaran[data.jenis] += jumlah;
+
+                } else {
+
+                    pengeluaran.Lainnya += jumlah;
+
+                }
 
             }
 
         });
 
-        // =======================
-        // SALDO
-        // =======================
-
         const saldo = totalMasuk - totalKeluar;
+
+        // ===============================
+        // Tampilkan Ringkasan Dashboard
+        // ===============================
+
+        if (document.getElementById("totalSaldo")) {
+
+            document.getElementById("totalSaldo").textContent =
+                rupiah(saldo);
+
+        }
 
         if (document.getElementById("totalMasuk")) {
 
             document.getElementById("totalMasuk").textContent =
-                "Rp " + totalMasuk.toLocaleString("id-ID");
+                rupiah(totalMasuk);
 
         }
 
         if (document.getElementById("totalKeluar")) {
 
             document.getElementById("totalKeluar").textContent =
-                "Rp " + totalKeluar.toLocaleString("id-ID");
-
-        }
-
-        if (document.getElementById("totalSaldo")) {
-
-            document.getElementById("totalSaldo").textContent =
-                "Rp " + saldo.toLocaleString("id-ID");
+                rupiah(totalKeluar);
 
         }
 
@@ -120,18 +182,61 @@ async function loadDashboard() {
 
         }
 
+
+        // ===============================
+        // Rekap Keuangan
+        // ===============================
+
+        const rekap = document.getElementById("rekap");
+
+        if (rekap) {
+
+            rekap.innerHTML = "";
+
+            ["Syahriyyah", "Kas", "Beras", "Lainnya"].forEach((jenis) => {
+
+                let masuk = pemasukan[jenis];
+                let keluar = pengeluaran[jenis];
+
+                if (jenis === "Beras") {
+
+                    rekap.innerHTML += `
+                        <tr>
+                            <td>${jenis}</td>
+                            <td>${masuk} Liter</td>
+                            <td>${keluar} Liter</td>
+                            <td>${masuk - keluar} Liter</td>
+                        </tr>
+                    `;
+
+                } else {
+
+                    rekap.innerHTML += `
+                        <tr>
+                            <td>${jenis}</td>
+                            <td>${rupiah(masuk)}</td>
+                            <td>${rupiah(keluar)}</td>
+                            <td>${rupiah(masuk - keluar)}</td>
+                        </tr>
+                    `;
+
+                }
+
+            });
+
+        }
+
     } catch (error) {
 
-        console.error(error);
+        console.error("Dashboard Error:", error);
 
-        alert("Gagal mengambil data dari Firebase.");
+        alert("Gagal memuat data Dashboard.");
 
     }
 
-}
-// =======================
+}// ===============================
 // Filter Bulan & Tahun
-// =======================
+// ===============================
 
 function isiFilter() {
 
@@ -140,45 +245,69 @@ function isiFilter() {
 
     if (!bulan || !tahun) return;
 
-    // Isi Bulan
     const namaBulan = [
-        "Januari","Februari","Maret","April","Mei","Juni",
-        "Juli","Agustus","September","Oktober","November","Desember"
+        "Januari",
+        "Februari",
+        "Maret",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agustus",
+        "September",
+        "Oktober",
+        "November",
+        "Desember"
     ];
 
     bulan.innerHTML = "";
 
     namaBulan.forEach((nama, index) => {
 
-        bulan.innerHTML += `<option value="${index}">${nama}</option>`;
+        bulan.innerHTML += `
+            <option value="${index}">
+                ${nama}
+            </option>
+        `;
 
     });
 
-    // Isi Tahun
     tahun.innerHTML = "";
 
     const tahunSekarang = new Date().getFullYear();
 
     for (let i = tahunSekarang - 2; i <= tahunSekarang + 2; i++) {
 
-        tahun.innerHTML += `<option value="${i}">${i}</option>`;
+        tahun.innerHTML += `
+            <option value="${i}">
+                ${i}
+            </option>
+        `;
 
     }
 
     bulan.value = new Date().getMonth();
     tahun.value = tahunSekarang;
 
-    // Saat filter berubah, hitung ulang dashboard
-    bulan.addEventListener("change", loadDashboard);
-    tahun.addEventListener("change", loadDashboard);
+    bulan.addEventListener("change", () => {
+        loadDashboard();
+    });
+
+    tahun.addEventListener("change", () => {
+        loadDashboard();
+    });
 
 }
 
-isiFilter();
 
-}
-
-isiFilter();
-
+// ===============================
 // Jalankan Dashboard
-loadDashboard();
+// ===============================
+
+window.addEventListener("DOMContentLoaded", () => {
+
+    isiFilter();
+
+    loadDashboard();
+
+});
