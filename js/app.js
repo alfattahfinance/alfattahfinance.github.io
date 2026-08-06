@@ -143,10 +143,7 @@ async function loadDashboard() {
 
         );
 
-       const pembayaranSnapshot = await getDocs(
-    pembayaranQuery
-);
-
+       
             // ===========================
         // Hitung Pemasukan
         // ===========================
