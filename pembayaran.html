@@ -2,31 +2,168 @@
 <html lang="id">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran Santri | Syahriyyah App</title>
 
-<title>Pembayaran Santri</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<link rel="stylesheet" href="css/style.css">
-
+    <link rel="stylesheet" href="css/style.css">
 </head>
-
 
 <body class="bg-light">
 
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark bg-success shadow-sm">
+        <div class="container">
+            <span class="navbar-brand fw-bold">
+                💰 Pembayaran Santri
+            </span>
+        </div>
+    </nav>
 
-<nav class="navbar navbar-dark bg-success">
-    <div class="container">
-        <span class="navbar-brand">
-            💰 Pembayaran Santri
-        </span>
+    <div class="container py-4">
+
+        <!-- Form Pembayaran -->
+        <div class="card shadow border-0">
+
+            <div class="card-body">
+
+                <h4 class="mb-4">
+                    Input Pembayaran
+                </h4>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Nama Santri
+                    </label>
+
+                    <select id="santri" class="form-select">
+
+                        <option value="">
+                            Pilih Santri
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Jenis Pembayaran
+                    </label>
+
+                    <select
+                        id="jenis"
+                        class="form-select"
+                        onchange="pilihPembayaran()">
+
+                        <option value="">
+                            Pilih Pembayaran
+                        </option>
+
+                        <option value="SPP">SPP</option>
+
+                        <option value="Syahriyyah">Syahriyyah</option>
+
+                        <option value="Infaq">Infaq</option>
+
+                        <option value="Kas">Kas</option>
+
+                        <option value="Beras">Beras</option>
+
+                    </select>
+
+                </div>
+
+                <div
+                    id="berasPilihan"
+                    class="mb-3"
+                    style="display:none;">
+
+                    <label class="form-label">
+                        Metode Beras
+                    </label>
+
+                    <select
+                        id="tipeBeras"
+                        class="form-select"
+                        onchange="aturBeras()">
+
+                        <option value="uang">
+                            💵 Uang
+                        </option>
+
+                        <option value="liter">
+                            🌾 Beras (Liter)
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label class="form-label">
+                        Nominal
+                    </label>
+
+                    <input
+                        type="number"
+                        id="nominal"
+                        class="form-control"
+                        placeholder="Masukkan nominal">
+
+                </div>
+
+                <button
+                    class="btn btn-success w-100"
+                    onclick="simpanPembayaran()">
+
+                    Simpan Pembayaran
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Riwayat Pembayaran -->
+        <div class="card shadow border-0 mt-4">
+
+            <div class="card-body">
+
+                <h5 class="mb-3">
+                    📜 Riwayat Pembayaran
+                </h5>
+
+                <ul
+                    id="riwayat"
+                    class="list-group">
+
+                    <li class="list-group-item text-center text-muted">
+
+                        Memuat data...
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
     </div>
-</nav>
 
+    <!-- Javascript -->
+    <script type="module" src="js/pembayaran.js?v=3"></script>
 
+</body>
+
+</html>
 
 <div class="container mt-4">
 
