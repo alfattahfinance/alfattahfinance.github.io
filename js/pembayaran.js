@@ -1,37 +1,56 @@
+// ======================================
+// Syahriyyah App
+// Pembayaran Santri
+// Bagian 1
+// ======================================
+
 import { db } from "./firebase-config.js";
 
 import {
     collection,
     getDocs,
     addDoc,
-    serverTimestamp
+    serverTimestamp,
+    query,
+    orderBy
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
-const selectSantri = document.getElementById("santri");
 
-// =========================
+// ======================================
+// Elemen HTML
+// ======================================
+
+const selectSantri = document.getElementById("santri");
+const riwayat = document.getElementById("riwayat");
+
+
+// ======================================
 // Tampilkan Data Santri
-// =========================
+// ======================================
+
 async function tampilkanSantri() {
 
     try {
 
-        selectSantri.innerHTML =
-            '<option value="">Pilih Santri</option>';
+        selectSantri.innerHTML = `
+            <option value="">
+                Pilih Santri
+            </option>
+        `;
 
-        const querySnapshot =
-            await getDocs(collection(db, "santri"));
+        const snapshot = await getDocs(
+            collection(db, "santri")
+        );
 
-        querySnapshot.forEach((item) => {
+        snapshot.forEach((doc) => {
 
-            const santri = item.data();
+            const data = doc.data();
 
-            const option = document.createElement("option");
-
-            option.value = santri.nama;
-            option.textContent = santri.nama;
-
-            selectSantri.appendChild(option);
+            selectSantri.innerHTML += `
+                <option value="${data.nama}">
+                    ${data.nama}
+                </option>
+            `;
 
         });
 
@@ -45,61 +64,153 @@ async function tampilkanSantri() {
 
 }
 
-tampilkanSantri();
+
+// ======================================
+// Pilihan Pembayaran
+// ======================================
+
+window.pilihPembayaran = function () {
+
+    const jenis = document.getElementById("jenis").value;
+
+    const nominal = document.getElementById("nominal");
+
+    const beras = document.getElementById("berasPilihan");
+
+    beras.style.display = "none";
+
+    nominal.placeholder = "Masukkan nominal";
+
+    if (jenis === "SPP") {
+
+        nominal.value = 50000;
+
+    }
+
+    else if (jenis === "Syahriyyah") {
+
+        nominal.value = 80000;
+
+    }
+
+    else if (jenis === "Kas") {
+
+        nominal.value = 30000;
+
+    }
+
+    else if (jenis === "Infaq") {
+
+        nominal.value = "";
+
+    }
+
+    else if (jenis === "Beras") {
+
+        nominal.value = "";
+
+        beras.style.display = "block";
+
+    }
+
+    else {
+
+        nominal.value = "";
+
+    }
+
+};
 
 
-// =========================
+// ======================================
+// Pengaturan Beras
+// ======================================
+
+window.aturBeras = function () {
+
+    const tipe = document.getElementById("tipeBeras").value;
+
+    const nominal = document.getElementById("nominal");
+
+    if (tipe === "uang") {
+
+        nominal.placeholder = "Masukkan nominal";
+
+        nominal.value = 120000;
+
+    }
+
+    else {
+
+        nominal.placeholder = "Masukkan jumlah liter";
+
+        nominal.value = "";
+
+    }
+
+};
+
+// ======================================
 // Simpan Pembayaran
-// =========================
+// ======================================
+
 window.simpanPembayaran = async function () {
 
     const nama = document.getElementById("santri").value;
     const jenis = document.getElementById("jenis").value;
     const nilai = document.getElementById("nominal").value;
+    const tipeBeras = document.getElementById("tipeBeras").value;
 
-    if (nama === "" || jenis === "" || nilai === "") {
+    if (!nama || !jenis || !nilai) {
 
-        alert("Data pembayaran belum lengkap.");
-
+        alert("Silakan lengkapi data pembayaran.");
         return;
 
     }
 
     const sekarang = new Date();
 
-    let dataPembayaran = {
+    const data = {
 
         nama_santri: nama,
-
         jenis: jenis,
-
         bulan: sekarang.getMonth() + 1,
-
         tahun: sekarang.getFullYear(),
-
         tanggal: serverTimestamp()
 
     };
 
-    // =========================
-    // Syahriyyah & Kas
-    // =========================
-    if (jenis === "Syahriyyah" || jenis === "Kas") {
+    // ==========================
+    // Pembayaran Beras
+    // ==========================
 
-        dataPembayaran.nominal = Number(nilai);
-        dataPembayaran.jumlah = 0;
-        dataPembayaran.satuan = "Rupiah";
+    if (jenis === "Beras") {
+
+        if (tipeBeras === "liter") {
+
+            data.nominal = 0;
+            data.jumlah = Number(nilai);
+            data.satuan = "Liter";
+
+        } else {
+
+            data.nominal = Number(nilai);
+            data.jumlah = 0;
+            data.satuan = "Rupiah";
+
+        }
 
     }
 
-    // =========================
-    // Beras
-    // =========================
-    else if (jenis === "Beras") {
+    // ==========================
+    // Pembayaran Uang
+    // ==========================
 
-        dataPembayaran.nominal = 0;
-        dataPembayaran.jumlah = Number(nilai);
-        dataPembayaran.satuan = "Liter";
+    else {
+
+        data.nominal = Number(nilai);
+        data.jumlah = 0;
+        data.satuan = "Rupiah";
 
     }
 
@@ -107,12 +218,17 @@ window.simpanPembayaran = async function () {
 
         await addDoc(
             collection(db, "payments"),
-            dataPembayaran
+            data
         );
 
-        document.getElementById("nominal").value = "";
-
         alert("Pembayaran berhasil disimpan.");
+
+        document.getElementById("nominal").value = "";
+        document.getElementById("jenis").value = "";
+        document.getElementById("santri").value = "";
+        document.getElementById("berasPilihan").style.display = "none";
+
+        tampilkanRiwayat();
 
     } catch (error) {
 
@@ -123,3 +239,118 @@ window.simpanPembayaran = async function () {
     }
 
 };
+
+// ======================================
+// Tampilkan Riwayat Pembayaran
+// ======================================
+
+async function tampilkanRiwayat() {
+
+    if (!riwayat) return;
+
+    riwayat.innerHTML = `
+        <li class="list-group-item text-center">
+            Memuat data...
+        </li>
+    `;
+
+    try {
+
+        const q = query(
+            collection(db, "payments"),
+            orderBy("tanggal", "desc")
+        );
+
+        const snapshot = await getDocs(q);
+
+        riwayat.innerHTML = "";
+
+        if (snapshot.empty) {
+
+            riwayat.innerHTML = `
+                <li class="list-group-item text-center text-muted">
+                    Belum ada pembayaran.
+                </li>
+            `;
+
+            return;
+
+        }
+
+        snapshot.forEach((doc) => {
+
+            const data = doc.data();
+
+            let nilai = "";
+
+            if (data.satuan === "Liter") {
+
+                nilai = `${data.jumlah} Liter`;
+
+            } else {
+
+                nilai = "Rp " + Number(data.nominal || 0)
+                    .toLocaleString("id-ID");
+
+            }
+
+            let tanggal = "-";
+
+            if (data.tanggal) {
+
+                tanggal = data.tanggal
+                    .toDate()
+                    .toLocaleDateString("id-ID");
+
+            }
+
+            riwayat.innerHTML += `
+                <li class="list-group-item">
+
+                    <strong>${data.nama_santri}</strong>
+
+                    <br>
+
+                    ${data.jenis}
+
+                    <br>
+
+                    ${nilai}
+
+                    <br>
+
+                    <small class="text-muted">
+                        ${tanggal}
+                    </small>
+
+                </li>
+            `;
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        riwayat.innerHTML = `
+            <li class="list-group-item text-danger">
+                Gagal memuat riwayat pembayaran.
+            </li>
+        `;
+
+    }
+
+}
+
+
+// ======================================
+// Jalankan Saat Halaman Dibuka
+// ======================================
+
+window.addEventListener("DOMContentLoaded", async () => {
+
+    await tampilkanSantri();
+
+    await tampilkanRiwayat();
+
+});
