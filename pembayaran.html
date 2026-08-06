@@ -182,22 +182,6 @@ class="list-group mt-3">
 </div>
 
 
-
-
-
-<script>
-
-
-let daftarSantri =
-JSON.parse(localStorage.getItem("santri")) || [];
-
-
-let pembayaran =
-JSON.parse(localStorage.getItem("pembayaran")) || [];
-
-
-
-
 // Dropdown santri
 
 let selectSantri =
@@ -447,13 +431,11 @@ Rp ${Number(item.nominal)
 }
 
 
-
 tampilkanRiwayat();
 
+</div>
 
-</script>
-
+<script type="module" src="js/pembayaran.js?v=2"></script>
 
 </body>
-
 </html>
