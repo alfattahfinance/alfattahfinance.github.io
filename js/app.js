@@ -1,33 +1,79 @@
-// ===============================
-// Dashboard Syahriyyah App
-// ===============================
+// ======================================
+// Syahriyyah App
+// Dashboard Firebase
+// Bagian 1
+// ======================================
 
 import { db } from "./firebase-config.js";
 
 import {
     collection,
-    getDocs
+    getDocs,
+    query,
+    where,
+    Timestamp
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 
-// ===============================
+// ======================================
 // Format Rupiah
-// ===============================
+// ======================================
 
-function rupiah(nilai) {
+function rupiah(angka) {
 
-    return "Rp " + Number(nilai).toLocaleString("id-ID");
+    return "Rp " + Number(angka || 0).toLocaleString("id-ID");
 
 }
 
 
-// ===============================
+// ======================================
+// Format Tanggal Awal & Akhir Bulan
+// ======================================
+
+function getTanggalFilter() {
+
+    const bulanSelect = document.getElementById("bulan");
+    const tahunSelect = document.getElementById("tahun");
+
+    let bulan = new Date().getMonth();
+    let tahun = new Date().getFullYear();
+
+    if (bulanSelect) {
+
+        bulan = Number(bulanSelect.value);
+
+    }
+
+    if (tahunSelect) {
+
+        tahun = Number(tahunSelect.value);
+
+    }
+
+    const awal = new Date(tahun, bulan, 1, 0, 0, 0);
+
+    const akhir = new Date(tahun, bulan + 1, 1, 0, 0, 0);
+
+    return {
+
+        awal: Timestamp.fromDate(awal),
+
+        akhir: Timestamp.fromDate(akhir)
+
+    };
+
+}
+
+
+// ======================================
 // Load Dashboard
-// ===============================
+// ======================================
 
 async function loadDashboard() {
 
     try {
+
+        const filter = getTanggalFilter();
 
         let totalSantri = 0;
 
@@ -35,63 +81,91 @@ async function loadDashboard() {
 
         let totalKeluar = 0;
 
-        let berasMasuk = 0;
-
-        let berasKeluar = 0;
+        let stokBeras = 0;
 
         const pemasukan = {
+
             Syahriyyah: 0,
             Kas: 0,
             Beras: 0,
             Lainnya: 0
+
         };
 
         const pengeluaran = {
+
             Syahriyyah: 0,
             Kas: 0,
             Beras: 0,
             Lainnya: 0
+
         };
 
 
-        // ===============================
+        // ===========================
         // Total Santri
-        // ===============================
+        // ===========================
 
-        const santriSnapshot =
-            await getDocs(collection(db, "santri"));
+        const santriSnapshot = await getDocs(
+
+            collection(db, "santri")
+
+        );
 
         totalSantri = santriSnapshot.size;
 
-        if (document.getElementById("totalSantri")) {
+        const totalSantriEl = document.getElementById("totalSantri");
 
-            document.getElementById("totalSantri").textContent =
-                totalSantri;
+        if (totalSantriEl) {
+
+            totalSantriEl.textContent = totalSantri;
 
         }
 
 
-        // ===============================
-        // Data Pembayaran
-        // ===============================
+        // ===========================
+        // Query Pembayaran
+        // ===========================
 
-        const pembayaranSnapshot =
-            await getDocs(collection(db, "payments"));
+        const pembayaranQuery = query(
 
-        pembayaranSnapshot.forEach((doc) => {
+            collection(db, "payments"),
 
-            const data = doc.data();
+            where("tanggal", ">=", filter.awal),
+
+            where("tanggal", "<", filter.akhir)
+
+        );
+
+        const pembayaranSnapshot = await getDocs(
+
+            pembayaranQuery
+
+        );
+
+       const pembayaranSnapshot = await getDocs(
+    pembayaranQuery
+);
+
+            // ===========================
+        // Hitung Pemasukan
+        // ===========================
+
+        pembayaranSnapshot.forEach((item) => {
+
+            const data = item.data();
 
             if (data.satuan === "Liter") {
 
-                berasMasuk += Number(data.jumlah || 0);
+                const jumlah = Number(data.jumlah || 0);
 
-                pemasukan.Beras += Number(data.jumlah || 0);
+                stokBeras += jumlah;
+
+                pemasukan.Beras += jumlah;
 
             } else {
 
-                const nominal =
-                    Number(data.nominal || 0);
+                const nominal = Number(data.nominal || 0);
 
                 totalMasuk += nominal;
 
@@ -110,27 +184,46 @@ async function loadDashboard() {
         });
 
 
-        // ===============================
-        // Data Pengeluaran
-        // ===============================
+        // ===========================
+        // Query Pengeluaran
+        // ===========================
 
-        const pengeluaranSnapshot =
-            await getDocs(collection(db, "expenses"));
+        const pengeluaranQuery = query(
 
-        pengeluaranSnapshot.forEach((doc) => {
+            collection(db, "expenses"),
 
-            const data = doc.data();
+            where("tanggal", ">=", filter.awal),
+
+            where("tanggal", "<", filter.akhir)
+
+        );
+
+        const pengeluaranSnapshot = await getDocs(
+
+            pengeluaranQuery
+
+        );
+
+
+        // ===========================
+        // Hitung Pengeluaran
+        // ===========================
+
+        pengeluaranSnapshot.forEach((item) => {
+
+            const data = item.data();
 
             if (data.satuan === "Liter") {
 
-                berasKeluar += Number(data.jumlah || 0);
+                const jumlah = Number(data.jumlah || 0);
 
-                pengeluaran.Beras += Number(data.jumlah || 0);
+                stokBeras -= jumlah;
+
+                pengeluaran.Beras += jumlah;
 
             } else {
 
-                const jumlah =
-                    Number(data.jumlah || 0);
+                const jumlah = Number(data.jumlah || 0);
 
                 totalKeluar += jumlah;
 
@@ -148,44 +241,42 @@ async function loadDashboard() {
 
         });
 
+
+        // ===========================
+        // Hitung Saldo
+        // ===========================
+
         const saldo = totalMasuk - totalKeluar;
 
-        // ===============================
-        // Tampilkan Ringkasan Dashboard
-        // ===============================
+                // ===========================
+        // Tampilkan Ringkasan
+        // ===========================
 
-        if (document.getElementById("totalSaldo")) {
+        const totalSaldoEl = document.getElementById("totalSaldo");
+        const totalMasukEl = document.getElementById("totalMasuk");
+        const totalKeluarEl = document.getElementById("totalKeluar");
+        const stokBerasEl = document.getElementById("stokBeras");
 
-            document.getElementById("totalSaldo").textContent =
-                rupiah(saldo);
-
+        if (totalSaldoEl) {
+            totalSaldoEl.textContent = rupiah(saldo);
         }
 
-        if (document.getElementById("totalMasuk")) {
-
-            document.getElementById("totalMasuk").textContent =
-                rupiah(totalMasuk);
-
+        if (totalMasukEl) {
+            totalMasukEl.textContent = rupiah(totalMasuk);
         }
 
-        if (document.getElementById("totalKeluar")) {
-
-            document.getElementById("totalKeluar").textContent =
-                rupiah(totalKeluar);
-
+        if (totalKeluarEl) {
+            totalKeluarEl.textContent = rupiah(totalKeluar);
         }
 
-        if (document.getElementById("stokBeras")) {
-
-            document.getElementById("stokBeras").textContent =
-                (berasMasuk - berasKeluar) + " Liter";
-
+        if (stokBerasEl) {
+            stokBerasEl.textContent = stokBeras + " Liter";
         }
 
 
-        // ===============================
+        // ===========================
         // Rekap Keuangan
-        // ===============================
+        // ===========================
 
         const rekap = document.getElementById("rekap");
 
@@ -193,10 +284,17 @@ async function loadDashboard() {
 
             rekap.innerHTML = "";
 
-            ["Syahriyyah", "Kas", "Beras", "Lainnya"].forEach((jenis) => {
+            const daftarJenis = [
+                "Syahriyyah",
+                "Kas",
+                "Beras",
+                "Lainnya"
+            ];
 
-                let masuk = pemasukan[jenis];
-                let keluar = pengeluaran[jenis];
+            daftarJenis.forEach((jenis) => {
+
+                const masuk = pemasukan[jenis];
+                const keluar = pengeluaran[jenis];
 
                 if (jenis === "Beras") {
 
@@ -228,15 +326,16 @@ async function loadDashboard() {
 
     } catch (error) {
 
-        console.error("Dashboard Error:", error);
+        console.error(error);
 
-        alert("Gagal memuat data Dashboard.");
+        alert("Gagal memuat Dashboard.");
 
     }
 
-}// ===============================
+}
+// ======================================
 // Filter Bulan & Tahun
-// ===============================
+// ======================================
 
 function isiFilter() {
 
@@ -289,25 +388,20 @@ function isiFilter() {
     bulan.value = new Date().getMonth();
     tahun.value = tahunSekarang;
 
-    bulan.addEventListener("change", () => {
-        loadDashboard();
-    });
-
-    tahun.addEventListener("change", () => {
-        loadDashboard();
-    });
+    bulan.addEventListener("change", loadDashboard);
+    tahun.addEventListener("change", loadDashboard);
 
 }
 
 
-// ===============================
+// ======================================
 // Jalankan Dashboard
-// ===============================
+// ======================================
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
 
     isiFilter();
 
-    loadDashboard();
+    await loadDashboard();
 
 });
