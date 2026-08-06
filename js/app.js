@@ -130,5 +130,64 @@ async function loadDashboard() {
 
 }
 
+    // =======================
+// Dropdown Bulan & Tahun
+// =======================
+
+function isiFilter() {
+
+    const bulan = document.getElementById("bulan");
+    const tahun = document.getElementById("tahun");
+
+    if (!bulan || !tahun) return;
+
+    const namaBulan = [
+        "Januari",
+        "Februari",
+        "Maret",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agustus",
+        "September",
+        "Oktober",
+        "November",
+        "Desember"
+    ];
+
+    bulan.innerHTML = "";
+
+    namaBulan.forEach((nama, index) => {
+
+        bulan.innerHTML += `
+            <option value="${index}">
+                ${nama}
+            </option>
+        `;
+
+    });
+
+    tahun.innerHTML = "";
+
+    const tahunSekarang = new Date().getFullYear();
+
+    for (let i = tahunSekarang - 2; i <= tahunSekarang + 2; i++) {
+
+        tahun.innerHTML += `
+            <option value="${i}">
+                ${i}
+            </option>
+        `;
+
+    }
+
+    bulan.value = new Date().getMonth();
+    tahun.value = tahunSekarang;
+
+}
+
+isiFilter();
+
 // Jalankan Dashboard
 loadDashboard();
