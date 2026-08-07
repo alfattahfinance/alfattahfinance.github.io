@@ -112,34 +112,28 @@ async function tampilkan() {
 
                 <div class="d-flex gap-1">
 
-<button
-    class="btn btn-warning btn-sm"
-    onclick="editSantri(
-    '${item.id}',
-    '${s.nama}',
-    '${s.kelas}',
-    '${s.wali || ""}'
-    )">  
 
-<div class="d-flex gap-1">
+                <div class="d-flex gap-1">
 
-<button
-class="btn btn-warning btn-sm"
-onclick="editSantri('${item.id}','${s.nama}','${s.kelas}','${s.wali || ""}')">
-Edit
-</button>
+                    <button
+                    class="btn btn-warning btn-sm"
+                    onclick="editSantri('${item.id}','${s.nama}','${s.kelas}','${s.wali || ""}')">
+                    Edit
+                    </button>
 
-<button
-class="btn btn-danger btn-sm"
-onclick="hapusSantri('${item.id}')">
-Hapus
-</button>
+                    <button
+                    class="btn btn-danger btn-sm"
+                    onclick="hapusSantri('${item.id}')">
+                    Hapus
+                    </button>
 
-</div>
+                </div>
 
+            </li>
+            
             `;
-
-        });
+            
+     });
 
     } catch (error) {
 
