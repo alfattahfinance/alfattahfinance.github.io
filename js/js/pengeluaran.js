@@ -86,9 +86,7 @@ ${data.keterangan}<br>
                       onclick="hapusPengeluaran('${idDoc}')">
     Hapus
 </button>
-                        Hapus
-
-                    </button>
+                        
                 </div>
 
             </li>
@@ -187,9 +185,12 @@ if (idEditPengeluaran === null) {
     }
         // Reset Form
         document.getElementById("jenis").value = "";
-        document.getElementById("keterangan").value = "";
-        document.getElementById("jumlah").value = "";
+document.getElementById("keterangan").value = "";
+document.getElementById("jumlah").value = "";
+document.getElementById("tanggal").value = "";
 
+        ubahSatuan();
+        
         tampilkanPengeluaran();
 
     } catch (error) {
