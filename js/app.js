@@ -218,38 +218,31 @@ if (jenis === "syahriyyah") {
         // -------------------------
 
 
-if (judul && masuk && keluar && saldo) {
+if (judul && masukEl && keluarEl && saldoEl) { {
 
     judul.textContent = jenis.charAt(0).toUpperCase() + jenis.slice(1);
 
     if (jenis === "beras" && mode === "liter") {
 
-        masuk.textContent = pemasukan.Beras + " Liter";
-        keluar.textContent = pengeluaran.Beras + " Liter";
-        saldo.textContent = (pemasukan.Beras - pengeluaran.Beras) + " Liter";
-
-    } else {
-
-        const nama =
+         masukEl.textContent = ...
+         keluarEl.textContent = ...
+         saldoEl.textContent = ...
+        const nama =     
             jenis === "syahriyyah" ? "Syahriyyah" :
             jenis === "kas" ? "Kas" :
             jenis === "spp" ? "SPP" :
             jenis === "infaq" ? "Infaq" :
             "Lainnya";
 
-        masuk.textContent = rupiah(pemasukan[nama]);
-        keluar.textContent = rupiah(pengeluaran[nama]);
-        saldo.textContent = rupiah(pemasukan[nama] - pengeluaran[nama]);
-    }
+        const judul = document.getElementById("judulJenis");
+const masukEl = document.getElementById("masuk");
+const keluarEl = document.getElementById("keluar");
+const saldoEl = document.getElementById("saldo");
+
+        catch (error) {
+    console.error(error);
+    alert(error.message);
 }
-        
-    } catch (error) {
-
-        console.error("Dashboard Error:", error);
-
-        alert("Gagal memuat Dashboard.");
-
-    }
 
 }
 
