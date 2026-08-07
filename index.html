@@ -96,6 +96,33 @@
         </div>
     </div>
 
+<div class="row g-3 mb-4">
+
+    <div class="col-6">
+        <label class="form-label fw-semibold">
+            <i class="bi bi-funnel"></i> Jenis
+        </label>
+
+        <select class="form-select" id="jenisDashboard">
+            <option value="syahriyyah">Syahriyyah</option>
+            <option value="kas">Kas</option>
+            <option value="beras">Beras</option>
+        </select>
+    </div>
+
+    <div class="col-6" id="modeBerasDiv" style="display:none;">
+        <label class="form-label fw-semibold">
+            <i class="bi bi-box-seam"></i> Mode Beras
+        </label>
+
+        <select class="form-select" id="modeBeras">
+            <option value="liter">Liter</option>
+            <option value="uang">Uang (Rp)</option>
+        </select>
+    </div>
+
+</div>
+    
         <!-- Total Saldo & Ringkasan Keuangan -->
     <div class="row g-3 mb-4">
         <!-- Saldo Saat Ini -->
@@ -168,5 +195,18 @@
 
 <script type="module" src="js/app.js"></script>
 
+<script>
+const jenis = document.getElementById("jenisDashboard");
+const modeDiv = document.getElementById("modeBerasDiv");
+
+function tampilkanModeBeras() {
+    modeDiv.style.display =
+        jenis.value === "beras" ? "block" : "none";
+}
+
+jenis.addEventListener("change", tampilkanModeBeras);
+tampilkanModeBeras();
+</script>
+    
 </body>
 </html>
