@@ -29,6 +29,37 @@ async function loadDashboard() {
 
     try {
 
+        // Ambil data Firebase
+
+        ...
+
+        // Hitung pemasukan
+
+        ...
+
+        // Hitung pengeluaran
+
+        ...
+
+        // Tampilkan ke Dashboard
+
+        ...
+
+
+        alert(
+    "Masuk: " + totalMasuk +
+    "\nKeluar: " + totalKeluar +
+    "\nSyahriyyah: " + pemasukan.Syahriyyah
+);
+        
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
         // -------------------------
         // Ambil Semua Data Firebase
         // -------------------------
