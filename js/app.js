@@ -45,24 +45,7 @@ const pengeluaranSnapshot = await getDocs(
     collection(db, "expenses")
 );
 
-// Hitung semua pemasukan
-pembayaranSnapshot.forEach((doc) => {
 
-    const data = doc.data();
-
-    console.log("PAYMENT:", data);
-
-    if (data.satuan === "Liter") {
-
-        // ...
-
-    } else {
-
-        // ...
-
-    }
-
-});
         // -------------------------
         // Variabel
         // -------------------------
