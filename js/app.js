@@ -309,5 +309,4 @@ window.addEventListener("DOMContentLoaded", async () => {
 });
     
 document.getElementById("jenisDashboard")?.addEventListener("change", loadDashboard);
-
 document.getElementById("modeBeras")?.addEventListener("change", loadDashboard);
