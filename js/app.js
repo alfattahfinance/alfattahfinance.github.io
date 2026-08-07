@@ -159,33 +159,60 @@ async function loadDashboard() {
         // Hitung Saldo
         // -------------------------
 
-        const saldo = totalMasuk - totalKeluar;
+ // -------------------------
+// Tampilkan Ringkasan
+// -------------------------
 
-        // -------------------------
-        // Tampilkan Ringkasan
-        // -------------------------
+const jenis = document.getElementById("jenisDashboard")?.value || "syahriyyah";
+const mode = document.getElementById("modeBeras")?.value || "liter";
 
-        const totalSaldoEl = document.getElementById("totalSaldo");
-        const totalMasukEl = document.getElementById("totalMasuk");
-        const totalKeluarEl = document.getElementById("totalKeluar");
-        const stokBerasEl = document.getElementById("stokBeras");
+const totalSaldoEl = document.getElementById("totalSaldo");
+const totalMasukEl = document.getElementById("totalMasuk");
+const totalKeluarEl = document.getElementById("totalKeluar");
 
-        if (totalSaldoEl) {
-            totalSaldoEl.textContent = rupiah(saldo);
-        }
+let masuk = 0;
+let keluar = 0;
+let saldo = 0;
 
-        if (totalMasukEl) {
-            totalMasukEl.textContent = rupiah(totalMasuk);
-        }
+if (jenis === "syahriyyah") {
+    masuk = pemasukan.Syahriyyah;
+    keluar = pengeluaran.Syahriyyah;
+    saldo = masuk - keluar;
 
-        if (totalKeluarEl) {
-            totalKeluarEl.textContent = rupiah(totalKeluar);
-        }
+    totalMasukEl.textContent = rupiah(masuk);
+    totalKeluarEl.textContent = rupiah(keluar);
+    totalSaldoEl.textContent = rupiah(saldo);
 
-        if (stokBerasEl) {
-            stokBerasEl.textContent = stokBeras + " Liter";
-        }
+} else if (jenis === "kas") {
+    masuk = pemasukan.Kas;
+    keluar = pengeluaran.Kas;
+    saldo = masuk - keluar;
 
+    totalMasukEl.textContent = rupiah(masuk);
+    totalKeluarEl.textContent = rupiah(keluar);
+    totalSaldoEl.textContent = rupiah(saldo);
+
+} else {
+
+    if (mode === "liter") {
+
+        masuk = pemasukan.Beras;
+        keluar = pengeluaran.Beras;
+        saldo = masuk - keluar;
+
+        totalMasukEl.textContent = masuk + " Liter";
+        totalKeluarEl.textContent = keluar + " Liter";
+        totalSaldoEl.textContent = saldo + " Liter";
+
+    } else {
+
+        totalMasukEl.textContent = rupiah(0);
+        totalKeluarEl.textContent = rupiah(0);
+        totalSaldoEl.textContent = rupiah(0);
+
+    }
+
+}
         // -------------------------
         // Rekap Keuangan
         // -------------------------
@@ -299,6 +326,8 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     await loadDashboard();
 
-});
-    
+    document.getElementById("jenisDashboard")?.addEventListener("change", loadDashboard);
 
+    document.getElementById("modeBeras")?.addEventListener("change", loadDashboard);
+
+});
