@@ -3,6 +3,7 @@ import { db } from "./firebase-config.js";
 import {
     collection,
     addDoc,
+    updateDoc,
     getDocs,
     deleteDoc,
     doc,
@@ -11,10 +12,16 @@ import {
 
 const daftarPengeluaran = document.getElementById("daftarPengeluaran");
 
+// Variabel global untuk mode Edit pengeluaran
+let idEditPengeluaran = null;
+
+
 // ==========================
 // Tampilkan Pengeluaran
 // ==========================
 async function tampilkanPengeluaran() {
+
+    if (!daftarPengeluaran) return;
 
     daftarPengeluaran.innerHTML = "";
 
@@ -25,7 +32,7 @@ async function tampilkanPengeluaran() {
         if (snapshot.empty) {
 
             daftarPengeluaran.innerHTML =
-                "<li class='list-group-item'>Belum ada pengeluaran.</li>";
+                "<li class='list-group-item text-center text-muted'>Belum ada pengeluaran.</li>";
 
             return;
 
@@ -34,10 +41,11 @@ async function tampilkanPengeluaran() {
         snapshot.forEach((item) => {
 
             const data = item.data();
+            const idDoc = item.id;
 
             daftarPengeluaran.innerHTML += `
 
-            <li class="list-group-item d-flex justify-content-between align-items-center">
+            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
 
                 <div>
 
@@ -45,20 +53,32 @@ async function tampilkanPengeluaran() {
 
                     ${data.keterangan}<br>
 
-                    ${data.satuan == "Liter"
-                        ? data.jumlah + " Liter"
-                        : "Rp " + Number(data.jumlah).toLocaleString("id-ID")
-                    }
+                    <span class="text-danger fw-bold">
+                        ${data.satuan == "Liter"
+                            ? data.jumlah + " Liter"
+                            : "Rp " + Number(data.jumlah).toLocaleString("id-ID")
+                        }
+                    </span>
 
                 </div>
 
-                <button
-                    class="btn btn-danger btn-sm"
-                    onclick="hapusPengeluaran('${item.id}')">
+                <div>
+                    <button
+                        class="btn btn-outline-primary btn-sm mb-1 d-block"
+                        onclick="mulaiEditPengeluaran('${idDoc}', '${data.jenis}', '${data.keterangan}', '${data.jumlah}')">
 
-                    Hapus
+                        Edit
 
-                </button>
+                    </button>
+
+                    <button
+                        class="btn btn-danger btn-sm d-block"
+                        onclick="hapusPengeluaran('${idDoc}')">
+
+                        Hapus
+
+                    </button>
+                </div>
 
             </li>
 
@@ -80,7 +100,7 @@ tampilkanPengeluaran();
 
 
 // ==========================
-// Simpan Pengeluaran
+// Simpan atau Perbarui Pengeluaran
 // ==========================
 window.simpanPengeluaran = async function () {
 
@@ -96,53 +116,77 @@ window.simpanPengeluaran = async function () {
 
     }
 
-    const sekarang = new Date();
-
     let data = {
-
         jenis: jenis,
-
         keterangan: keterangan,
-
-        jumlah: Number(jumlah),
-
-        bulan: sekarang.getMonth() + 1,
-
-        tahun: sekarang.getFullYear(),
-
-        tanggal: serverTimestamp()
-
+        jumlah: Number(jumlah)
     };
 
     if (jenis === "Beras") {
-
         data.satuan = "Liter";
-
     } else {
-
         data.satuan = "Rupiah";
-
     }
 
     try {
 
-        await addDoc(collection(db, "expenses"), data);
+        if (idEditPengeluaran === null) {
+            // Mode Tambah Baru
+            const sekarang = new Date();
+            data.bulan = sekarang.getMonth() + 1;
+            data.tahun = sekarang.getFullYear();
+            data.tanggal = serverTimestamp();
 
+            await addDoc(collection(db, "expenses"), data);
+            alert("Pengeluaran berhasil disimpan.");
+
+        } else {
+            // Mode Edit (Perbarui data di Firebase)
+            await updateDoc(doc(db, "expenses", idEditPengeluaran), data);
+            alert("Pengeluaran berhasil diperbarui.");
+
+            // Reset mode edit
+            idEditPengeluaran = null;
+            const tombolSimpan = document.querySelector("button[onclick='simpanPengeluaran()']");
+            if (tombolSimpan) tombolSimpan.textContent = "Simpan Pengeluaran";
+        }
+
+        // Reset Form
+        document.getElementById("jenis").value = "";
         document.getElementById("keterangan").value = "";
         document.getElementById("jumlah").value = "";
 
         tampilkanPengeluaran();
 
-        alert("Pengeluaran berhasil disimpan.");
-
     } catch (error) {
 
         console.error(error);
 
-        alert("Gagal menyimpan pengeluaran.");
+        alert("Gagal menyimpan pengeluaran ke database.");
 
     }
 
+};
+
+
+// ==========================
+// Ambil Data untuk Diedit
+// ==========================
+window.mulaiEditPengeluaran = function (id, jenis, keterangan, jumlah) {
+    idEditPengeluaran = id;
+
+    document.getElementById("jenis").value = jenis;
+    document.getElementById("keterangan").value = keterangan;
+    document.getElementById("jumlah").value = jumlah;
+
+    // Ubah teks tombol simpan menjadi "Simpan Perubahan"
+    const tombolSimpan = document.querySelector("button[onclick='simpanPengeluaran()']");
+    if (tombolSimpan) {
+        tombolSimpan.textContent = "Simpan Perubahan";
+    }
+
+    // Scroll ke atas halaman agar form terlihat
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 
@@ -151,12 +195,12 @@ window.simpanPengeluaran = async function () {
 // ==========================
 window.hapusPengeluaran = async function (id) {
 
-    if (!confirm("Yakin ingin menghapus?")) return;
+    if (!confirm("Yakin ingin menghapus pengeluaran ini dari database?")) return;
 
     try {
 
         await deleteDoc(doc(db, "expenses", id));
-
+        alert("Data berhasil dihapus.");
         tampilkanPengeluaran();
 
     } catch (error) {
