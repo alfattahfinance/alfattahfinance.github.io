@@ -48,47 +48,25 @@ button {
 }
 
 
-/* HP */
-@media (max-width: 576px){
+        /* Kontainer responsif untuk HP dan Tablet */
+        .mobile-container {
+            max-width: 100%;
+            width: 100%;
+            padding-left: 15px;
+            padding-right: 15px;
+            margin: auto;
+        }
 
-    .mobile-container {
-        padding: 10px;
-    }
+        /* Jika diakses lewat Tablet/Laptop (breakpoint >= 768px), batasi lebar maksimalnya agar tetap rapi */
+        @media (min-width: 768px) {
+            .mobile-container {
+                max-width: 850px; 
+            }
+        }
 
-    h4 {
-        font-size: 20px;
-    }
-
-    h5 {
-        font-size: 18px;
-    }
-
-    .custom-card {
-        margin-bottom: 15px;
-    }
-
-    table {
-        font-size: 14px;
-    }
-
-}
-
-
-/* Tablet */
-@media (min-width:577px) and (max-width:992px){
-
-    .mobile-container {
-        padding: 15px;
-    }
-
-}
-
-
-/* Laptop */
-@media (min-width:993px){
-
-    .mobile-container {
-        padding: 20px;
-    }
-
-}
+        /* Jika diakses lewat Laptop/PC layar besar (breakpoint >= 992px) */
+        @media (min-width: 992px) {
+            .mobile-container {
+                max-width: 1000px;
+            }
+        }
