@@ -190,53 +190,39 @@ async function loadDashboard() {
         // Rekap Keuangan
         // -------------------------
 
-        const rekap = document.getElementById("rekap");
+const jenis = document.getElementById("jenisDashboard")?.value || "Syahriyyah";
+const mode = document.getElementById("modeBeras")?.value || "liter";
 
-        if (rekap) {
+const judul = document.getElementById("judulJenis");
+const masuk = document.getElementById("masuk");
+const keluar = document.getElementById("keluar");
+const saldo = document.getElementById("saldo");
 
-            rekap.innerHTML = "";
+if (judul && masuk && keluar && saldo) {
 
-            const daftarJenis = [
-                "SPP",
-                "Syahriyyah",
-                "Infaq",
-                "Kas",
-                "Beras",
-                "Lainnya"
-            ];
+    judul.textContent = jenis.charAt(0).toUpperCase() + jenis.slice(1);
 
-            daftarJenis.forEach((jenis) => {
+    if (jenis === "beras" && mode === "liter") {
 
-                const masuk = pemasukan[jenis];
-                const keluar = pengeluaran[jenis];
+        masuk.textContent = pemasukan.Beras + " Liter";
+        keluar.textContent = pengeluaran.Beras + " Liter";
+        saldo.textContent = (pemasukan.Beras - pengeluaran.Beras) + " Liter";
 
-                if (jenis === "Beras") {
+    } else {
 
-                    rekap.innerHTML += `
-                        <tr>
-                            <td>${jenis}</td>
-                            <td>${masuk} Liter</td>
-                            <td>${keluar} Liter</td>
-                            <td>${masuk - keluar} Liter</td>
-                        </tr>
-                    `;
+        const nama =
+            jenis === "syahriyyah" ? "Syahriyyah" :
+            jenis === "kas" ? "Kas" :
+            jenis === "spp" ? "SPP" :
+            jenis === "infaq" ? "Infaq" :
+            "Lainnya";
 
-                } else {
-
-                    rekap.innerHTML += `
-                        <tr>
-                            <td>${jenis}</td>
-                            <td>${rupiah(masuk)}</td>
-                            <td>${rupiah(keluar)}</td>
-                            <td>${rupiah(masuk - keluar)}</td>
-                        </tr>
-                    `;
-
-                }
-
-            });
-
-        }
+        masuk.textContent = rupiah(pemasukan[nama]);
+        keluar.textContent = rupiah(pengeluaran[nama]);
+        saldo.textContent = rupiah(pemasukan[nama] - pengeluaran[nama]);
+    }
+}
+        
     } catch (error) {
 
         console.error("Dashboard Error:", error);
@@ -322,3 +308,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 });
     
+document.getElementById("jenisDashboard")?.addEventListener("change", loadDashboard);
+
+document.getElementById("modeBeras")?.addEventListener("change", loadDashboard);
