@@ -134,7 +134,33 @@
         </select>
     </div>
 </div>
-    
+
+    <div class="row align-items-end mb-4">
+
+    <div class="col-6">
+        <label class="form-label fw-semibold">
+            <i class="bi bi-funnel"></i> Jenis
+        </label>
+
+        <select class="form-select" id="jenisDashboard">
+            <option value="syahriyyah">Syahriyyah</option>
+            <option value="kas">Kas</option>
+            <option value="beras">Beras</option>
+        </select>
+    </div>
+
+    <div class="col-6" id="modeBerasDiv" style="display:none;">
+        <label class="form-label fw-semibold">
+            <i class="bi bi-box-seam"></i> Mode Beras
+        </label>
+
+        <select class="form-select" id="modeBeras">
+            <option value="liter">Liter</option>
+            <option value="uang">Uang (Rp)</option>
+        </select>
+    </div>
+
+</div>
     
     <!-- Tabel Rekap Keuangan -->
     <div class="rekap-wrapper shadow-sm mb-4">
@@ -235,16 +261,26 @@
 
 <script>
 const jenisDashboard = document.getElementById("jenisDashboard");
+const modeBerasDiv = document.getElementById("modeBerasDiv");
 
-jenisDashboard.addEventListener("change", function () {
-    console.log("Jenis dipilih:", this.value);
+function updateJenis() {
+    if (jenisDashboard.value === "beras") {
+        modeBerasDiv.style.display = "block";
+    } else {
+        modeBerasDiv.style.display = "none";
+    }
 
-    // Nanti di sini kita hitung ulang dashboard
+    // Nanti di sini akan menghitung ulang saldo
     updateDashboard();
-});
+}
+
+jenisDashboard.addEventListener("change", updateJenis);
+
+// Jalankan saat halaman pertama dibuka
+updateJenis();
 
 function updateDashboard() {
-    // Akan kita isi pada tahap berikutnya
+    // Akan kita isi pada langkah berikutnya
 }
 </script>
     
