@@ -1,54 +1,80 @@
 import { db } from "./firebase-config.js";
-
 import {
     collection,
     addDoc,
     getDocs,
     deleteDoc,
+    updateDoc,
     doc
-} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
+    
+}from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 const daftarSantri = document.getElementById("daftarSantri");
 
 tampilkan();
 
-window.tambahSantri = async function () {
+window.simpanSantri = async function () {
+
+    const id = document.getElementById("idSantri").value;
 
     const nama = document.getElementById("nama").value.trim();
     const kelas = document.getElementById("kelas").value.trim();
     const wali = document.getElementById("wali").value.trim();
+
 
     if (!nama || !kelas) {
         alert("Nama dan kelas harus diisi!");
         return;
     }
 
+
     try {
 
-        await addDoc(collection(db, "santri"), {
-            nama,
-            kelas,
-            wali
-        });
+        if(id){
 
-        document.getElementById("nama").value = "";
-        document.getElementById("kelas").value = "";
-        document.getElementById("wali").value = "";
+            await updateDoc(doc(db,"santri",id),{
+                nama,
+                kelas,
+                wali
+            });
+
+            alert("Data santri berhasil diperbarui.");
+
+        } else {
+
+
+            await addDoc(collection(db, "santri"), {
+                nama,
+                kelas,
+                wali
+            });
+
+            alert("Santri berhasil ditambahkan.");
+
+        }
+
+
+        document.getElementById("nama").value="";
+        document.getElementById("kelas").value="";
+        document.getElementById("wali").value="";
+        document.getElementById("idSantri").value="";
+
+
+        document.querySelector("button").textContent="Tambah Santri";
+
 
         tampilkan();
 
-        alert("Santri berhasil ditambahkan.");
 
-    } catch (error) {
+    } catch(error){
 
         console.error(error);
 
-        alert("Gagal menyimpan data ke Firebase.");
+        alert("Gagal menyimpan data.");
 
     }
 
 };
-
 
 async function tampilkan() {
 
@@ -84,15 +110,32 @@ async function tampilkan() {
 
                 </div>
 
-                <button
-                    class="btn btn-danger btn-sm"
-                    onclick="hapusSantri('${item.id}')">
+                <div class="d-flex gap-1">
 
-                    Hapus
+<button
+    class="btn btn-warning btn-sm"
+    onclick="editSantri(
+    '${item.id}',
+    '${s.nama}',
+    '${s.kelas}',
+    '${s.wali || ""}'
+    )">  
 
-                </button>
+<div class="d-flex gap-1">
 
-            </li>
+<button
+class="btn btn-warning btn-sm"
+onclick="editSantri('${item.id}','${s.nama}','${s.kelas}','${s.wali || ""}')">
+Edit
+</button>
+
+<button
+class="btn btn-danger btn-sm"
+onclick="hapusSantri('${item.id}')">
+Hapus
+</button>
+
+</div>
 
             `;
 
@@ -129,3 +172,26 @@ window.hapusSantri = async function(id){
     }
 
 }
+
+window.editSantri = function(id, nama, kelas, wali){
+
+    document.getElementById("idSantri").value = id;
+
+    document.getElementById("nama").value = nama;
+    document.getElementById("kelas").value = kelas;
+    document.getElementById("wali").value = wali;
+
+
+    const tombol = document.querySelector(".card button");
+
+    if(tombol){
+        tombol.textContent = "Update Santri";
+    }
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+};
