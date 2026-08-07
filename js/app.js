@@ -190,13 +190,6 @@ async function loadDashboard() {
         // Rekap Keuangan
         // -------------------------
 
-const jenis = document.getElementById("jenisDashboard")?.value || "Syahriyyah";
-const mode = document.getElementById("modeBeras")?.value || "liter";
-
-const judul = document.getElementById("judulJenis");
-const masuk = document.getElementById("masuk");
-const keluar = document.getElementById("keluar");
-const saldo = document.getElementById("saldo");
 
 if (judul && masuk && keluar && saldo) {
 
@@ -308,5 +301,4 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 });
     
-document.getElementById("jenisDashboard")?.addEventListener("change", loadDashboard);
-document.getElementById("modeBeras")?.addEventListener("change", loadDashboard);
+
