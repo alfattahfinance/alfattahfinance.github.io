@@ -1,7 +1,7 @@
 // ======================================
 // Syahriyyah App
 // Pembayaran Santri
-// Bagian 1
+// Bagian 1 & 2 (Lengkap dengan Edit & Hapus Firebase)
 // ======================================
 
 import { db } from "./firebase-config.js";
@@ -10,6 +10,9 @@ import {
     collection,
     getDocs,
     addDoc,
+    updateDoc,
+    deleteDoc,
+    doc,
     serverTimestamp,
     query,
     orderBy
@@ -22,6 +25,9 @@ import {
 
 const selectSantri = document.getElementById("santri");
 const riwayat = document.getElementById("riwayat");
+
+// Variabel global untuk mode Edit database
+let idEditPembayaran = null;
 
 
 // ======================================
@@ -42,9 +48,9 @@ async function tampilkanSantri() {
             collection(db, "santri")
         );
 
-        snapshot.forEach((doc) => {
+        snapshot.forEach((docItem) => {
 
-            const data = doc.data();
+            const data = docItem.data();
 
             selectSantri.innerHTML += `
                 <option value="${data.nama}">
@@ -150,8 +156,9 @@ window.aturBeras = function () {
 
 };
 
+
 // ======================================
-// Simpan Pembayaran
+// Simpan / Perbarui Pembayaran (Firebase)
 // ======================================
 
 window.simpanPembayaran = async function () {
@@ -168,16 +175,9 @@ window.simpanPembayaran = async function () {
 
     }
 
-    const sekarang = new Date();
-
     const data = {
-
         nama_santri: nama,
         jenis: jenis,
-        bulan: sekarang.getMonth() + 1,
-        tahun: sekarang.getFullYear(),
-        tanggal: serverTimestamp()
-
     };
 
     // ==========================
@@ -216,13 +216,26 @@ window.simpanPembayaran = async function () {
 
     try {
 
-        await addDoc(
-            collection(db, "payments"),
-            data
-        );
+        if (idEditPembayaran === null) {
+            // Mode Tambah Baru
+            data.tanggal = serverTimestamp();
+            data.bulan = new Date().getMonth() + 1;
+            data.tahun = new Date().getFullYear();
 
-        alert("Pembayaran berhasil disimpan.");
+            await addDoc(collection(db, "payments"), data);
+            alert("Pembayaran berhasil disimpan.");
 
+        } else {
+            // Mode Edit (Update data di Firebase berdasarkan ID dokumen)
+            await updateDoc(doc(db, "payments", idEditPembayaran), data);
+            alert("Pembayaran berhasil diperbarui.");
+
+            // Reset mode edit
+            idEditPembayaran = null;
+            document.querySelector("button[onclick='simpanPembayaran()']").textContent = "Simpan Pembayaran";
+        }
+
+        // Reset Form
         document.getElementById("nominal").value = "";
         document.getElementById("jenis").value = "";
         document.getElementById("santri").value = "";
@@ -234,11 +247,68 @@ window.simpanPembayaran = async function () {
 
         console.error(error);
 
-        alert("Gagal menyimpan pembayaran.");
+        alert("Gagal menyimpan pembayaran ke database.");
 
     }
 
 };
+
+
+// ======================================
+// Hapus Pembayaran (Firebase)
+// ======================================
+
+window.hapusPembayaran = async function (idDoc) {
+    if (confirm("Apakah Anda yakin ingin menghapus data pembayaran ini dari database?")) {
+        try {
+            await deleteDoc(doc(db, "payments", idDoc));
+            alert("Data berhasil dihapus.");
+            tampilkanRiwayat();
+        } catch (error) {
+            console.error(error);
+            alert("Gagal menghapus data.");
+        }
+    }
+};
+
+
+// ======================================
+// Ambil Data untuk Diedit
+// ======================================
+
+window.mulaiEditPembayaran = async function (idDoc, nama, jenis, nominal, jumlah, satuan) {
+    idEditPembayaran = idDoc;
+
+    document.getElementById("santri").value = nama;
+    document.getElementById("jenis").value = jenis;
+
+    const inputNominal = document.getElementById("nominal");
+    const berasPilihan = document.getElementById("berasPilihan");
+
+    berasPilihan.style.display = "none";
+
+    if (jenis === "Beras") {
+        berasPilihan.style.display = "block";
+        if (satuan === "Liter") {
+            document.getElementById("tipeBeras").value = "liter";
+            inputNominal.value = jumlah;
+            inputNominal.placeholder = "Masukkan jumlah liter";
+        } else {
+            document.getElementById("tipeBeras").value = "uang";
+            inputNominal.value = nominal;
+            inputNominal.placeholder = "Masukkan nominal";
+        }
+    } else {
+        inputNominal.value = nominal;
+    }
+
+    // Ubah teks tombol simpan
+    document.querySelector("button[onclick='simpanPembayaran()']").textContent = "Simpan Perubahan";
+    
+    // Gulir ke atas form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
 
 // ======================================
 // Tampilkan Riwayat Pembayaran
@@ -277,9 +347,10 @@ async function tampilkanRiwayat() {
 
         }
 
-        snapshot.forEach((doc) => {
+        snapshot.forEach((docItem) => {
 
-            const data = doc.data();
+            const data = docItem.data();
+            const idDoc = docItem.id; // ID Unik dari Firebase Firestore
 
             let nilai = "";
 
@@ -305,24 +376,24 @@ async function tampilkanRiwayat() {
             }
 
             riwayat.innerHTML += `
-                <li class="list-group-item">
-
-                    <strong>${data.nama_santri}</strong>
-
-                    <br>
-
-                    ${data.jenis}
-
-                    <br>
-
-                    ${nilai}
-
-                    <br>
-
-                    <small class="text-muted">
-                        ${tanggal}
-                    </small>
-
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                    <div>
+                        <strong>${data.nama_santri}</strong>
+                        <br>
+                        ${data.jenis}
+                        <br>
+                        <span class="text-success fw-bold">${nilai}</span>
+                        <br>
+                        <small class="text-muted">${tanggal}</small>
+                    </div>
+                    <div>
+                        <button class="btn btn-sm btn-outline-primary mb-1 d-block" onclick="mulaiEditPembayaran('${idDoc}', '${data.nama_santri}', '${data.jenis}', '${data.nominal || 0}', '${data.jumlah || 0}', '${data.satuan || ''}')">
+                            Edit
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger d-block" onclick="hapusPembayaran('${idDoc}')">
+                            Hapus
+                        </button>
+                    </div>
                 </li>
             `;
 
