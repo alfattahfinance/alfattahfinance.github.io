@@ -133,7 +133,7 @@
             <option value="beras">Beras</option>
         </select>
     </div>
-
+</div>
     
     
     <!-- Tabel Rekap Keuangan -->
@@ -235,17 +235,17 @@
 
 <script>
 const jenisDashboard = document.getElementById("jenisDashboard");
-const modeBerasDiv = document.getElementById("modeBerasDiv");
 
 jenisDashboard.addEventListener("change", function () {
+    console.log("Jenis dipilih:", this.value);
 
-    if (this.value === "beras") {
-        modeBerasDiv.style.display = "block";
-    } else {
-        modeBerasDiv.style.display = "none";
-    }
-
+    // Nanti di sini kita hitung ulang dashboard
+    updateDashboard();
 });
+
+function updateDashboard() {
+    // Akan kita isi pada tahap berikutnya
+}
 </script>
     
 </body>
