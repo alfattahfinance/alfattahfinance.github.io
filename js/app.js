@@ -158,9 +158,8 @@ async function loadDashboard() {
         // -------------------------
         // Hitung Saldo
         // -------------------------
-
- // -------------------------
-// Tampilkan Ringkasan
+// -------------------------
+// Tampilkan Ringkasan Dinamis
 // -------------------------
 
 const jenis = document.getElementById("jenisDashboard")?.value || "syahriyyah";
@@ -170,79 +169,53 @@ const totalSaldoEl = document.getElementById("totalSaldo");
 const totalMasukEl = document.getElementById("totalMasuk");
 const totalKeluarEl = document.getElementById("totalKeluar");
 
-let masuk = 0;
-let keluar = 0;
-let saldo = 0;
 
-if (jenis === "syahriyyah") {
-    masuk = pemasukan.Syahriyyah;
-    keluar = pengeluaran.Syahriyyah;
-    saldo = masuk - keluar;
+const namaJenis = {
+    syahriyyah: "Syahriyyah",
+    kas: "Kas",
+    spp: "SPP",
+    infaq: "Infaq",
+    beras: "Beras"
+};
 
-    totalMasukEl.textContent = rupiah(masuk);
-    totalKeluarEl.textContent = rupiah(keluar);
-    totalSaldoEl.textContent = rupiah(saldo);
 
-} else if (jenis === "kas") {
-    masuk = pemasukan.Kas;
-    keluar = pengeluaran.Kas;
-    saldo = masuk - keluar;
-
-    totalMasukEl.textContent = rupiah(masuk);
-    totalKeluarEl.textContent = rupiah(keluar);
-    totalSaldoEl.textContent = rupiah(saldo);
-
-} else {
+// Jika Beras
+if (jenis === "beras") {
 
     if (mode === "liter") {
 
-        masuk = pemasukan.Beras;
-        keluar = pengeluaran.Beras;
-        saldo = masuk - keluar;
-
-        totalMasukEl.textContent = masuk + " Liter";
-        totalKeluarEl.textContent = keluar + " Liter";
-        totalSaldoEl.textContent = saldo + " Liter";
+        totalMasukEl.textContent = stokBeras + " Liter";
+        totalKeluarEl.textContent = "0 Liter";
+        totalSaldoEl.textContent = stokBeras + " Liter";
 
     } else {
 
-        totalMasukEl.textContent = rupiah(0);
-        totalKeluarEl.textContent = rupiah(0);
-        totalSaldoEl.textContent = rupiah(0);
+        totalMasukEl.textContent = rupiah(pemasukan.Beras);
+        totalKeluarEl.textContent = rupiah(pengeluaran.Beras);
+        totalSaldoEl.textContent = rupiah(
+            pemasukan.Beras - pengeluaran.Beras
+        );
 
     }
 
-}
-        // -------------------------
-        // Rekap Keuangan
-        // -------------------------
+
+} else {
+
+    const key = 
+        namaJenis[jenis] || "Lainnya";
 
 
-if (judul && masukEl && keluarEl && saldoEl) { {
+    const masuk = pemasukan[key] || 0;
+    const keluar = pengeluaran[key] || 0;
 
-    judul.textContent = jenis.charAt(0).toUpperCase() + jenis.slice(1);
 
-    if (jenis === "beras" && mode === "liter") {
+    totalMasukEl.textContent = rupiah(masuk);
 
-         masukEl.textContent = ...
-         keluarEl.textContent = ...
-         saldoEl.textContent = ...
-        const nama =     
-            jenis === "syahriyyah" ? "Syahriyyah" :
-            jenis === "kas" ? "Kas" :
-            jenis === "spp" ? "SPP" :
-            jenis === "infaq" ? "Infaq" :
-            "Lainnya";
+    totalKeluarEl.textContent = rupiah(keluar);
 
-        const judul = document.getElementById("judulJenis");
-const masukEl = document.getElementById("masuk");
-const keluarEl = document.getElementById("keluar");
-const saldoEl = document.getElementById("saldo");
-
-        catch (error) {
-    console.error(error);
-    alert(error.message);
-}
+    totalSaldoEl.textContent = rupiah(
+        masuk - keluar
+    );
 
 }
 
