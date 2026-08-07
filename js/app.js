@@ -127,21 +127,9 @@ async function loadDashboard() {
         // Query Pembayaran
         // ===========================
 
-        const pembayaranQuery = query(
-
-            collection(db, "payments"),
-
-            where("tanggal", ">=", filter.awal),
-
-            where("tanggal", "<", filter.akhir)
-
-        );
-
         const pembayaranSnapshot = await getDocs(
-
-            pembayaranQuery
-
-        );
+    collection(db, "payments")
+);
 
        
             // ===========================
@@ -150,17 +138,18 @@ async function loadDashboard() {
 
         pembayaranSnapshot.forEach((item) => {
 
-            const data = item.data();
+    const data = item.data();
 
-            if (data.satuan === "Liter") {
+    console.log(data);
 
-                const jumlah = Number(data.jumlah || 0);
+    const nominal = Number(data.nominal || 0);
+    totalMasuk += nominal;
 
-                stokBeras += jumlah;
+    if (data.satuan === "Liter") {
+        stokBeras += Number(data.jumlah || 0);
+    }
 
-                pemasukan.Beras += jumlah;
-
-            } else {
+});
 
                 const nominal = Number(data.nominal || 0);
 
@@ -185,23 +174,10 @@ async function loadDashboard() {
         // Query Pengeluaran
         // ===========================
 
-        const pengeluaranQuery = query(
-
-            collection(db, "expenses"),
-
-            where("tanggal", ">=", filter.awal),
-
-            where("tanggal", "<", filter.akhir)
-
-        );
-
-        const pengeluaranSnapshot = await getDocs(
-
-            pengeluaranQuery
-
-        );
-
-
+const pengeluaranSnapshot = await getDocs(
+    collection(db, "expenses")
+);
+        
         // ===========================
         // Hitung Pengeluaran
         // ===========================
