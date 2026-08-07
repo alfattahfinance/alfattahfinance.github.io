@@ -34,17 +34,35 @@ async function loadDashboard() {
         // -------------------------
 
         const santriSnapshot = await getDocs(
-            collection(db, "santri")
-        );
+    collection(db, "santri")
+);
 
-        const pembayaranSnapshot = await getDocs(
-            collection(db, "payments")
-        );
+const pembayaranSnapshot = await getDocs(
+    collection(db, "payments")
+);
 
-        const pengeluaranSnapshot = await getDocs(
-            collection(db, "expenses")
-        );
+const pengeluaranSnapshot = await getDocs(
+    collection(db, "expenses")
+);
 
+// Hitung semua pemasukan
+pembayaranSnapshot.forEach((doc) => {
+
+    const data = doc.data();
+
+    console.log("PAYMENT:", data);
+
+    if (data.satuan === "Liter") {
+
+        // ...
+
+    } else {
+
+        // ...
+
+    }
+
+});
         // -------------------------
         // Variabel
         // -------------------------
