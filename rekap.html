@@ -32,6 +32,33 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
 
+       <div class="row align-items-end mb-4">
+
+    <div class="col-lg-3 col-md-4 col-sm-6">
+        <label class="form-label fw-semibold">
+            <i class="bi bi-funnel"></i> Jenis Data
+        </label>
+
+        <select class="form-select shadow-sm" id="jenisDashboard">
+            <option value="syahriyyah">Syahriyyah</option>
+            <option value="kas">Kas</option>
+            <option value="beras">Beras</option>
+        </select>
+    </div>
+
+    <div class="col-lg-3 col-md-4 col-sm-6" id="modeBerasDiv" style="display:none;">
+        <label class="form-label fw-semibold">
+            <i class="bi bi-box-seam"></i> Mode Beras
+        </label>
+
+        <select class="form-select shadow-sm" id="modeBeras">
+            <option value="liter">Beras (Liter)</option>
+            <option value="uang">Uang (Rp)</option>
+        </select>
+    </div>
+
+</div>
+        
         /* Styling Tabel Rekap */
         .rekap-wrapper {
             border-radius: 12px;
