@@ -184,10 +184,10 @@ if (jenis === "beras") {
 
     if (mode === "liter") {
 
-        totalMasukEl.textContent = stokBeras + " Liter";
-        totalKeluarEl.textContent = "0 Liter";
+        totalMasukEl.textContent = pemasukan.Beras + " Liter";
+        totalKeluarEl.textContent = pengeluaran.Beras + " Liter";
         totalSaldoEl.textContent = stokBeras + " Liter";
-
+        
     } else {
 
         totalMasukEl.textContent = rupiah(pemasukan.Beras);
@@ -218,7 +218,11 @@ if (jenis === "beras") {
     );
 
 }
+    } catch (error) {
+        console.error(error);
+    }
 
+}
 
 // ======================================
 // Isi Filter Bulan & Tahun
