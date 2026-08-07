@@ -107,12 +107,20 @@ window.simpanPengeluaran = async function () {
     const jenis = document.getElementById("jenis").value;
     const keterangan = document.getElementById("keterangan").value.trim();
     const jumlah = document.getElementById("jumlah").value;
+    const tanggal = document.getElementById("tanggal").value;
+   
+    if (
+    jenis === "" ||
+    keterangan === "" ||
+    jumlah === "" ||
+    tanggal === ""
+) {
 
-    if (jenis === "" || keterangan === "" || jumlah === "") {
+    alert("Lengkapi data pengeluaran.");
 
-        alert("Lengkapi data pengeluaran.");
+    return;
 
-        return;
+}
 
     }
 
@@ -130,27 +138,42 @@ window.simpanPengeluaran = async function () {
 
     try {
 
-        if (idEditPengeluaran === null) {
-            // Mode Tambah Baru
-            const sekarang = new Date();
-            data.bulan = sekarang.getMonth() + 1;
-            data.tahun = sekarang.getFullYear();
-            data.tanggal = serverTimestamp();
+if (idEditPengeluaran === null) {
 
-            await addDoc(collection(db, "expenses"), data);
-            alert("Pengeluaran berhasil disimpan.");
+    // Mode Tambah Baru
+    const tgl = new Date(tanggal);
 
-        } else {
-            // Mode Edit (Perbarui data di Firebase)
-            await updateDoc(doc(db, "expenses", idEditPengeluaran), data);
-            alert("Pengeluaran berhasil diperbarui.");
+    data.tanggal = tanggal;
+    data.bulan = tgl.getMonth() + 1;
+    data.tahun = tgl.getFullYear();
 
+    await addDoc(collection(db, "expenses"), data);
+
+    alert("Pengeluaran berhasil disimpan.");
+
+} else {
+
+    data.tanggal = tanggal;
+    data.bulan = new Date(tanggal).getMonth() + 1;
+    data.tahun = new Date(tanggal).getFullYear();
+
+    await updateDoc(doc(db, "expenses", idEditPengeluaran), data);
+
+    alert("Pengeluaran berhasil diperbarui.");
+}
             // Reset mode edit
             idEditPengeluaran = null;
-            const tombolSimpan = document.querySelector("button[onclick='simpanPengeluaran()']");
-            if (tombolSimpan) tombolSimpan.textContent = "Simpan Pengeluaran";
-        }
+            const tombolSimpan = document.querySelector(
 
+        "button[onclick='simpanPengeluaran()']"
+
+    );
+
+    if (tombolSimpan) {
+
+        tombolSimpan.textContent = "Simpan Pengeluaran";
+
+    }
         // Reset Form
         document.getElementById("jenis").value = "";
         document.getElementById("keterangan").value = "";
@@ -172,23 +195,33 @@ window.simpanPengeluaran = async function () {
 // ==========================
 // Ambil Data untuk Diedit
 // ==========================
-window.mulaiEditPengeluaran = function (id, jenis, keterangan, jumlah) {
+window.mulaiEditPengeluaran = function (id, jenis, keterangan, jumlah, tanggal) {
+
     idEditPengeluaran = id;
 
     document.getElementById("jenis").value = jenis;
     document.getElementById("keterangan").value = keterangan;
     document.getElementById("jumlah").value = jumlah;
+    document.getElementById("tanggal").value = tanggal;
 
-    // Ubah teks tombol simpan menjadi "Simpan Perubahan"
-    const tombolSimpan = document.querySelector("button[onclick='simpanPengeluaran()']");
+    // Sesuaikan satuan jika Beras
+    ubahSatuan();
+
+    // Ubah teks tombol
+    const tombolSimpan = document.querySelector(
+        "button[onclick='simpanPengeluaran()']"
+    );
+
     if (tombolSimpan) {
         tombolSimpan.textContent = "Simpan Perubahan";
     }
 
-    // Scroll ke atas halaman agar form terlihat
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Scroll ke atas
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 };
-
 
 // ==========================
 // Hapus Pengeluaran
