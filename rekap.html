@@ -162,48 +162,15 @@
                         <th>Saldo</th>
                     </tr>
                 </thead>
+
                 <tbody id="rekap">
-                    <!-- Tampilan statis sebagai kerangka awal (akan diganti otomatis oleh JS Anda) -->
-                    <tr>
-                        <td>SPP</td>
-                        <td>Rp 0</td>
-                        <td>Rp 0</td>
-                        <td>Rp 0</td>
-                    </tr>
-                    <tr>
-                        <td>Syahriyyah</td>
-                        <td>Rp 240.000</td>
-                        <td>Rp 0</td>
-                        <td>Rp 240.000</td>
-                    </tr>
-                    <tr>
-                        <td>Infaq</td>
-                        <td>Rp 0</td>
-                        <td>Rp 0</td>
-                        <td>Rp 0</td>
-                    </tr>
-                    <tr>
-                        <td>Kas</td>
-                        <td>Rp 0</td>
-                        <td>Rp 0</td>
-                        <td>Rp 0</td>
-                    </tr>
-                    <tr>
-                        <td>Beras</td>
-                        <td>0 Liter</td>
-                        <td>0 Liter</td>
-                        <td>0 Liter</td>
-                    </tr>
-                    <tr>
-                        <td>Lainnya</td>
-                        <td>Rp 0</td>
-                        <td>Rp 30.000</td>
-                        <td>Rp -30.000</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <tr>
+        <td id="judulJenis">Syahriyyah</td>
+        <td id="masuk">Rp 0</td>
+        <td id="keluar">Rp 0</td>
+        <td id="saldo">Rp 0</td>
+    </tr>
+</tbody>
 
     <!-- Menu Navigasi Bawah -->
     <div class="row g-3">
@@ -261,12 +228,80 @@ function updateJenis() {
 
 jenisDashboard.addEventListener("change", updateJenis);
 
+document.getElementById("modeBeras")
+    .addEventListener("change", updateDashboard);
+    
 // Jalankan saat halaman pertama dibuka
 updateJenis();
 
 function updateDashboard() {
-    // Akan kita isi pada langkah berikutnya
+
+    const jenis = jenisDashboard.value;
+    const mode = document.getElementById("modeBeras").value;
+
+    document.getElementById("judulJenis").innerText =
+        jenis.charAt(0).toUpperCase() + jenis.slice(1);
+
+    let masuk = 0;
+    let keluar = 0;
+    let saldo = 0;
+
+    if (jenis === "syahriyyah") {
+
+        masuk = 240000;
+        keluar = 30000;
+        saldo = masuk - keluar;
+
+        document.getElementById("masuk").innerHTML = "Rp " + masuk.toLocaleString("id-ID");
+        document.getElementById("keluar").innerHTML = "Rp " + keluar.toLocaleString("id-ID");
+        document.getElementById("saldo").innerHTML = "Rp " + saldo.toLocaleString("id-ID");
+
+    }
+
+    else if (jenis === "kas") {
+
+        masuk = 50000;
+        keluar = 10000;
+        saldo = masuk - keluar;
+
+        document.getElementById("masuk").innerHTML = "Rp " + masuk.toLocaleString("id-ID");
+        document.getElementById("keluar").innerHTML = "Rp " + keluar.toLocaleString("id-ID");
+        document.getElementById("saldo").innerHTML = "Rp " + saldo.toLocaleString("id-ID");
+
+    }
+
+    else if (jenis === "beras") {
+
+        if (mode === "liter") {
+
+            document.getElementById("judulJenis").innerText = "Beras (Liter)";
+
+            masuk = 80;
+            keluar = 12;
+            saldo = masuk - keluar;
+
+            document.getElementById("masuk").innerHTML = masuk + " Liter";
+            document.getElementById("keluar").innerHTML = keluar + " Liter";
+            document.getElementById("saldo").innerHTML = saldo + " Liter";
+
+        } else {
+
+            document.getElementById("judulJenis").innerText = "Beras (Uang)";
+
+            masuk = 1200000;
+            keluar = 180000;
+            saldo = masuk - keluar;
+
+            document.getElementById("masuk").innerHTML = "Rp " + masuk.toLocaleString("id-ID");
+            document.getElementById("keluar").innerHTML = "Rp " + keluar.toLocaleString("id-ID");
+            document.getElementById("saldo").innerHTML = "Rp " + saldo.toLocaleString("id-ID");
+
+        }
+
+    }
+
 }
+    
 </script>
     
 </body>
