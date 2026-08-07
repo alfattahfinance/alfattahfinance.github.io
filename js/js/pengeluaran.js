@@ -7,7 +7,9 @@ import {
     getDocs,
     deleteDoc,
     doc,
-    serverTimestamp
+    query,
+    orderBy
+
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 const daftarPengeluaran = document.getElementById("daftarPengeluaran");
@@ -27,7 +29,11 @@ async function tampilkanPengeluaran() {
 
     try {
 
-        const snapshot = await getDocs(collection(db, "expenses"));
+        const q = query(
+    collection(db, "expenses"),
+    orderBy("tanggal", "desc")
+);
+        const snapshot = await getDocs(q);
 
         if (snapshot.empty) {
 
@@ -51,7 +57,13 @@ async function tampilkanPengeluaran() {
 
                     <strong>${data.jenis}</strong><br>
 
-                    ${data.keterangan}<br>
+              <small class="text-muted">
+                    📅 ${data.tanggal || "-"}
+              </small><br>
+
+${data.keterangan}<br>
+
+                    
 
                     <span class="text-danger fw-bold">
                         ${data.satuan == "Liter"
@@ -64,17 +76,16 @@ async function tampilkanPengeluaran() {
 
                 <div>
                     <button
-                        class="btn btn-outline-primary btn-sm mb-1 d-block"
-                        onclick="mulaiEditPengeluaran('${idDoc}', '${data.jenis}', '${data.keterangan}', '${data.jumlah}')">
+                       class="btn btn-outline-primary btn-sm mb-1 d-block"
+                       onclick="mulaiEditPengeluaran('${idDoc}','${data.jenis}','${data.keterangan}','${data.jumlah}','${data.tanggal}')">
+    Edit
+</button>
 
-                        Edit
-
-                    </button>
-
-                    <button
-                        class="btn btn-danger btn-sm d-block"
-                        onclick="hapusPengeluaran('${idDoc}')">
-
+                   <button
+                      class="btn btn-danger btn-sm d-block"
+                      onclick="hapusPengeluaran('${idDoc}')">
+    Hapus
+</button>
                         Hapus
 
                     </button>
@@ -122,7 +133,7 @@ window.simpanPengeluaran = async function () {
 
 }
 
-    }
+    
 
     let data = {
         jenis: jenis,
