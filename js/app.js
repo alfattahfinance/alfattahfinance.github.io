@@ -105,12 +105,20 @@ async function loadDashboard() {
 
                 totalMasuk += nominal;
 
-                if (pemasukan[data.jenis] !== undefined) {
-                    pemasukan[data.jenis] += nominal;
-                } else {
-                    pemasukan.Lainnya += nominal;
-                }
+                const jenisData = data.jenis;
 
+if (jenisData === "Syahriyyah") {
+    pemasukan.Syahriyyah += nominal;
+
+} else if (jenisData === "Kas") {
+    pemasukan.Kas += nominal;
+
+} else if (jenisData === "Beras") {
+    pemasukan.Beras += nominal;
+
+} else {
+    pemasukan.Lainnya += nominal;
+}
             }
 
         });
