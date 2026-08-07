@@ -4,28 +4,244 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dashboard Keuangan</title>
+<title>Dashboard Keuangan Al-Fattah</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Link to your existing stylesheet -->
 <link rel="stylesheet" href="css/style.css">
 
 <style>
-body{
-    background:#f5f6fa;
+/* --- Custom Styles based on image --- */
+
+/* Font setting for specific elements */
+.dashboard-title {
+    font-family: Georgia, 'Times New Roman', Times, serif; /* Serif font like image */
+    font-weight: normal;
+    color: #1a1a1a;
+    font-size: 2.5rem; /* Larger title */
 }
 
-.card-stat{
-    border:none;
-    border-radius:15px;
-    box-shadow:0 4px 10px rgba(0,0,0,.08);
+.sub-title {
+    font-family: Arial, sans-serif; /* Sans-serif for other text */
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: #6c757d; /* Gray color */
+    letter-spacing: 1px;
+    margin-bottom: 0;
 }
 
-.icon{
-    font-size:30px;
+body {
+    background-color: #fdfaf5; /* Pale cream background */
+    color: #1a1a1a;
+    font-family: Arial, sans-serif;
 }
 
-.dashboard-title{
-    font-weight:bold;
+/* Common Card Style */
+.card-stat {
+    border: none;
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05); /* Subtle shadow */
+    padding: 25px;
+    height: 100%; /* Ensure all cards in a row have equal height */
+}
+
+/* Specific Card: Balance */
+.card-balance {
+    background-color: #386641; /* Dark green background */
+    color: #ffffff; /* White text */
+}
+
+.card-balance h6 {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 15px;
+}
+
+.card-balance h3 {
+    font-weight: bold;
+    color: #ffffff;
+    font-size: 2.2rem;
+}
+
+/* Specific Cards: Income & Expense */
+.card-income, .card-expense {
+    background-color: #ffffff;
+}
+
+.card-income h6 {
+    color: #386641; /* Green title */
+}
+
+.card-income h3 {
+    color: #1a1a1a; /* Black amount */
+    font-size: 2.2rem;
+}
+
+.card-expense h6 {
+    color: #a04d4d; /* Dark red title */
+}
+
+.card-expense h3 {
+    color: #1a1a1a; /* Black amount */
+    font-size: 2.2rem;
+}
+
+
+/* Ikon and positioning */
+.icon-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.icon-wallet, .icon-trend-up, .icon-trend-down {
+    font-size: 24px;
+}
+
+.icon-wallet {
+    background-color: rgba(255,255,255, 0.2);
+    border-radius: 50%;
+    padding: 10px;
+    color: #ffffff;
+}
+
+.icon-trend-up {
+    color: #84cc16; /* Light green for up arrow */
+}
+
+.icon-trend-down {
+    color: #ef4444; /* Bright red for down arrow```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard Keuangan Al-Fattah</title>
+
+<link href="[https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css](https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css)" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+/* --- Custom Styles based on image --- */
+
+body {
+    background-color: #fdfaf5; /* Pale cream background */
+    color: #1a1a1a;
+    font-family: Arial, sans-serif;
+}
+
+/* Common Card Style */
+.card-stat {
+    border: none;
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05); /* Subtle shadow */
+    padding: 25px;
+    height: 100%; /* Ensure all cards in a row have equal height */
+}
+
+/* Specific Card: Balance */
+.card-balance {
+    background-color: #386641; /* Dark green background */
+    color: #ffffff; /* White text */
+}
+
+.card-balance h6 {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 15px;
+}
+
+.card-balance h3 {
+    font-weight: bold;
+    color: #ffffff;
+    font-size: 2.2rem;
+}
+
+/* Specific Cards: Income & Expense */
+.card-income, .card-expense {
+    background-color: #ffffff;
+}
+
+.card-income h6 {
+    color: #386641; /* Green title */
+}
+
+.card-income h3 {
+    color: #1a1a1a; /* Black amount */
+    font-size: 2.2rem;
+}
+
+.card-expense h6 {
+    color: #a04d4d; /* Dark red title */
+}
+
+.card-expense h3 {
+    color: #1a1a1a; /* Black amount */
+    font-size: 2.2rem;
+}
+
+
+/* Ikon and positioning */
+.icon-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.icon-wallet {
+    background-color: rgba(255,255,255, 0.2);
+    border-radius: 50%;
+    padding: 10px;
+    color: #ffffff;
+    font-size: 24px;
+}
+
+.icon-trend-up, .icon-trend-down {
+    font-size: 24px;
+}
+
+.icon-trend-up {
+    color: #84cc16; /* Light green for up arrow */
+}
+
+.icon-trend-down {
+    color: #ef4444; /* Bright red for down arrow */
+}
+
+
+/* Title formatting */
+.dashboard-title {
+    font-family: Georgia, 'Times New Roman', Times, serif; /* Serif font like image */
+    font-weight: normal;
+    color: #1a1a1a;
+    font-size: 2.5rem; /* Larger title */
+}
+
+.sub-title {
+    font-family: Arial, sans-serif; /* Sans-serif for other text */
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: #6c757d; /* Gray color */
+    letter-spacing: 1px;
+    margin-bottom: 0;
+}
+
+/* Other adjustments */
+.card-stat h6 {
+    text-transform: capitalize;
+    font-weight: normal;
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+/* Category Filter (Kategori) styling */
+.category-filter {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.category-filter span {
+    font-weight: bold;
+    color: #1a1a1a;
 }
 </style>
 
@@ -33,116 +249,120 @@ body{
 
 <body>
 
-<nav class="navbar navbar-dark bg-success">
-<div class="container">
-<span class="navbar-brand">
-🏫 Ribath Madrasah Al-Fattah
-</span>
+<div class="container mt-5">
+
+    <div class="row align-items-center mb-4">
+        <div class="col-md-9">
+            <p class="sub-title">RINGKASAN</p>
+            <h1 class="dashboard-title">Posisi keuangan Anda</h1>
+        </div>
+        <div class="col-md-3 text-end">
+            <div class="category-filter">Kategori: <span>Semua kategori</span> <i class="bi bi-chevron-down ms-1"></i></div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- Total Saldo (Green Card) -->
+        <div class="col-md-4">
+            <div class="card card-stat card-balance p-4">
+                <div class="icon-container">
+                    <h6>Saldo saat ini</h6>
+                    <div class="icon-wallet"><i class="bi bi-wallet2"></i></div>
+                </div>
+                <h3 id="totalSaldo">Rp 0</h3>
+            </div>
+        </div>
+
+        <!-- Total Pemasukan -->
+        <div class="col-md-4">
+            <div class="card card-stat card-income p-4">
+                <div class="icon-container">
+                    <h6>Total pemasukan</h6>
+                    <div class="icon-trend-up"><i class="bi bi-graph-up-arrow"></i></div>
+                </div>
+                <h3 id="totalMasuk">Rp 0</h3>
+            </div>
+        </div>
+
+        <!-- Total Pengeluaran -->
+        <div class="col-md-4">
+            <div class="card card-stat card-expense p-4">
+                <div class="icon-container">
+                    <h6>Total pengeluaran</h6>
+                    <div class="icon-trend-down"><i class="bi bi-graph-down-arrow"></i></div>
+                </div>
+                <h3 id="totalKeluar">Rp 0</h3>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- The rest of your original content, styled to fit the new theme -->
+    
+    <div class="row mt-5 pt-4">
+
+        <div class="col-md-4">
+            <div class="card card-stat p-3 bg-white">
+                <div class="icon text-success">🌾</div>
+                <h6>Stok Beras</h6>
+                <h3 id="stokBeras">0 Liter</h3>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label text-secondary">Bulan</label>
+            <select id="bulan" class="form-select border-0 bg-white shadow-sm rounded-pill px-3"></select>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label text-secondary">Tahun</label>
+            <select id="tahun" class="form-select border-0 bg-white shadow-sm rounded-pill px-3"></select>
+        </div>
+
+    </div>
+
+    <div class="card card-stat mt-5 bg-white mb-5">
+
+        <div class="card-header bg-success text-white rounded-top-4 border-0 py-3">
+            📋 Rekap Keuangan
+        </div>
+
+        <div class="table-responsive p-3">
+
+            <table class="table table-bordered table-hover mb-0">
+
+                <thead class="table-light">
+
+                    <tr>
+                        <th>Jenis</th>
+                        <th>Pemasukan</th>
+                        <th>Pengeluaran</th>
+                        <th>Saldo</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="rekap">
+
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            Memuat data...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
 </div>
-</nav>
 
-<div class="container mt-4">
-
-<h3 class="dashboard-title mb-4">
-📊 Dashboard Keuangan
-</h3>
-
-<div class="row g-3">
-
-<div class="col-md-3 col-6">
-<div class="card card-stat p-3">
-<div class="icon">👨‍🎓</div>
-<h6>Total Santri</h6>
-<h3 id="totalSantri">0</h3>
-</div>
-</div>
-
-<div class="col-md-3 col-6">
-<div class="card card-stat p-3">
-<div class="icon">💵</div>
-<h6>Total Pemasukan</h6>
-<h3 id="totalMasuk">Rp 0</h3>
-</div>
-</div>
-
-<div class="col-md-3 col-6">
-<div class="card card-stat p-3">
-<div class="icon">💸</div>
-<h6>Total Pengeluaran</h6>
-<h3 id="totalKeluar">Rp 0</h3>
-</div>
-</div>
-
-<div class="col-md-3 col-6">
-<div class="card card-stat p-3">
-<div class="icon">💰</div>
-<h6>Total Saldo</h6>
-<h3 id="totalSaldo">Rp 0</h3>
-</div>
-</div>
-
-</div>
-
-<div class="row mt-3">
-
-<div class="col-md-4">
-<div class="card card-stat p-3">
-<div class="icon">🌾</div>
-<h6>Stok Beras</h6>
-<h3 id="stokBeras">0 Liter</h3>
-</div>
-</div>
-
-<div class="col-md-4">
-<label class="form-label">Bulan</label>
-<select id="bulan" class="form-select"></select>
-</div>
-
-<div class="col-md-4">
-<label class="form-label">Tahun</label>
-<select id="tahun" class="form-select"></select>
-</div>
-
-</div>
-
-<div class="card card-stat mt-4">
-
-<div class="card-header bg-success text-white">
-📋 Rekap Keuangan
-</div>
-
-<div class="table-responsive">
-
-<table class="table table-bordered table-hover mb-0">
-
-<thead class="table-light">
-
-<tr>
-<th>Jenis</th>
-<th>Pemasukan</th>
-<th>Pengeluaran</th>
-<th>Saldo</th>
-</tr>
-
-</thead>
-
-<tbody id="rekap">
-
-<tr>
-<td colspan="4" class="text-center">
-Memuat data...
-</td>
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
-</div>
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="[https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css](https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css)">
 
 <script type="module" src="js/app.js"></script>
 
