@@ -9,6 +9,9 @@ import {
     collection,
     addDoc,
     getDocs,
+    updateDoc,
+    deleteDoc,
+    doc,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
@@ -27,8 +30,6 @@ window.simpanPengeluaran = async function () {
     const jumlah = Number(document.getElementById("jumlah").value);
     const satuan = document.getElementById("satuan").value;
 
-
-    // Validasi
     if (!jenis) {
         alert("Pilih jenis pengeluaran terlebih dahulu.");
         return;
@@ -49,8 +50,6 @@ window.simpanPengeluaran = async function () {
         return;
     }
 
-
-    // Simpan ke Firestore
     try {
 
         console.log("Menyimpan ke Firestore...");
@@ -71,15 +70,11 @@ window.simpanPengeluaran = async function () {
 
         alert("✅ Pengeluaran berhasil disimpan!");
 
-
-        // Kosongkan form
         document.getElementById("jenis").value = "";
         document.getElementById("keterangan").value = "";
         document.getElementById("jumlah").value = "";
         document.getElementById("satuan").value = "Rupiah";
 
-
-        // Tampilkan riwayat
         await tampilkanRiwayatPengeluaran();
 
     } catch (error) {
@@ -92,9 +87,122 @@ window.simpanPengeluaran = async function () {
             "\n" +
             error.message
         );
+    }
+};
 
+
+// ======================================
+// EDIT PENGELUARAN
+// ======================================
+
+window.editPengeluaran = async function (id, jenisLama, keteranganLama, tanggalLama, jumlahLama, satuanLama) {
+
+    const jenis = prompt(
+        "Jenis pengeluaran:",
+        jenisLama
+    );
+
+    if (jenis === null) return;
+
+    const keterangan = prompt(
+        "Keterangan:",
+        keteranganLama
+    );
+
+    if (keterangan === null) return;
+
+    const tanggal = prompt(
+        "Tanggal (YYYY-MM-DD):",
+        tanggalLama
+    );
+
+    if (tanggal === null) return;
+
+    const jumlahInput = prompt(
+        satuanLama === "Liter"
+            ? "Jumlah (Liter):"
+            : "Jumlah (Rupiah):",
+        jumlahLama
+    );
+
+    if (jumlahInput === null) return;
+
+    const jumlah = Number(jumlahInput);
+
+    if (!jumlah || jumlah <= 0) {
+        alert("❌ Jumlah tidak valid.");
+        return;
     }
 
+    try {
+
+        console.log("Mengubah data:", id);
+
+        await updateDoc(
+            doc(db, "expenses", id),
+            {
+                jenis: jenis.trim(),
+                keterangan: keterangan.trim(),
+                tanggal: tanggal.trim(),
+                jumlah: jumlah
+            }
+        );
+
+        alert("✅ Pengeluaran berhasil diubah!");
+
+        await tampilkanRiwayatPengeluaran();
+
+    } catch (error) {
+
+        console.error(
+            "Gagal mengubah pengeluaran:",
+            error
+        );
+
+        alert(
+            "❌ Gagal mengubah pengeluaran!\n\n" +
+            error.message
+        );
+    }
+};
+
+
+// ======================================
+// HAPUS PENGELUARAN
+// ======================================
+
+window.hapusPengeluaran = async function (id) {
+
+    const yakin = confirm(
+        "⚠️ Apakah kamu yakin ingin menghapus pengeluaran ini?"
+    );
+
+    if (!yakin) return;
+
+    try {
+
+        console.log("Menghapus data:", id);
+
+        await deleteDoc(
+            doc(db, "expenses", id)
+        );
+
+        alert("✅ Pengeluaran berhasil dihapus!");
+
+        await tampilkanRiwayatPengeluaran();
+
+    } catch (error) {
+
+        console.error(
+            "Gagal menghapus pengeluaran:",
+            error
+        );
+
+        alert(
+            "❌ Gagal menghapus pengeluaran!\n\n" +
+            error.message
+        );
+    }
 };
 
 
@@ -114,27 +222,21 @@ async function tampilkanRiwayatPengeluaran() {
         return;
     }
 
-
     try {
 
         console.log("Mengambil data expenses...");
 
-
         const snapshot = await getDocs(
             collection(db, "expenses")
         );
-
 
         console.log(
             "Jumlah data:",
             snapshot.size
         );
 
-
         daftar.innerHTML = "";
 
-
-        // Tidak ada data
         if (snapshot.empty) {
 
             daftar.innerHTML = `
@@ -146,24 +248,19 @@ async function tampilkanRiwayatPengeluaran() {
             return;
         }
 
-
-        // Masukkan data ke array
         let dataPengeluaran = [];
 
+        snapshot.forEach((docSnapshot) => {
 
-        snapshot.forEach((doc) => {
-
-            const data = doc.data();
+            const data = docSnapshot.data();
 
             dataPengeluaran.push({
-                id: doc.id,
+                id: docSnapshot.id,
                 ...data
             });
 
         });
 
-
-        // Urutkan berdasarkan tanggal
         dataPengeluaran.sort((a, b) => {
 
             const tanggalA =
@@ -177,11 +274,13 @@ async function tampilkanRiwayatPengeluaran() {
         });
 
 
-        // Tampilkan semua data
+        // ======================================
+        // Tampilkan Data
+        // ======================================
+
         dataPengeluaran.forEach((data) => {
 
             let jumlahTampil;
-
 
             if (data.satuan === "Liter") {
 
@@ -211,7 +310,7 @@ async function tampilkanRiwayatPengeluaran() {
 
                 <div class="d-flex justify-content-between align-items-start">
 
-                    <div>
+                    <div class="me-2">
 
                         <strong>
                             ${data.jenis || "-"}
@@ -231,16 +330,46 @@ async function tampilkanRiwayatPengeluaran() {
 
                     </div>
 
-                    <div class="text-danger fw-bold">
+                    <div class="text-end">
 
-                        ${jumlahTampil}
+                        <div class="text-danger fw-bold mb-2">
+
+                            ${jumlahTampil}
+
+                        </div>
+
+                        <div class="d-flex gap-1">
+
+                            <button
+                                class="btn btn-sm btn-warning"
+                                onclick="editPengeluaran(
+                                    '${data.id}',
+                                    '${String(data.jenis || "").replace(/'/g, "\\'")}',
+                                    '${String(data.keterangan || "").replace(/'/g, "\\'")}',
+                                    '${data.tanggal || ""}',
+                                    '${data.jumlah || 0}',
+                                    '${data.satuan || "Rupiah"}'
+                                )">
+
+                                ✏️ Edit
+
+                            </button>
+
+                            <button
+                                class="btn btn-sm btn-danger"
+                                onclick="hapusPengeluaran('${data.id}')">
+
+                                🗑️ Hapus
+
+                            </button>
+
+                        </div>
 
                     </div>
 
                 </div>
 
             `;
-
 
             daftar.appendChild(item);
 
@@ -253,7 +382,6 @@ async function tampilkanRiwayatPengeluaran() {
             "Gagal mengambil riwayat:",
             error
         );
-
 
         daftar.innerHTML = `
 
@@ -270,9 +398,7 @@ async function tampilkanRiwayatPengeluaran() {
             </li>
 
         `;
-
     }
-
 }
 
 
@@ -286,7 +412,6 @@ document.addEventListener(
 
         const tanggal =
             document.getElementById("tanggal");
-
 
         if (tanggal) {
 
@@ -306,14 +431,10 @@ document.addEventListener(
                     sekarang.getDate()
                 ).padStart(2, "0");
 
-
             tanggal.value =
                 `${tahun}-${bulan}-${hari}`;
-
         }
 
-
-        // Muat riwayat saat halaman dibuka
         tampilkanRiwayatPengeluaran();
 
     }
