@@ -319,3 +319,60 @@ body.dark-mode {
     background-color: #121212 !important;
     min-height: 100vh;
 }
+
+/* =================================
+   DARK MODE - LAPORAN KEUANGAN
+   ================================= */
+
+body.dark-mode .card {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+    border-color: #333 !important;
+}
+
+body.dark-mode .card-body {
+    color: #ffffff !important;
+}
+
+/* Teks abu-abu Bootstrap */
+body.dark-mode .text-muted {
+    color: #aaaaaa !important;
+}
+
+/* Tabel transaksi */
+body.dark-mode .table {
+    --bs-table-bg: #1e1e1e;
+    --bs-table-color: #ffffff;
+    --bs-table-border-color: #444;
+    color: #ffffff !important;
+}
+
+body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) > * {
+    background-color: #252525 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .table-hover > tbody > tr:hover > * {
+    background-color: #333333 !important;
+    color: #ffffff !important;
+}
+
+/* Header tabel */
+body.dark-mode .table-success {
+    --bs-table-bg: #198754 !important;
+    --bs-table-color: #ffffff !important;
+    background-color: #198754 !important;
+    color: #ffffff !important;
+}
+
+/* Input dan pilihan filter */
+body.dark-mode .form-select {
+    background-color: #2b2b2b !important;
+    color: #ffffff !important;
+    border-color: #555 !important;
+}
+
+/* Label */
+body.dark-mode .form-label {
+    color: #ffffff !important;
+}
