@@ -141,3 +141,20 @@ body.dark-mode footer {
     background-color: #1e1e1e !important;
     color: #aaa;
 }
+
+/* ======================================
+   BACKGROUND UTAMA DARK MODE
+   ====================================== */
+
+html:has(body.dark-mode),
+body.dark-mode {
+    background-color: #121212 !important;
+}
+
+body.dark-mode.bg-light {
+    background-color: #121212 !important;
+}
+
+body.dark-mode {
+    min-height: 100vh;
+}
