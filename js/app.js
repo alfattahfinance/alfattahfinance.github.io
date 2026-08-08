@@ -475,18 +475,38 @@ async function loadDashboard() {
 
 window.addEventListener("DOMContentLoaded", () => {
 
-    loadDashboard();
+    loadSemua();
 
     document
         .getElementById("jenisDashboard")
-        ?.addEventListener("change", loadDashboard);
+        ?.addEventListener("change", () => {
+            tampilkanDashboard();
+        });
 
     document
         .getElementById("modeBeras")
-        ?.addEventListener("change", loadDashboard);
+        ?.addEventListener("change", () => {
+            tampilkanDashboard();
+        });
+
+
+    // ======================================
+    // FILTER LAPORAN
+    // ======================================
+
+    document
+        .getElementById("bulan")
+        ?.addEventListener("change", () => {
+            tampilkanTabelLaporan();
+        });
+
+    document
+        .getElementById("tahun")
+        ?.addEventListener("change", () => {
+            tampilkanTabelLaporan();
+        });
 
 });
-
 // ======================================
 // Isi Filter Bulan & Tahun
 // ======================================
@@ -586,8 +606,9 @@ function tampilkanLaporan()
     }
 }
 
+
 // ======================================
-// Tampilkan Tabel Laporan
+// Tampilkan Tabel Laporan + Filter
 // ======================================
 
 function tampilkanTabelLaporan() {
@@ -597,15 +618,48 @@ function tampilkanTabelLaporan() {
 
     if (!tbody) return;
 
+    const bulanEl =
+        document.getElementById("bulan");
+
+    const tahunEl =
+        document.getElementById("tahun");
+
+    const bulanDipilih =
+        Number(bulanEl?.value);
+
+    const tahunDipilih =
+        Number(tahunEl?.value);
+
+
     tbody.innerHTML = "";
 
     const transaksi = [];
 
+
+    // ======================================
     // PEMASUKAN
+    // ======================================
+
     semuaPembayaran.forEach((data) => {
 
+        const tanggal =
+            bacaTanggal(data);
+
+        // Filter bulan & tahun
+        if (tanggal) {
+
+            if (
+                tanggal.getMonth() + 1 !== bulanDipilih ||
+                tanggal.getFullYear() !== tahunDipilih
+            ) {
+                return;
+            }
+
+        }
+
         transaksi.push({
-            tanggal: bacaTanggal(data),
+
+            tanggal: tanggal,
 
             nama:
                 data.namaSantri ||
@@ -617,18 +671,43 @@ function tampilkanTabelLaporan() {
                 data.jenis || "-",
 
             jumlah:
-                Number(data.nominal || data.jumlah || 0),
+                Number(
+                    data.nominal ||
+                    data.jumlah ||
+                    0
+                ),
 
             tipe: "Pemasukan"
+
         });
 
     });
 
+
+    // ======================================
     // PENGELUARAN
+    // ======================================
+
     semuaPengeluaran.forEach((data) => {
 
+        const tanggal =
+            bacaTanggal(data);
+
+        // Filter bulan & tahun
+        if (tanggal) {
+
+            if (
+                tanggal.getMonth() + 1 !== bulanDipilih ||
+                tanggal.getFullYear() !== tahunDipilih
+            ) {
+                return;
+            }
+
+        }
+
         transaksi.push({
-            tanggal: bacaTanggal(data),
+
+            tanggal: tanggal,
 
             nama:
                 data.namaSantri ||
@@ -640,42 +719,70 @@ function tampilkanTabelLaporan() {
                 data.jenis || "-",
 
             jumlah:
-                Number(data.jumlah || data.nominal || 0),
+                Number(
+                    data.jumlah ||
+                    data.nominal ||
+                    0
+                ),
 
             tipe: "Pengeluaran"
+
         });
 
     });
 
+
+    // ======================================
     // URUTKAN TERBARU
+    // ======================================
+
     transaksi.sort((a, b) => {
 
         const tanggalA =
-            a.tanggal ? a.tanggal.getTime() : 0;
+            a.tanggal
+                ? a.tanggal.getTime()
+                : 0;
 
         const tanggalB =
-            b.tanggal ? b.tanggal.getTime() : 0;
+            b.tanggal
+                ? b.tanggal.getTime()
+                : 0;
 
         return tanggalB - tanggalA;
 
     });
 
-    // JIKA KOSONG
+
+    // ======================================
+    // TIDAK ADA DATA
+    // ======================================
+
     if (transaksi.length === 0) {
 
         tbody.innerHTML = `
             <tr>
-                <td colspan="4"
-                    class="text-center text-muted">
-                    Belum ada transaksi
+
+                <td
+                    colspan="4"
+                    class="text-center text-muted py-4">
+
+                    Tidak ada transaksi
+                    pada bulan dan tahun yang dipilih.
+
                 </td>
+
             </tr>
         `;
 
         return;
+
     }
 
+
+    // ======================================
     // TAMPILKAN DATA
+    // ======================================
+
     transaksi.forEach((item) => {
 
         const tanggal =
@@ -683,15 +790,43 @@ function tampilkanTabelLaporan() {
                 ? item.tanggal.toLocaleDateString("id-ID")
                 : "-";
 
-        const tr = document.createElement("tr");
+        const tr =
+            document.createElement("tr");
 
         tr.innerHTML = `
-            <td>${tanggal}</td>
-            <td>${item.nama}</td>
-            <td>${item.jenis}</td>
-            <td class="fw-bold">
-                ${rupiah(item.jumlah)}
+
+            <td>
+                ${tanggal}
             </td>
+
+            <td>
+                ${item.nama}
+            </td>
+
+            <td>
+
+                <span class="badge ${
+                    item.tipe === "Pemasukan"
+                        ? "bg-success"
+                        : "bg-danger"
+                }">
+
+                    ${item.jenis}
+
+                </span>
+
+            </td>
+
+            <td class="${
+                item.tipe === "Pemasukan"
+                    ? "text-success"
+                    : "text-danger"
+            } fw-bold">
+
+                ${rupiah(item.jumlah)}
+
+            </td>
+
         `;
 
         tbody.appendChild(tr);
