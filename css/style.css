@@ -7,6 +7,12 @@ body {
     background: linear-gradient(135deg, #FFF8DC 0%, #FFFFFF 100%);
 }
 
+/* DARK MODE */
+body.dark-mode {
+    background: #121212 !important;
+    color: #ffffff !important;
+}
+
 /* Container mengikuti layar */
 .mobile-container {
     width: 100%;
@@ -89,4 +95,19 @@ button {
         padding: 20px;
     }
 
+}
+
+/* ========================= */
+/* DARK MODE */
+/* ========================= */
+
+html,
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode {
+    background: #121212 !important;
+    background-image: none !important;
+    color: #ffffff !important;
 }
