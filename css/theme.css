@@ -306,3 +306,16 @@ body.dark-mode {
 body.dark-mode.bg-light {
     background-color: #121212 !important;
 }
+
+html {
+    background-color: #f8f9fa;
+}
+
+html:has(body.dark-mode) {
+    background-color: #121212 !important;
+}
+
+body.dark-mode {
+    background-color: #121212 !important;
+    min-height: 100vh;
+}
