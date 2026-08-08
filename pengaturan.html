@@ -346,21 +346,29 @@ function simpanPengaturan() {
 
 function terapkanTema(tema) {
 
+    let gunakanGelap = false;
+
     if (tema === "dark") {
 
-        document.body.style.backgroundColor =
-            "#212529";
+        gunakanGelap = true;
 
-        document.body.style.color =
-            "#fff";
+    } else if (tema === "system") {
+
+        gunakanGelap =
+            window.matchMedia(
+                "(prefers-color-scheme: dark)"
+            ).matches;
+
+    }
+
+
+    if (gunakanGelap) {
+
+        document.body.classList.add("dark-mode");
 
     } else {
 
-        document.body.style.backgroundColor =
-            "#f8f9fa";
-
-        document.body.style.color =
-            "#212529";
+        document.body.classList.remove("dark-mode");
 
     }
 
