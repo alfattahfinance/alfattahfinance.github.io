@@ -148,34 +148,39 @@
 function ubahSatuan(){
 
     const jenis =
-    document.getElementById("jenis").value;
+        document.getElementById("jenis").value;
 
     const satuan =
-    document.getElementById("satuan");
+        document.getElementById("satuan");
 
     const label =
-    document.getElementById("labelJumlah");
+        document.getElementById("labelJumlah");
 
-    if(jenis=="Beras"){
+    if (jenis == "Beras") {
 
-        satuan.value="Liter";
+        satuan.value = "Liter";
 
-        label.innerHTML="Jumlah (Liter)";
+        label.innerHTML = "Jumlah (Liter)";
 
-        document.getElementById("jumlah").placeholder="Masukkan jumlah liter";
+        document.getElementById("jumlah").placeholder =
+            "Masukkan jumlah liter";
 
-    }
+    } else {
 
-    else{
+        satuan.value = "Rupiah";
 
-        satuan.value="Rupiah";
+        label.innerHTML = "Nominal (Rp)";
 
-        label.innerHTML="Nominal (Rp)";
-
-        document.getElementById("jumlah").placeholder="Masukkan nominal";
+        document.getElementById("jumlah").placeholder =
+            "Masukkan nominal";
 
     }
 
 }
 
+</script>
+
 <script type="module" src="js/pengeluaran.js?v=2"></script>
+
+</body>
+</html>
