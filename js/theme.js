@@ -13,28 +13,82 @@
     const tema =
         data.tema || "light";
 
+
+    // ======================================
+    // CEK TEMA SISTEM HP
+    // ======================================
+
+    const sistemGelap =
+        window.matchMedia &&
+        window.matchMedia(
+            "(prefers-color-scheme: dark)"
+        ).matches;
+
+
+    // ======================================
+    // TENTUKAN TEMA
+    // ======================================
+
+    let gunakanGelap = false;
+
+
     if (tema === "dark") {
 
+        gunakanGelap = true;
+
+    } else if (tema === "system") {
+
+        gunakanGelap = sistemGelap;
+
+    }
+
+
+    // ======================================
+    // TERAPKAN
+    // ======================================
+
+    if (gunakanGelap) {
+
         document.body.classList.add("dark-mode");
-
-        document.documentElement.style.backgroundColor =
-            "#121212";
-
-        document.body.style.setProperty(
-            "background-color",
-            "#121212",
-            "important"
-        );
 
     } else {
 
         document.body.classList.remove("dark-mode");
 
-        document.documentElement.style.backgroundColor =
-            "";
+    }
 
-        document.body.style.removeProperty(
-            "background-color"
+
+    // ======================================
+    // IKUTI PERUBAHAN TEMA HP
+    // ======================================
+
+    if (tema === "system") {
+
+        const mediaQuery =
+            window.matchMedia(
+                "(prefers-color-scheme: dark)"
+            );
+
+
+        mediaQuery.addEventListener(
+            "change",
+            function (event) {
+
+                if (event.matches) {
+
+                    document.body.classList.add(
+                        "dark-mode"
+                    );
+
+                } else {
+
+                    document.body.classList.remove(
+                        "dark-mode"
+                    );
+
+                }
+
+            }
         );
 
     }
