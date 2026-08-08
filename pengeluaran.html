@@ -145,10 +145,10 @@
 
 <script>
 
-function ubahSatuan(){
+function ubahSatuan() {
 
     const jenis =
-    document.getElementById("jenisPengeluaran").value;
+        document.getElementById("jenis").value;
 
     const satuan =
         document.getElementById("satuan");
@@ -156,22 +156,26 @@ function ubahSatuan(){
     const label =
         document.getElementById("labelJumlah");
 
-    if (jenis == "Beras") {
+    const jumlah =
+        document.getElementById("jumlah");
+
+
+    if (jenis === "Beras") {
 
         satuan.value = "Liter";
 
-        label.innerHTML = "Jumlah (Liter)";
+        label.textContent = "Jumlah (Liter)";
 
-        document.getElementById("jumlah").placeholder =
+        jumlah.placeholder =
             "Masukkan jumlah liter";
 
     } else {
 
         satuan.value = "Rupiah";
 
-        label.innerHTML = "Nominal (Rp)";
+        label.textContent = "Nominal (Rp)";
 
-       document.getElementById("nominal") ).placeholder =
+        jumlah.placeholder =
             "Masukkan nominal";
 
     }
