@@ -1,3 +1,5 @@
+alert("PENGELUARAN.JS BERHASIL DIMUAT");
+
 // ======================================
 // Pengeluaran Pondok
 // js/pengeluaran.js
