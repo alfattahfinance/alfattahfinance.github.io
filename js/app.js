@@ -630,6 +630,17 @@ function tampilkanTabelLaporan() {
     const tahunDipilih =
         Number(tahunEl?.value);
 
+    const jenisEl =
+    document.getElementById("filterJenis");
+
+    const jenisDipilih =
+    jenisEl?.value || "semua";
+  
+    const jenisEl =
+    document.getElementById("filterJenis");
+
+    const jenisDipilih =
+    jenisEl?.value || "semua";
 
     tbody.innerHTML = "";
 
@@ -655,6 +666,13 @@ function tampilkanTabelLaporan() {
                 return;
             }
 
+         if (
+              jenisDipilih !== "semua" &&
+              data.jenis !== jenisDipilih
+) {
+              return;
+}
+          
         }
 
         transaksi.push({
