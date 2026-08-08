@@ -284,3 +284,25 @@ body.dark-mode .dropdown-item:hover {
 body.dark-mode hr {
     border-color: #444 !important;
 }
+
+/* ======================================
+   PAKSA BACKGROUND DARK MODE
+   ====================================== */
+
+html,
+body {
+    min-height: 100%;
+}
+
+html:has(body.dark-mode) {
+    background-color: #121212 !important;
+}
+
+body.dark-mode {
+    background-color: #121212 !important;
+    color: #f1f1f1 !important;
+}
+
+body.dark-mode.bg-light {
+    background-color: #121212 !important;
+}
