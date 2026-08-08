@@ -5,58 +5,419 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Pengaturan</title>
+    <title>Pengaturan | Syahriyyah App</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
+
+    <style>
+
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .mobile-container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .custom-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .setting-item {
+            border: none;
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #198754;
+            font-weight: 600;
+        }
+
+    </style>
+
 </head>
 
 <body>
 
-<div class="container py-4">
+<div class="container-fluid mobile-container py-4">
 
-    <h2 class="text-success mb-4">
-        <i class="bi bi-gear-fill"></i>
-        Pengaturan
-    </h2>
+    <!-- Header -->
 
-    <div class="card shadow-sm border-0">
-        <div class="list-group list-group-flush">
+    <div class="d-flex align-items-center mb-4">
 
-            <a href="#" class="list-group-item list-group-item-action">
-                <i class="bi bi-person-circle me-2"></i>
-                Profil Admin
-            </a>
+        <a href="index.html" class="back-btn me-3">
+            <i class="bi bi-arrow-left fs-4"></i>
+        </a>
 
-            <a href="#" class="list-group-item list-group-item-action">
-                <i class="bi bi-house-door-fill me-2"></i>
-                Data Pondok
-            </a>
+        <div>
+            <h4 class="fw-bold mb-0">
+                Pengaturan Aplikasi
+            </h4>
 
-            <a href="#" class="list-group-item list-group-item-action">
-                <i class="bi bi-key-fill me-2"></i>
-                Ubah Password
-            </a>
-
-            <a href="#" class="list-group-item list-group-item-action text-danger">
-                <i class="bi bi-box-arrow-right me-2"></i>
-                Keluar
-            </a>
-
+            <small class="text-muted">
+                Atur tampilan dan informasi aplikasi
+            </small>
         </div>
+
     </div>
 
-    <a href="index.html" class="btn btn-secondary w-100 mt-4">
-        ← Kembali ke Dashboard
-    </a>
+
+    <!-- INFORMASI PONDOK -->
+
+    <div class="card custom-card mb-4">
+
+        <div class="card-body">
+
+            <h5 class="fw-bold mb-3">
+                <i class="bi bi-building text-success"></i>
+                Informasi Pondok
+            </h5>
+
+
+            <div class="setting-item">
+
+                <label class="form-label fw-semibold">
+                    Nama Pondok
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    id="namaPondok"
+                    placeholder="Nama pondok">
+
+            </div>
+
+
+            <div class="setting-item">
+
+                <label class="form-label fw-semibold">
+                    Keterangan Dashboard
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    id="subJudul"
+                    placeholder="Contoh: Dashboard Keuangan Pondok">
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PENGATURAN KEUANGAN -->
+
+    <div class="card custom-card mb-4">
+
+        <div class="card-body">
+
+            <h5 class="fw-bold mb-3">
+                <i class="bi bi-cash-coin text-success"></i>
+                Pengaturan Keuangan
+            </h5>
+
+
+            <div class="setting-item">
+
+                <label class="form-label fw-semibold">
+                    Mata Uang
+                </label>
+
+                <select class="form-select" id="mataUang">
+
+                    <option value="Rupiah">
+                        Rupiah (Rp)
+                    </option>
+
+                    <option value="USD">
+                        Dollar ($)
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TAMPILAN -->
+
+    <div class="card custom-card mb-4">
+
+        <div class="card-body">
+
+            <h5 class="fw-bold mb-3">
+                <i class="bi bi-palette text-success"></i>
+                Tampilan
+            </h5>
+
+
+            <div class="setting-item">
+
+                <label class="form-label fw-semibold">
+                    Tema Aplikasi
+                </label>
+
+                <select class="form-select" id="tema">
+
+                    <option value="light">
+                        ☀️ Terang
+                    </option>
+
+                    <option value="dark">
+                        🌙 Gelap
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TOMBOL -->
+
+    <div class="d-grid gap-2 mb-4">
+
+        <button
+            class="btn btn-success btn-lg"
+            onclick="simpanPengaturan()">
+
+            <i class="bi bi-save"></i>
+            Simpan Pengaturan
+
+        </button>
+
+
+        <button
+            class="btn btn-outline-danger"
+            onclick="resetPengaturan()">
+
+            <i class="bi bi-arrow-counterclockwise"></i>
+            Kembalikan Pengaturan Awal
+
+        </button>
+
+    </div>
+
+
+    <!-- VERSI -->
+
+    <div class="text-center text-muted">
+
+        <small>
+            Syahriyyah App v2.0
+        </small>
+
+    </div>
 
 </div>
 
+
+<script>
+
+
+// ======================================
+// PENGATURAN DEFAULT
+// ======================================
+
+const pengaturanDefault = {
+
+    namaPondok:
+        "Ribath Madrasah Al-Fattah",
+
+    subJudul:
+        "Dashboard Keuangan Pondok",
+
+    mataUang:
+        "Rupiah",
+
+    tema:
+        "light"
+
+};
+
+
+// ======================================
+// MUAT PENGATURAN
+// ======================================
+
+function muatPengaturan() {
+
+    const data =
+        JSON.parse(
+            localStorage.getItem("pengaturanAplikasi")
+        ) || pengaturanDefault;
+
+
+    document.getElementById("namaPondok").value =
+        data.namaPondok;
+
+    document.getElementById("subJudul").value =
+        data.subJudul;
+
+    document.getElementById("mataUang").value =
+        data.mataUang;
+
+    document.getElementById("tema").value =
+        data.tema;
+
+}
+
+
+// ======================================
+// SIMPAN PENGATURAN
+// ======================================
+
+function simpanPengaturan() {
+
+    const data = {
+
+        namaPondok:
+            document.getElementById("namaPondok").value.trim(),
+
+        subJudul:
+            document.getElementById("subJudul").value.trim(),
+
+        mataUang:
+            document.getElementById("mataUang").value,
+
+        tema:
+            document.getElementById("tema").value
+
+    };
+
+
+    if (!data.namaPondok) {
+
+        alert("Nama pondok belum diisi.");
+
+        return;
+
+    }
+
+
+    localStorage.setItem(
+        "pengaturanAplikasi",
+        JSON.stringify(data)
+    );
+
+
+    terapkanTema(data.tema);
+
+
+    alert(
+        "✅ Pengaturan berhasil disimpan!"
+    );
+
+}
+
+
+// ======================================
+// TEMA
+// ======================================
+
+function terapkanTema(tema) {
+
+    if (tema === "dark") {
+
+        document.body.style.backgroundColor =
+            "#212529";
+
+        document.body.style.color =
+            "#fff";
+
+    } else {
+
+        document.body.style.backgroundColor =
+            "#f8f9fa";
+
+        document.body.style.color =
+            "#212529";
+
+    }
+
+}
+
+
+// ======================================
+// RESET
+// ======================================
+
+function resetPengaturan() {
+
+    const yakin =
+        confirm(
+            "Apakah kamu yakin ingin mengembalikan pengaturan awal?"
+        );
+
+
+    if (!yakin) return;
+
+
+    localStorage.removeItem(
+        "pengaturanAplikasi"
+    );
+
+
+    muatPengaturan();
+
+    terapkanTema("light");
+
+
+    alert(
+        "✅ Pengaturan dikembalikan ke awal."
+    );
+
+}
+
+
+// ======================================
+// JALANKAN
+// ======================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        muatPengaturan();
+
+        const data =
+            JSON.parse(
+                localStorage.getItem(
+                    "pengaturanAplikasi"
+                )
+            ) || pengaturanDefault;
+
+        terapkanTema(data.tema);
+
+    }
+);
+
+</script>
+
 </body>
+
 </html>
