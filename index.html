@@ -86,12 +86,13 @@
                  height="60"
                  alt="Logo Ribath Madrasah Al-Fattah">
             <div class="ms-3">
-                <h5 class="mb-1 text-success fw-bold">
-                    Ribath Madrasah Al-Fattah
-                </h5>
-                 <small class="text-secondary">
-                     Dashboard Keuangan Pondok
-                 </small>
+                <h5 id="namaPondokDashboard" class="mb-1 text-success fw-bold">
+                       Ribath Madrasah Al-Fattah
+               </h5>
+
+              <small id="subJudulDashboard" class="text-secondary">
+                        Dashboard Keuangan Pondok
+             </small>
             </div>
         </div>
     </div>
@@ -236,6 +237,37 @@ function tampilkanModeBeras() {
 jenis.addEventListener("change", tampilkanModeBeras);
 tampilkanModeBeras();
 </script>
-    
+
+<!-- Pengaturan Aplikasi -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const data =
+        JSON.parse(
+            localStorage.getItem("pengaturanAplikasi")
+        );
+
+    if (!data) return;
+
+    const namaPondok =
+        document.getElementById("namaPondokDashboard");
+
+    const subJudul =
+        document.getElementById("subJudulDashboard");
+
+    if (namaPondok && data.namaPondok) {
+        namaPondok.textContent =
+            data.namaPondok;
+    }
+
+    if (subJudul && data.subJudul) {
+        subJudul.textContent =
+            data.subJudul;
+    }
+
+});
+</script>
+
 </body>
 </html>
+    
