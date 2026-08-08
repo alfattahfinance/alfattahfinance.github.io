@@ -3,7 +3,7 @@
 // THEME MANAGER
 // ======================================
 
-(function () {
+function terapkanTemaGlobal() {
 
     const data =
         JSON.parse(
@@ -13,24 +13,7 @@
     const tema =
         data.tema || "light";
 
-
-    // ======================================
-    // CEK TEMA SISTEM HP
-    // ======================================
-
-    const sistemGelap =
-        window.matchMedia &&
-        window.matchMedia(
-            "(prefers-color-scheme: dark)"
-        ).matches;
-
-
-    // ======================================
-    // TENTUKAN TEMA
-    // ======================================
-
     let gunakanGelap = false;
-
 
     if (tema === "dark") {
 
@@ -38,59 +21,39 @@
 
     } else if (tema === "system") {
 
-        gunakanGelap = sistemGelap;
-
+        gunakanGelap =
+            window.matchMedia(
+                "(prefers-color-scheme: dark)"
+            ).matches;
     }
 
 
-    // ======================================
-    // TERAPKAN
-    // ======================================
-
     if (gunakanGelap) {
 
+        document.documentElement.classList.add("dark-mode");
         document.body.classList.add("dark-mode");
 
     } else {
 
+        document.documentElement.classList.remove("dark-mode");
         document.body.classList.remove("dark-mode");
 
     }
 
-
-    // ======================================
-    // IKUTI PERUBAHAN TEMA HP
-    // ======================================
-
-    if (tema === "system") {
-
-        const mediaQuery =
-            window.matchMedia(
-                "(prefers-color-scheme: dark)"
-            );
+}
 
 
-        mediaQuery.addEventListener(
-            "change",
-            function (event) {
+// Jalankan setelah halaman siap
 
-                if (event.matches) {
+if (document.readyState === "loading") {
 
-                    document.body.classList.add(
-                        "dark-mode"
-                    );
+    document.addEventListener(
+        "DOMContentLoaded",
+        terapkanTemaGlobal
+    );
 
-                } else {
+} else {
 
-                    document.body.classList.remove(
-                        "dark-mode"
-                    );
+    terapkanTemaGlobal();
 
-                }
-
-            }
-        );
-
-    }
-
-})();
+}
