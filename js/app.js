@@ -7,9 +7,10 @@ import { db } from "./firebase-config.js";
 
 import {
     collection,
-    getDocs
+    getDocs,
+    addDoc,
+    serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
-
 
 // ======================================
 // FORMAT RUPIAH
@@ -1563,6 +1564,111 @@ async function loadSemua() {
 
 }
 
+// ======================================
+// SIMPAN PENGELUARAN
+// ======================================
+
+async function simpanPengeluaran() {
+
+    const jenisEl =
+        document.getElementById("jenisPengeluaran");
+
+    const keteranganEl =
+        document.getElementById("keterangan");
+
+    const tanggalEl =
+        document.getElementById("tanggal");
+
+    const nominalEl =
+        document.getElementById("nominal");
+
+    const satuanEl =
+        document.getElementById("satuan");
+
+
+    const jenis =
+        jenisEl?.value || "";
+
+    const keterangan =
+        keteranganEl?.value.trim() || "";
+
+    const tanggal =
+        tanggalEl?.value || "";
+
+    const nominal =
+        Number(nominalEl?.value || 0);
+
+    const satuan =
+        satuanEl?.value || "Rupiah";
+
+
+    // Validasi
+    if (!jenis) {
+        alert("Silakan pilih jenis pengeluaran.");
+        return;
+    }
+
+    if (!keterangan) {
+        alert("Silakan isi keterangan.");
+        return;
+    }
+
+    if (!tanggal) {
+        alert("Silakan pilih tanggal.");
+        return;
+    }
+
+    if (nominal <= 0) {
+        alert("Nominal harus lebih dari 0.");
+        return;
+    }
+
+
+    try {
+
+        await addDoc(
+            collection(db, "expenses"),
+            {
+                jenis: jenis,
+                keterangan: keterangan,
+                tanggal: tanggal,
+                jumlah: nominal,
+                nominal: nominal,
+                satuan: satuan,
+                createdAt: serverTimestamp()
+            }
+        );
+
+
+        alert("Pengeluaran berhasil disimpan!");
+
+
+        // Kosongkan form
+        if (jenisEl) jenisEl.value = "";
+        if (keteranganEl) keteranganEl.value = "";
+        if (tanggalEl) tanggalEl.value = "";
+        if (nominalEl) nominalEl.value = "";
+
+
+        // Muat ulang data Firebase
+        await loadSemua();
+
+
+    } catch (error) {
+
+        console.error(
+            "Gagal menyimpan pengeluaran:",
+            error
+        );
+
+        alert(
+            "Gagal menyimpan pengeluaran:\n" +
+            error.message
+        );
+
+    }
+
+}
 
 // ======================================
 // EVENT GLOBAL
@@ -1572,12 +1678,23 @@ window.addEventListener(
     "DOMContentLoaded",
     () => {
 
-
         // ==================================
         // LOAD AWAL
         // ==================================
 
         loadSemua();
+
+
+        // ==================================
+        // TOMBOL SIMPAN PENGELUARAN
+        // ==================================
+
+        document
+            .getElementById("simpanPengeluaran")
+            ?.addEventListener(
+                "click",
+                simpanPengeluaran
+            );
 
 
         // ==================================
