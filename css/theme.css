@@ -158,3 +158,129 @@ body.dark-mode.bg-light {
 body.dark-mode {
     min-height: 100vh;
 }
+
+/* ======================================
+   DARK MODE - GLOBAL
+   ====================================== */
+
+html {
+    background-color: #f8f9fa;
+}
+
+html:has(body.dark-mode) {
+    background-color: #121212 !important;
+}
+
+body.dark-mode,
+body.dark-mode.bg-light {
+    background-color: #121212 !important;
+    color: #f1f1f1 !important;
+}
+
+
+/* Container utama */
+
+body.dark-mode .container,
+body.dark-mode .container-fluid {
+    color: #f1f1f1;
+}
+
+
+/* Card */
+
+body.dark-mode .card,
+body.dark-mode .custom-card {
+    background-color: #1e1e1e !important;
+    color: #f1f1f1 !important;
+}
+
+
+/* Input */
+
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+    background-color: #2b2b2b !important;
+    color: #fff !important;
+    border-color: #555 !important;
+}
+
+
+/* Option dropdown */
+
+body.dark-mode option {
+    background-color: #2b2b2b;
+    color: #fff;
+}
+
+
+/* List */
+
+body.dark-mode .list-group-item {
+    background-color: #1e1e1e !important;
+    color: #f1f1f1 !important;
+    border-color: #444 !important;
+}
+
+
+/* Menu */
+
+body.dark-mode .menu-btn {
+    background-color: #1e1e1e !important;
+    color: #f1f1f1 !important;
+    border-color: #444 !important;
+}
+
+
+/* Teks */
+
+body.dark-mode .text-dark {
+    color: #fff !important;
+}
+
+body.dark-mode .text-muted,
+body.dark-mode .text-secondary {
+    color: #adb5bd !important;
+}
+
+
+/* Tabel */
+
+body.dark-mode table {
+    color: #fff !important;
+}
+
+body.dark-mode .table-light {
+    background-color: #2b2b2b !important;
+    color: #fff !important;
+}
+
+
+/* Modal */
+
+body.dark-mode .modal-content {
+    background-color: #1e1e1e !important;
+    color: #fff !important;
+}
+
+
+/* Dropdown */
+
+body.dark-mode .dropdown-menu {
+    background-color: #1e1e1e !important;
+}
+
+body.dark-mode .dropdown-item {
+    color: #fff !important;
+}
+
+body.dark-mode .dropdown-item:hover {
+    background-color: #333 !important;
+}
+
+
+/* Garis */
+
+body.dark-mode hr {
+    border-color: #444 !important;
+}
