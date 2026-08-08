@@ -12,12 +12,16 @@ import {
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
+
 // ======================================
 // FORMAT RUPIAH
 // ======================================
 
 function rupiah(nilai) {
-    return "Rp " + Number(nilai || 0).toLocaleString("id-ID");
+
+    return "Rp " +
+        Number(nilai || 0).toLocaleString("id-ID");
+
 }
 
 
@@ -26,8 +30,11 @@ function rupiah(nilai) {
 // ======================================
 
 let totalSantri = 0;
+
 let totalMasuk = 0;
+
 let totalKeluar = 0;
+
 let stokBeras = 0;
 
 
@@ -36,6 +43,7 @@ let stokBeras = 0;
 // ======================================
 
 let semuaPembayaran = [];
+
 let semuaPengeluaran = [];
 
 
@@ -44,37 +52,55 @@ let semuaPengeluaran = [];
 // ======================================
 
 let masukHariIni = 0;
+
 let masukBulanIni = 0;
+
 let masukTahunIni = 0;
 
 let keluarHariIni = 0;
+
 let keluarBulanIni = 0;
+
 let keluarTahunIni = 0;
 
 
 // ======================================
-// REKAP JENIS
+// REKAP JENIS PEMASUKAN
 // ======================================
 
 const pemasukan = {
 
     SPP: 0,
+
     Syahriyyah: 0,
+
     Infaq: 0,
+
     Kas: 0,
+
     Beras: 0,
+
     Lainnya: 0
 
 };
 
 
+// ======================================
+// REKAP JENIS PENGELUARAN
+// ======================================
+
 const pengeluaran = {
 
     SPP: 0,
+
     Syahriyyah: 0,
+
     Infaq: 0,
+
     Kas: 0,
+
     Beras: 0,
+
     Lainnya: 0
 
 };
@@ -87,15 +113,23 @@ const pengeluaran = {
 function resetData() {
 
     totalMasuk = 0;
+
     totalKeluar = 0;
+
     stokBeras = 0;
 
+
     masukHariIni = 0;
+
     masukBulanIni = 0;
+
     masukTahunIni = 0;
 
+
     keluarHariIni = 0;
+
     keluarBulanIni = 0;
+
     keluarTahunIni = 0;
 
 
@@ -129,7 +163,9 @@ function bacaTanggal(data) {
 
 
     if (!nilaiTanggal) {
+
         return null;
+
     }
 
 
@@ -163,6 +199,7 @@ function bacaTanggal(data) {
         const tanggal =
             new Date(nilaiTanggal);
 
+
         if (!isNaN(tanggal.getTime())) {
 
             return tanggal;
@@ -178,54 +215,95 @@ function bacaTanggal(data) {
 
 
 // ======================================
-// CEK TANGGAL
+// CEK HARI INI
 // ======================================
 
 function tanggalHariIni(tanggal) {
 
-    if (!tanggal) return false;
+    if (!tanggal) {
 
-    const sekarang = new Date();
+        return false;
+
+    }
+
+
+    const sekarang =
+        new Date();
+
 
     return (
 
-        tanggal.getDate() === sekarang.getDate() &&
+        tanggal.getDate() ===
+        sekarang.getDate()
 
-        tanggal.getMonth() === sekarang.getMonth() &&
+        &&
 
-        tanggal.getFullYear() === sekarang.getFullYear()
+        tanggal.getMonth() ===
+        sekarang.getMonth()
+
+        &&
+
+        tanggal.getFullYear() ===
+        sekarang.getFullYear()
 
     );
 
 }
 
+
+// ======================================
+// CEK BULAN INI
+// ======================================
 
 function tanggalBulanIni(tanggal) {
 
-    if (!tanggal) return false;
+    if (!tanggal) {
 
-    const sekarang = new Date();
+        return false;
+
+    }
+
+
+    const sekarang =
+        new Date();
+
 
     return (
 
-        tanggal.getMonth() === sekarang.getMonth() &&
+        tanggal.getMonth() ===
+        sekarang.getMonth()
 
-        tanggal.getFullYear() === sekarang.getFullYear()
+        &&
+
+        tanggal.getFullYear() ===
+        sekarang.getFullYear()
 
     );
 
 }
 
 
+// ======================================
+// CEK TAHUN INI
+// ======================================
+
 function tanggalTahunIni(tanggal) {
 
-    if (!tanggal) return false;
+    if (!tanggal) {
 
-    const sekarang = new Date();
+        return false;
+
+    }
+
+
+    const sekarang =
+        new Date();
+
 
     return (
 
-        tanggal.getFullYear() === sekarang.getFullYear()
+        tanggal.getFullYear() ===
+        sekarang.getFullYear()
 
     );
 
@@ -241,29 +319,33 @@ async function ambilDataFirebase() {
     resetData();
 
 
+    // SANTRI
     const santriSnapshot =
         await getDocs(
             collection(db, "santri")
         );
 
 
+    // PEMBAYARAN
     const pembayaranSnapshot =
         await getDocs(
             collection(db, "payments")
         );
 
 
+    // PENGELUARAN
     const pengeluaranSnapshot =
         await getDocs(
             collection(db, "expenses")
         );
 
 
-    // ======================================
+    // ==================================
     // SIMPAN PEMBAYARAN
-    // ======================================
+    // ==================================
 
     semuaPembayaran = [];
+
 
     pembayaranSnapshot.forEach(item => {
 
@@ -278,11 +360,12 @@ async function ambilDataFirebase() {
     });
 
 
-    // ======================================
+    // ==================================
     // SIMPAN PENGELUARAN
-    // ======================================
+    // ==================================
 
     semuaPengeluaran = [];
+
 
     pengeluaranSnapshot.forEach(item => {
 
@@ -304,6 +387,7 @@ async function ambilDataFirebase() {
     return {
 
         pembayaranSnapshot,
+
         pengeluaranSnapshot
 
     };
@@ -319,7 +403,9 @@ function hitungPemasukan(snapshot) {
 
     snapshot.forEach(item => {
 
-        const data = item.data();
+        const data =
+            item.data();
+
 
         const tanggal =
             bacaTanggal(data);
@@ -342,19 +428,27 @@ function hitungPemasukan(snapshot) {
 
             if (tanggal) {
 
-                if (tanggalHariIni(tanggal)) {
+                if (
+                    tanggalHariIni(tanggal)
+                ) {
 
                     masukHariIni += liter;
 
                 }
 
-                if (tanggalBulanIni(tanggal)) {
+
+                if (
+                    tanggalBulanIni(tanggal)
+                ) {
 
                     masukBulanIni += liter;
 
                 }
 
-                if (tanggalTahunIni(tanggal)) {
+
+                if (
+                    tanggalTahunIni(tanggal)
+                ) {
 
                     masukTahunIni += liter;
 
@@ -373,7 +467,11 @@ function hitungPemasukan(snapshot) {
         // ==================================
 
         const nominal =
-            Number(data.nominal || 0);
+            Number(
+                data.nominal ||
+                data.jumlah ||
+                0
+            );
 
 
         totalMasuk += nominal;
@@ -381,19 +479,27 @@ function hitungPemasukan(snapshot) {
 
         if (tanggal) {
 
-            if (tanggalHariIni(tanggal)) {
+            if (
+                tanggalHariIni(tanggal)
+            ) {
 
                 masukHariIni += nominal;
 
             }
 
-            if (tanggalBulanIni(tanggal)) {
+
+            if (
+                tanggalBulanIni(tanggal)
+            ) {
 
                 masukBulanIni += nominal;
 
             }
 
-            if (tanggalTahunIni(tanggal)) {
+
+            if (
+                tanggalTahunIni(tanggal)
+            ) {
 
                 masukTahunIni += nominal;
 
@@ -403,7 +509,7 @@ function hitungPemasukan(snapshot) {
 
 
         // ==================================
-        // JENIS PEMBAYARAN
+        // JENIS
         // ==================================
 
         switch (data.jenis) {
@@ -462,7 +568,9 @@ function hitungPengeluaran(snapshot) {
 
     snapshot.forEach(item => {
 
-        const data = item.data();
+        const data =
+            item.data();
+
 
         const tanggal =
             bacaTanggal(data);
@@ -485,19 +593,27 @@ function hitungPengeluaran(snapshot) {
 
             if (tanggal) {
 
-                if (tanggalHariIni(tanggal)) {
+                if (
+                    tanggalHariIni(tanggal)
+                ) {
 
                     keluarHariIni += liter;
 
                 }
 
-                if (tanggalBulanIni(tanggal)) {
+
+                if (
+                    tanggalBulanIni(tanggal)
+                ) {
 
                     keluarBulanIni += liter;
 
                 }
 
-                if (tanggalTahunIni(tanggal)) {
+
+                if (
+                    tanggalTahunIni(tanggal)
+                ) {
 
                     keluarTahunIni += liter;
 
@@ -528,19 +644,27 @@ function hitungPengeluaran(snapshot) {
 
         if (tanggal) {
 
-            if (tanggalHariIni(tanggal)) {
+            if (
+                tanggalHariIni(tanggal)
+            ) {
 
                 keluarHariIni += nominal;
 
             }
 
-            if (tanggalBulanIni(tanggal)) {
+
+            if (
+                tanggalBulanIni(tanggal)
+            ) {
 
                 keluarBulanIni += nominal;
 
             }
 
-            if (tanggalTahunIni(tanggal)) {
+
+            if (
+                tanggalTahunIni(tanggal)
+            ) {
 
                 keluarTahunIni += nominal;
 
@@ -550,7 +674,7 @@ function hitungPengeluaran(snapshot) {
 
 
         // ==================================
-        // JENIS PENGELUARAN
+        // JENIS
         // ==================================
 
         switch (data.jenis) {
@@ -675,60 +799,65 @@ function tampilkanDashboard() {
 
 
     // ==================================
-    // BERAS
+    // DASHBOARD BERAS
     // ==================================
 
     if (jenis === "beras") {
 
         if (mode === "liter") {
 
-            totalMasukEl &&
-                (
-                    totalMasukEl.textContent =
-                    pemasukan.Beras + " Liter"
-                );
+            if (totalMasukEl) {
+
+                totalMasukEl.textContent =
+                    pemasukan.Beras +
+                    " Liter";
+
+            }
 
 
-            totalKeluarEl &&
-                (
-                    totalKeluarEl.textContent =
-                    pengeluaran.Beras + " Liter"
-                );
+            if (totalKeluarEl) {
+
+                totalKeluarEl.textContent =
+                    pengeluaran.Beras +
+                    " Liter";
+
+            }
 
 
-            totalSaldoEl &&
-                (
-                    totalSaldoEl.textContent =
-                    stokBeras + " Liter"
-                );
+            if (totalSaldoEl) {
+
+                totalSaldoEl.textContent =
+                    stokBeras +
+                    " Liter";
+
+            }
 
 
-            masukEl &&
-                (
-                    masukEl.textContent =
-                    pemasukan.Beras + " Liter"
-                );
+            if (masukEl) {
+
+                masukEl.textContent =
+                    pemasukan.Beras +
+                    " Liter";
+
+            }
 
 
-            keluarEl &&
-                (
-                    keluarEl.textContent =
-                    pengeluaran.Beras + " Liter"
-                );
+            if (keluarEl) {
+
+                keluarEl.textContent =
+                    pengeluaran.Beras +
+                    " Liter";
+
+            }
 
 
-            saldoEl &&
-                (
-                    saldoEl.textContent =
-                    stokBeras + " Liter"
-                );
+            if (saldoEl) {
 
+                saldoEl.textContent =
+                    stokBeras +
+                    " Liter";
 
-            judulEl &&
-                (
-                    judulEl.textContent =
-                    "Beras"
-                );
+            }
 
         } else {
 
@@ -737,53 +866,60 @@ function tampilkanDashboard() {
                 pengeluaran.Beras;
 
 
-            totalMasukEl &&
-                (
-                    totalMasukEl.textContent =
-                    rupiah(pemasukan.Beras)
-                );
+            if (totalMasukEl) {
+
+                totalMasukEl.textContent =
+                    rupiah(pemasukan.Beras);
+
+            }
 
 
-            totalKeluarEl &&
-                (
-                    totalKeluarEl.textContent =
-                    rupiah(pengeluaran.Beras)
-                );
+            if (totalKeluarEl) {
+
+                totalKeluarEl.textContent =
+                    rupiah(pengeluaran.Beras);
+
+            }
 
 
-            totalSaldoEl &&
-                (
-                    totalSaldoEl.textContent =
-                    rupiah(saldo)
-                );
+            if (totalSaldoEl) {
+
+                totalSaldoEl.textContent =
+                    rupiah(saldo);
+
+            }
 
 
-            masukEl &&
-                (
-                    masukEl.textContent =
-                    rupiah(pemasukan.Beras)
-                );
+            if (masukEl) {
+
+                masukEl.textContent =
+                    rupiah(pemasukan.Beras);
+
+            }
 
 
-            keluarEl &&
-                (
-                    keluarEl.textContent =
-                    rupiah(pengeluaran.Beras)
-                );
+            if (keluarEl) {
+
+                keluarEl.textContent =
+                    rupiah(pengeluaran.Beras);
+
+            }
 
 
-            saldoEl &&
-                (
-                    saldoEl.textContent =
-                    rupiah(saldo)
-                );
+            if (saldoEl) {
+
+                saldoEl.textContent =
+                    rupiah(saldo);
+
+            }
+
+        }
 
 
-            judulEl &&
-                (
-                    judulEl.textContent =
-                    "Beras"
-                );
+        if (judulEl) {
+
+            judulEl.textContent =
+                "Beras";
 
         }
 
@@ -794,7 +930,7 @@ function tampilkanDashboard() {
 
 
     // ==================================
-    // JENIS UANG
+    // DASHBOARD UANG
     // ==================================
 
     const key =
@@ -813,53 +949,60 @@ function tampilkanDashboard() {
         masuk - keluar;
 
 
-    totalMasukEl &&
-        (
-            totalMasukEl.textContent =
-            rupiah(masuk)
-        );
+    if (totalMasukEl) {
+
+        totalMasukEl.textContent =
+            rupiah(masuk);
+
+    }
 
 
-    totalKeluarEl &&
-        (
-            totalKeluarEl.textContent =
-            rupiah(keluar)
-        );
+    if (totalKeluarEl) {
+
+        totalKeluarEl.textContent =
+            rupiah(keluar);
+
+    }
 
 
-    totalSaldoEl &&
-        (
-            totalSaldoEl.textContent =
-            rupiah(saldo)
-        );
+    if (totalSaldoEl) {
+
+        totalSaldoEl.textContent =
+            rupiah(saldo);
+
+    }
 
 
-    masukEl &&
-        (
-            masukEl.textContent =
-            rupiah(masuk)
-        );
+    if (masukEl) {
+
+        masukEl.textContent =
+            rupiah(masuk);
+
+    }
 
 
-    keluarEl &&
-        (
-            keluarEl.textContent =
-            rupiah(keluar)
-        );
+    if (keluarEl) {
+
+        keluarEl.textContent =
+            rupiah(keluar);
+
+    }
 
 
-    saldoEl &&
-        (
-            saldoEl.textContent =
-            rupiah(saldo)
-        );
+    if (saldoEl) {
+
+        saldoEl.textContent =
+            rupiah(saldo);
+
+    }
 
 
-    judulEl &&
-        (
-            judulEl.textContent =
-            key
-        );
+    if (judulEl) {
+
+        judulEl.textContent =
+            key;
+
+    }
 
 }
 
@@ -888,16 +1031,27 @@ function isiFilter() {
     const namaBulan = [
 
         "Januari",
+
         "Februari",
+
         "Maret",
+
         "April",
+
         "Mei",
+
         "Juni",
+
         "Juli",
+
         "Agustus",
+
         "September",
+
         "Oktober",
+
         "November",
+
         "Desember"
 
     ];
@@ -953,153 +1107,8 @@ function isiFilter() {
 }
 
 
-    // ==================================
-    // HITUNG PEMASUKAN
-    // ==================================
-
-    semuaPembayaran.forEach(data => {
-
-        const tanggal =
-            bacaTanggal(data);
-
-
-        if (!tanggal) {
-
-            return;
-
-        }
-
-
-        const jenis =
-            data.jenis || "";
-
-
-        // Filter jenis
-        if (
-            jenisDipilih !== "semua" &&
-            jenis !== jenisDipilih
-        ) {
-
-            return;
-
-        }
-
-
-        const nominal =
-            Number(
-                data.nominal ||
-                data.jumlah ||
-                0
-            );
-
-
-        // Hari ini
-        if (
-            tanggalHariIni(tanggal)
-        ) {
-
-            pemasukanHariIni += nominal;
-
-        }
-
-
-        // Bulan + tahun
-        if (
-
-            tanggal.getMonth() + 1 === bulanDipilih &&
-
-            tanggal.getFullYear() === tahunDipilih
-
-        ) {
-
-            pemasukanBulan += nominal;
-
-        }
-
-
-        // Tahun
-        if (
-            tanggal.getFullYear() === tahunDipilih
-        ) {
-
-            pemasukanTahun += nominal;
-
-        }
-
-    });
-
-
-    // ==================================
-    // HITUNG PENGELUARAN
-    // ==================================
-
-    semuaPengeluaran.forEach(data => {
-
-        const tanggal =
-            bacaTanggal(data);
-
-
-        if (!tanggal) {
-
-            return;
-
-        }
-
-
-        const jenis =
-            data.jenis || "";
-
-
-        // Filter jenis
-        if (
-            jenisDipilih !== "semua" &&
-            jenis !== jenisDipilih
-        ) {
-
-            return;
-
-        }
-
-
-        const nominal =
-            Number(
-                data.jumlah ||
-                data.nominal ||
-                0
-            );
-
-
-        // Bulan + tahun
-        if (
-
-            tanggal.getMonth() + 1 === bulanDipilih &&
-
-            tanggal.getFullYear() === tahunDipilih
-
-        ) {
-
-            pengeluaranBulan += nominal;
-
-        }
-
-    });
-
-
-    // ==================================
-    // SALDO
-    // ==================================
-
-    const saldoBulan =
-        pemasukanBulan -
-        pengeluaranBulan;
-
-
-    // ==================================
-    // TAMPILKAN KARTU
-    // ==================================
-
 // ======================================
-// TAMPILKAN LAPORAN SESUAI FILTER
+// TAMPILKAN LAPORAN
 // ======================================
 
 function tampilkanLaporan() {
@@ -1108,18 +1117,99 @@ function tampilkanLaporan() {
         document.getElementById("totalSaldo");
 
 
+    const hariIniEl =
+        document.getElementById("hariIni");
+
+
+    const bulanIniEl =
+        document.getElementById("bulanIni");
+
+
+    const tahunIniEl =
+        document.getElementById("tahunIni");
+
+
+    const pengeluaranHariIniEl =
+        document.getElementById(
+            "pengeluaranHariIni"
+        );
+
+
+    const pengeluaranBulanIniEl =
+        document.getElementById(
+            "pengeluaranBulanIni"
+        );
+
+
+    const pengeluaranTahunIniEl =
+        document.getElementById(
+            "pengeluaranTahunIni"
+        );
+
+
+    // ==================================
+    // CEK HALAMAN
+    // ==================================
+
+    if (
+        !totalSaldoEl &&
+        !hariIniEl &&
+        !bulanIniEl &&
+        !tahunIniEl &&
+        !pengeluaranHariIniEl &&
+        !pengeluaranBulanIniEl &&
+        !pengeluaranTahunIniEl
+    ) {
+
+        return;
+
+    }
+
+
+    // ==================================
+    // FILTER
+    // ==================================
+
+    const bulanEl =
+        document.getElementById("bulan");
+
+
+    const tahunEl =
+        document.getElementById("tahun");
+
+
+    const jenisEl =
+        document.getElementById("filterJenis");
+
+
+    const bulanDipilih =
+        Number(bulanEl?.value);
+
+
+    const tahunDipilih =
+        Number(tahunEl?.value);
+
+
+    const jenisDipilih =
+        jenisEl?.value || "semua";
+
 
     // ==================================
     // VARIABEL
     // ==================================
 
     let pemasukanBulan = 0;
+
     let pengeluaranBulan = 0;
 
+
     let pemasukanTahun = 0;
+
     let pengeluaranTahun = 0;
 
+
     let pemasukanHariIni = 0;
+
     let pengeluaranHariIni = 0;
 
 
@@ -1132,8 +1222,11 @@ function tampilkanLaporan() {
         const tanggal =
             bacaTanggal(data);
 
+
         if (!tanggal) {
+
             return;
+
         }
 
 
@@ -1141,11 +1234,14 @@ function tampilkanLaporan() {
             data.jenis || "";
 
 
+        // Filter jenis
         if (
             jenisDipilih !== "semua" &&
             jenis !== jenisDipilih
         ) {
+
             return;
+
         }
 
 
@@ -1157,18 +1253,33 @@ function tampilkanLaporan() {
             );
 
 
-        // Hari ini
-        if (tanggalHariIni(tanggal)) {
+        // ------------------------------
+        // HARI INI
+        // ------------------------------
+
+        if (
+            tanggalHariIni(tanggal)
+        ) {
 
             pemasukanHariIni += nominal;
 
         }
 
 
-        // Bulan yang dipilih
+        // ------------------------------
+        // BULAN TERPILIH
+        // ------------------------------
+
         if (
-            tanggal.getMonth() + 1 === bulanDipilih &&
-            tanggal.getFullYear() === tahunDipilih
+
+            tanggal.getMonth() + 1 ===
+            bulanDipilih
+
+            &&
+
+            tanggal.getFullYear() ===
+            tahunDipilih
+
         ) {
 
             pemasukanBulan += nominal;
@@ -1176,9 +1287,13 @@ function tampilkanLaporan() {
         }
 
 
-        // Tahun yang dipilih
+        // ------------------------------
+        // TAHUN TERPILIH
+        // ------------------------------
+
         if (
-            tanggal.getFullYear() === tahunDipilih
+            tanggal.getFullYear() ===
+            tahunDipilih
         ) {
 
             pemasukanTahun += nominal;
@@ -1197,8 +1312,11 @@ function tampilkanLaporan() {
         const tanggal =
             bacaTanggal(data);
 
+
         if (!tanggal) {
+
             return;
+
         }
 
 
@@ -1206,14 +1324,150 @@ function tampilkanLaporan() {
             data.jenis || "";
 
 
+        // Filter jenis
         if (
             jenisDipilih !== "semua" &&
             jenis !== jenisDipilih
         ) {
+
             return;
+
         }
 
-    //
+
+        const nominal =
+            Number(
+                data.jumlah ||
+                data.nominal ||
+                0
+            );
+
+
+        // ------------------------------
+        // HARI INI
+        // ------------------------------
+
+        if (
+            tanggalHariIni(tanggal)
+        ) {
+
+            pengeluaranHariIni += nominal;
+
+        }
+
+
+        // ------------------------------
+        // BULAN TERPILIH
+        // ------------------------------
+
+        if (
+
+            tanggal.getMonth() + 1 ===
+            bulanDipilih
+
+            &&
+
+            tanggal.getFullYear() ===
+            tahunDipilih
+
+        ) {
+
+            pengeluaranBulan += nominal;
+
+        }
+
+
+        // ------------------------------
+        // TAHUN TERPILIH
+        // ------------------------------
+
+        if (
+            tanggal.getFullYear() ===
+            tahunDipilih
+        ) {
+
+            pengeluaranTahun += nominal;
+
+        }
+
+    });
+
+
+    // ==================================
+    // HITUNG SALDO
+    // ==================================
+
+    const saldoBulan =
+        pemasukanBulan -
+        pengeluaranBulan;
+
+
+    // ==================================
+    // TAMPILKAN PEMASUKAN
+    // ==================================
+
+    if (totalSaldoEl) {
+
+        totalSaldoEl.textContent =
+            rupiah(saldoBulan);
+
+    }
+
+
+    if (hariIniEl) {
+
+        hariIniEl.textContent =
+            rupiah(pemasukanHariIni);
+
+    }
+
+
+    if (bulanIniEl) {
+
+        bulanIniEl.textContent =
+            rupiah(pemasukanBulan);
+
+    }
+
+
+    if (tahunIniEl) {
+
+        tahunIniEl.textContent =
+            rupiah(pemasukanTahun);
+
+    }
+
+
+    // ==================================
+    // TAMPILKAN PENGELUARAN
+    // ==================================
+
+    if (pengeluaranHariIniEl) {
+
+        pengeluaranHariIniEl.textContent =
+            rupiah(pengeluaranHariIni);
+
+    }
+
+
+    if (pengeluaranBulanIniEl) {
+
+        pengeluaranBulanIniEl.textContent =
+            rupiah(pengeluaranBulan);
+
+    }
+
+
+    if (pengeluaranTahunIniEl) {
+
+        pengeluaranTahunIniEl.textContent =
+            rupiah(pengeluaranTahun);
+
+    }
+
+}
+
+
 // ======================================
 // TAMPILKAN TABEL LAPORAN
 // ======================================
@@ -1221,7 +1475,9 @@ function tampilkanLaporan() {
 function tampilkanTabelLaporan() {
 
     const tbody =
-        document.getElementById("dataPembayaran");
+        document.getElementById(
+            "dataPembayaran"
+        );
 
 
     if (!tbody) {
@@ -1240,7 +1496,9 @@ function tampilkanTabelLaporan() {
 
 
     const jenisEl =
-        document.getElementById("filterJenis");
+        document.getElementById(
+            "filterJenis"
+        );
 
 
     const bulanDipilih =
@@ -1278,12 +1536,16 @@ function tampilkanTabelLaporan() {
         }
 
 
-        // Filter bulan & tahun
+        // Filter bulan dan tahun
         if (
 
-            tanggal.getMonth() + 1 !== bulanDipilih ||
+            tanggal.getMonth() + 1 !==
+            bulanDipilih
 
-            tanggal.getFullYear() !== tahunDipilih
+            ||
+
+            tanggal.getFullYear() !==
+            tahunDipilih
 
         ) {
 
@@ -1295,9 +1557,12 @@ function tampilkanTabelLaporan() {
         // Filter jenis
         if (
 
-            jenisDipilih !== "semua" &&
+            jenisDipilih !== "semua"
 
-            data.jenis !== jenisDipilih
+            &&
+
+            data.jenis !==
+            jenisDipilih
 
         ) {
 
@@ -1310,15 +1575,18 @@ function tampilkanTabelLaporan() {
 
             tanggal: tanggal,
 
+
             nama:
                 data.namaSantri ||
                 data.nama ||
                 data.santri ||
                 "-",
 
+
             jenis:
                 data.jenis ||
                 "-",
+
 
             jumlah:
                 Number(
@@ -1327,7 +1595,9 @@ function tampilkanTabelLaporan() {
                     0
                 ),
 
-            tipe: "Pemasukan"
+
+            tipe:
+                "Pemasukan"
 
         });
 
@@ -1351,12 +1621,16 @@ function tampilkanTabelLaporan() {
         }
 
 
-        // Filter bulan & tahun
+        // Filter bulan dan tahun
         if (
 
-            tanggal.getMonth() + 1 !== bulanDipilih ||
+            tanggal.getMonth() + 1 !==
+            bulanDipilih
 
-            tanggal.getFullYear() !== tahunDipilih
+            ||
+
+            tanggal.getFullYear() !==
+            tahunDipilih
 
         ) {
 
@@ -1368,9 +1642,12 @@ function tampilkanTabelLaporan() {
         // Filter jenis
         if (
 
-            jenisDipilih !== "semua" &&
+            jenisDipilih !== "semua"
 
-            data.jenis !== jenisDipilih
+            &&
+
+            data.jenis !==
+            jenisDipilih
 
         ) {
 
@@ -1383,15 +1660,19 @@ function tampilkanTabelLaporan() {
 
             tanggal: tanggal,
 
+
             nama:
+                data.keterangan ||
                 data.namaSantri ||
                 data.nama ||
                 data.santri ||
                 "-",
 
+
             jenis:
                 data.jenis ||
                 "-",
+
 
             jumlah:
                 Number(
@@ -1400,7 +1681,9 @@ function tampilkanTabelLaporan() {
                     0
                 ),
 
-            tipe: "Pengeluaran"
+
+            tipe:
+                "Pengeluaran"
 
         });
 
@@ -1454,6 +1737,7 @@ function tampilkanTabelLaporan() {
 
         `;
 
+
         return;
 
     }
@@ -1467,7 +1751,9 @@ function tampilkanTabelLaporan() {
 
         const tanggal =
             item.tanggal
-                ? item.tanggal.toLocaleDateString("id-ID")
+                ? item.tanggal.toLocaleDateString(
+                    "id-ID"
+                )
                 : "-";
 
 
@@ -1481,11 +1767,9 @@ function tampilkanTabelLaporan() {
                 ${tanggal}
             </td>
 
-
             <td>
                 ${item.nama}
             </td>
-
 
             <td>
 
@@ -1500,7 +1784,6 @@ function tampilkanTabelLaporan() {
                 </span>
 
             </td>
-
 
             <td class="${
                 item.tipe === "Pemasukan"
@@ -1523,129 +1806,129 @@ function tampilkanTabelLaporan() {
 
 
 // ======================================
-// LOAD SEMUA
-// ======================================
-
-async function loadSemua() {
-
-    try {
-
-        const data =
-            await ambilDataFirebase();
-
-
-        hitungPemasukan(
-            data.pembayaranSnapshot
-        );
-
-
-        hitungPengeluaran(
-            data.pengeluaranSnapshot
-        );
-
-
-        // Dashboard
-        tampilkanDashboard();
-
-
-        // Filter laporan
-        isiFilter();
-
-
-        // Laporan
-        tampilkanLaporan();
-
-
-        // Tabel
-        tampilkanTabelLaporan();
-
-
-    } catch (e) {
-
-        console.error(
-            "Gagal memuat data:",
-            e
-        );
-
-    }
-
-}
-
-        // ======================================
 // SIMPAN PENGELUARAN
 // ======================================
 
 async function simpanPengeluaran(event) {
 
-    // Mencegah form reload
+    // Mencegah reload
     if (event) {
+
         event.preventDefault();
+
     }
 
+
     const jenisEl =
-        document.getElementById("jenisPengeluaran");
+        document.getElementById(
+            "jenisPengeluaran"
+        );
+
 
     const keteranganEl =
-        document.getElementById("keterangan");
+        document.getElementById(
+            "keterangan"
+        );
+
 
     const tanggalEl =
-        document.getElementById("tanggal");
+        document.getElementById(
+            "tanggal"
+        );
+
 
     const nominalEl =
-        document.getElementById("nominal");
+        document.getElementById(
+            "nominal"
+        );
+
 
     const satuanEl =
-        document.getElementById("satuan");
+        document.getElementById(
+            "satuan"
+        );
 
 
     const jenis =
         jenisEl?.value || "";
 
+
     const keterangan =
         keteranganEl?.value.trim() || "";
+
 
     const tanggal =
         tanggalEl?.value || "";
 
+
     const nominal =
-        Number(nominalEl?.value || 0);
+        Number(
+            nominalEl?.value || 0
+        );
+
 
     const satuan =
         satuanEl?.value || "Rupiah";
 
 
-    // ======================================
+    // ==================================
     // VALIDASI
-    // ======================================
+    // ==================================
 
     if (!jenis) {
-        alert("Silakan pilih jenis pengeluaran.");
+
+        alert(
+            "Silakan pilih jenis pengeluaran."
+        );
+
         return;
+
     }
+
 
     if (!keterangan) {
-        alert("Silakan isi keterangan.");
+
+        alert(
+            "Silakan isi keterangan."
+        );
+
         return;
+
     }
+
 
     if (!tanggal) {
-        alert("Silakan pilih tanggal.");
+
+        alert(
+            "Silakan pilih tanggal."
+        );
+
         return;
+
     }
+
 
     if (nominal <= 0) {
-        alert("Nominal harus lebih dari 0.");
+
+        alert(
+            "Nominal harus lebih dari 0."
+        );
+
         return;
+
     }
 
 
-    // ======================================
-    // SIMPAN KE FIRESTORE
-    // ======================================
+    // ==================================
+    // SIMPAN FIRESTORE
+    // ==================================
 
     try {
 
-        console.log("Mencoba menyimpan pengeluaran...");
+        console.log(
+            "Mencoba menyimpan pengeluaran..."
+        );
+
 
         const dataPengeluaran = {
 
@@ -1661,7 +1944,8 @@ async function simpanPengeluaran(event) {
 
             satuan: satuan,
 
-            createdAt: serverTimestamp()
+            createdAt:
+                serverTimestamp()
 
         };
 
@@ -1674,8 +1958,14 @@ async function simpanPengeluaran(event) {
 
         const docRef =
             await addDoc(
-                collection(db, "expenses"),
+
+                collection(
+                    db,
+                    "expenses"
+                ),
+
                 dataPengeluaran
+
             );
 
 
@@ -1686,35 +1976,45 @@ async function simpanPengeluaran(event) {
 
 
         alert(
-            "Pengeluaran berhasil disimpan!\n\n" +
-            "ID: " + docRef.id
+            "Pengeluaran berhasil disimpan!"
         );
 
 
-        // ======================================
+        // ==================================
         // KOSONGKAN FORM
-        // ======================================
+        // ==================================
 
         if (jenisEl) {
+
             jenisEl.value = "";
+
         }
+
 
         if (keteranganEl) {
+
             keteranganEl.value = "";
+
         }
+
 
         if (tanggalEl) {
+
             tanggalEl.value = "";
+
         }
+
 
         if (nominalEl) {
+
             nominalEl.value = "";
+
         }
 
 
-        // ======================================
-        // LOAD ULANG FIREBASE
-        // ======================================
+        // ==================================
+        // LOAD ULANG
+        // ==================================
 
         await loadSemua();
 
@@ -1741,13 +2041,64 @@ async function simpanPengeluaran(event) {
 
 
 // ======================================
+// LOAD SEMUA DATA
+// ======================================
+
+async function loadSemua() {
+
+    try {
+
+        const data =
+            await ambilDataFirebase();
+
+
+        // Hitung pemasukan
+        hitungPemasukan(
+            data.pembayaranSnapshot
+        );
+
+
+        // Hitung pengeluaran
+        hitungPengeluaran(
+            data.pengeluaranSnapshot
+        );
+
+
+        // Dashboard
+        tampilkanDashboard();
+
+
+        // Filter
+        isiFilter();
+
+
+        // Laporan
+        tampilkanLaporan();
+
+
+        // Tabel
+        tampilkanTabelLaporan();
+
+
+    } catch (error) {
+
+        console.error(
+            "Gagal memuat data:",
+            error
+        );
+
+    }
+
+}
+
+
+// ======================================
 // EVENT GLOBAL
 // ======================================
 
 window.addEventListener(
     "DOMContentLoaded",
     () => {
-
 
         // ==================================
         // LOAD AWAL
@@ -1781,7 +2132,9 @@ window.addEventListener(
         // ==================================
 
         document
-            .getElementById("jenisDashboard")
+            .getElementById(
+                "jenisDashboard"
+            )
             ?.addEventListener(
                 "change",
                 () => {
@@ -1797,7 +2150,9 @@ window.addEventListener(
         // ==================================
 
         document
-            .getElementById("modeBeras")
+            .getElementById(
+                "modeBeras"
+            )
             ?.addEventListener(
                 "change",
                 () => {
@@ -1818,9 +2173,9 @@ window.addEventListener(
                 "change",
                 () => {
 
-                    tampilkanTabelLaporan();
-
                     tampilkanLaporan();
+
+                    tampilkanTabelLaporan();
 
                 }
             );
@@ -1836,9 +2191,9 @@ window.addEventListener(
                 "change",
                 () => {
 
-                    tampilkanTabelLaporan();
-
                     tampilkanLaporan();
+
+                    tampilkanTabelLaporan();
 
                 }
             );
@@ -1849,14 +2204,16 @@ window.addEventListener(
         // ==================================
 
         document
-            .getElementById("filterJenis")
+            .getElementById(
+                "filterJenis"
+            )
             ?.addEventListener(
                 "change",
                 () => {
 
-                    tampilkanTabelLaporan();
-
                     tampilkanLaporan();
+
+                    tampilkanTabelLaporan();
 
                 }
             );
