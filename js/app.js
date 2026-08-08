@@ -724,12 +724,37 @@ function hitungPengeluaran(snapshot) {
 
 }
 
+// ======================================
+// HAPUS KARTU RINGKASAN JENIS
+// ======================================
+
+function hapusKartuJenis() {
+
+    const judulEl =
+        document.getElementById("judulJenis");
+
+    if (!judulEl) {
+        return;
+    }
+
+    const kartu =
+        judulEl.closest(".card, .card-stat");
+
+    if (kartu) {
+        kartu.remove();
+    }
+
+}
 
 // ======================================
 // TAMPILKAN DASHBOARD
 // ======================================
 
 function tampilkanDashboard() {
+
+    // Hapus kartu Syahriyyah/Ringkasan Jenis
+    // tetapi dropdown Jenis tetap berfungsi
+    hapusKartuJenis();
 
     const jenis =
         document
