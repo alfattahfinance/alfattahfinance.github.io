@@ -1173,6 +1173,229 @@ function tampilkanLaporan() {
     // TAMPILKAN KARTU
     // ==================================
 
+// ======================================
+// TAMPILKAN LAPORAN SESUAI FILTER
+// ======================================
+
+function tampilkanLaporan() {
+
+    const totalSaldoEl =
+        document.getElementById("totalSaldo");
+
+    const hariIniEl =
+        document.getElementById("hariIni");
+
+    const bulanIniEl =
+        document.getElementById("bulanIni");
+
+    const tahunIniEl =
+        document.getElementById("tahunIni");
+
+    // PENGELUARAN
+    const pengeluaranHariIniEl =
+        document.getElementById("pengeluaranHariIni");
+
+    const pengeluaranBulanIniEl =
+        document.getElementById("pengeluaranBulanIni");
+
+    const pengeluaranTahunIniEl =
+        document.getElementById("pengeluaranTahunIni");
+
+
+    if (
+        !totalSaldoEl &&
+        !hariIniEl &&
+        !bulanIniEl &&
+        !tahunIniEl &&
+        !pengeluaranHariIniEl &&
+        !pengeluaranBulanIniEl &&
+        !pengeluaranTahunIniEl
+    ) {
+        return;
+    }
+
+
+    // ==================================
+    // FILTER
+    // ==================================
+
+    const bulanEl =
+        document.getElementById("bulan");
+
+    const tahunEl =
+        document.getElementById("tahun");
+
+    const jenisEl =
+        document.getElementById("filterJenis");
+
+
+    const bulanDipilih =
+        Number(bulanEl?.value);
+
+    const tahunDipilih =
+        Number(tahunEl?.value);
+
+    const jenisDipilih =
+        jenisEl?.value || "semua";
+
+
+    // ==================================
+    // VARIABEL
+    // ==================================
+
+    let pemasukanBulan = 0;
+    let pengeluaranBulan = 0;
+
+    let pemasukanTahun = 0;
+    let pengeluaranTahun = 0;
+
+    let pemasukanHariIni = 0;
+    let pengeluaranHariIni = 0;
+
+
+    // ==================================
+    // HITUNG PEMASUKAN
+    // ==================================
+
+    semuaPembayaran.forEach(data => {
+
+        const tanggal =
+            bacaTanggal(data);
+
+        if (!tanggal) {
+            return;
+        }
+
+
+        const jenis =
+            data.jenis || "";
+
+
+        if (
+            jenisDipilih !== "semua" &&
+            jenis !== jenisDipilih
+        ) {
+            return;
+        }
+
+
+        const nominal =
+            Number(
+                data.nominal ||
+                data.jumlah ||
+                0
+            );
+
+
+        // Hari ini
+        if (tanggalHariIni(tanggal)) {
+
+            pemasukanHariIni += nominal;
+
+        }
+
+
+        // Bulan yang dipilih
+        if (
+            tanggal.getMonth() + 1 === bulanDipilih &&
+            tanggal.getFullYear() === tahunDipilih
+        ) {
+
+            pemasukanBulan += nominal;
+
+        }
+
+
+        // Tahun yang dipilih
+        if (
+            tanggal.getFullYear() === tahunDipilih
+        ) {
+
+            pemasukanTahun += nominal;
+
+        }
+
+    });
+
+
+    // ==================================
+    // HITUNG PENGELUARAN
+    // ==================================
+
+    semuaPengeluaran.forEach(data => {
+
+        const tanggal =
+            bacaTanggal(data);
+
+        if (!tanggal) {
+            return;
+        }
+
+
+        const jenis =
+            data.jenis || "";
+
+
+        if (
+            jenisDipilih !== "semua" &&
+            jenis !== jenisDipilih
+        ) {
+            return;
+        }
+
+
+        const nominal =
+            Number(
+                data.jumlah ||
+                data.nominal ||
+                0
+            );
+
+
+        // Hari ini
+        if (tanggalHariIni(tanggal)) {
+
+            pengeluaranHariIni += nominal;
+
+        }
+
+
+        // Bulan yang dipilih
+        if (
+            tanggal.getMonth() + 1 === bulanDipilih &&
+            tanggal.getFullYear() === tahunDipilih
+        ) {
+
+            pengeluaranBulan += nominal;
+
+        }
+
+
+        // Tahun yang dipilih
+        if (
+            tanggal.getFullYear() === tahunDipilih
+        ) {
+
+            pengeluaranTahun += nominal;
+
+        }
+
+    });
+
+
+    // ==================================
+    // SALDO BULAN
+    // ==================================
+
+    const saldoBulan =
+        pemasukanBulan -
+        pengeluaranBulan;
+
+
+    // ==================================
+    // TAMPILKAN PEMASUKAN
+    // ==================================
+
     if (totalSaldoEl) {
 
         totalSaldoEl.textContent =
@@ -1204,8 +1427,35 @@ function tampilkanLaporan() {
 
     }
 
-}
 
+    // ==================================
+    // TAMPILKAN PENGELUARAN
+    // ==================================
+
+    if (pengeluaranHariIniEl) {
+
+        pengeluaranHariIniEl.textContent =
+            rupiah(pengeluaranHariIni);
+
+    }
+
+
+    if (pengeluaranBulanIniEl) {
+
+        pengeluaranBulanIniEl.textContent =
+            rupiah(pengeluaranBulan);
+
+    }
+
+
+    if (pengeluaranTahunIniEl) {
+
+        pengeluaranTahunIniEl.textContent =
+            rupiah(pengeluaranTahun);
+
+    }
+
+}
 
 // ======================================
 // TAMPILKAN TABEL LAPORAN
