@@ -1564,11 +1564,16 @@ async function loadSemua() {
 
 }
 
-// ======================================
+        // ======================================
 // SIMPAN PENGELUARAN
 // ======================================
 
-async function simpanPengeluaran() {
+async function simpanPengeluaran(event) {
+
+    // Mencegah form reload
+    if (event) {
+        event.preventDefault();
+    }
 
     const jenisEl =
         document.getElementById("jenisPengeluaran");
@@ -1602,7 +1607,10 @@ async function simpanPengeluaran() {
         satuanEl?.value || "Rupiah";
 
 
-    // Validasi
+    // ======================================
+    // VALIDASI
+    // ======================================
+
     if (!jenis) {
         alert("Silakan pilih jenis pengeluaran.");
         return;
@@ -1624,51 +1632,106 @@ async function simpanPengeluaran() {
     }
 
 
+    // ======================================
+    // SIMPAN KE FIRESTORE
+    // ======================================
+
     try {
 
-        await addDoc(
-            collection(db, "expenses"),
-            {
-                jenis: jenis,
-                keterangan: keterangan,
-                tanggal: tanggal,
-                jumlah: nominal,
-                nominal: nominal,
-                satuan: satuan,
-                createdAt: serverTimestamp()
-            }
+        console.log("Mencoba menyimpan pengeluaran...");
+
+        const dataPengeluaran = {
+
+            jenis: jenis,
+
+            keterangan: keterangan,
+
+            tanggal: tanggal,
+
+            jumlah: nominal,
+
+            nominal: nominal,
+
+            satuan: satuan,
+
+            createdAt: serverTimestamp()
+
+        };
+
+
+        console.log(
+            "Data yang dikirim:",
+            dataPengeluaran
         );
 
 
-        alert("Pengeluaran berhasil disimpan!");
+        const docRef =
+            await addDoc(
+                collection(db, "expenses"),
+                dataPengeluaran
+            );
 
 
-        // Kosongkan form
-        if (jenisEl) jenisEl.value = "";
-        if (keteranganEl) keteranganEl.value = "";
-        if (tanggalEl) tanggalEl.value = "";
-        if (nominalEl) nominalEl.value = "";
+        console.log(
+            "BERHASIL DISIMPAN!",
+            docRef.id
+        );
 
 
-        // Muat ulang data Firebase
+        alert(
+            "Pengeluaran berhasil disimpan!\n\n" +
+            "ID: " + docRef.id
+        );
+
+
+        // ======================================
+        // KOSONGKAN FORM
+        // ======================================
+
+        if (jenisEl) {
+            jenisEl.value = "";
+        }
+
+        if (keteranganEl) {
+            keteranganEl.value = "";
+        }
+
+        if (tanggalEl) {
+            tanggalEl.value = "";
+        }
+
+        if (nominalEl) {
+            nominalEl.value = "";
+        }
+
+
+        // ======================================
+        // LOAD ULANG FIREBASE
+        // ======================================
+
         await loadSemua();
 
 
     } catch (error) {
 
         console.error(
-            "Gagal menyimpan pengeluaran:",
+            "ERROR FIRESTORE:",
             error
         );
 
+
         alert(
-            "Gagal menyimpan pengeluaran:\n" +
+            "GAGAL MENYIMPAN!\n\n" +
+            "Kode: " +
+            (error.code || "-") +
+            "\n\n" +
             error.message
         );
 
     }
 
 }
+
 
 // ======================================
 // EVENT GLOBAL
@@ -1677,6 +1740,7 @@ async function simpanPengeluaran() {
 window.addEventListener(
     "DOMContentLoaded",
     () => {
+
 
         // ==================================
         // LOAD AWAL
@@ -1689,12 +1753,20 @@ window.addEventListener(
         // TOMBOL SIMPAN PENGELUARAN
         // ==================================
 
-        document
-            .getElementById("simpanPengeluaran")
-            ?.addEventListener(
+        const tombolSimpan =
+            document.getElementById(
+                "simpanPengeluaran"
+            );
+
+
+        if (tombolSimpan) {
+
+            tombolSimpan.addEventListener(
                 "click",
                 simpanPengeluaran
             );
+
+        }
 
 
         // ==================================
