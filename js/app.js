@@ -30,6 +30,13 @@ let totalKeluar = 0;
 let stokBeras = 0;
 
 // ======================================
+// Data Laporan Keuangan
+// ======================================
+
+let semuaPembayaran = [];
+let semuaPengeluaran = [];
+
+// ======================================
 
 // Rekap Berdasarkan Periode
 
@@ -182,6 +189,29 @@ async function ambilDataFirebase() {
   const pengeluaranSnapshot =
     await getDocs(collection(db, "expenses"));
 
+semuaPembayaran = [];
+
+pembayaranSnapshot.forEach((item) => {
+
+    semuaPembayaran.push({
+        id: item.id,
+        ...item.data()
+    });
+
+});
+
+
+semuaPengeluaran = [];
+
+pengeluaranSnapshot.forEach((item) => {
+
+    semuaPengeluaran.push({
+        id: item.id,
+        ...item.data()
+    });
+
+});
+  
   totalSantri = santriSnapshot.size;
 
   return {
@@ -509,7 +539,9 @@ function isiFilter() {
 // ======================================
 // Tampilkan Laporan
 // ======================================
-function tampilkanLaporan() {
+function tampilkanLaporan() 
+
+{
     const totalSaldoEl =
         document.getElementById("totalSaldo");
     const hariIniEl =
@@ -553,6 +585,121 @@ function tampilkanLaporan() {
             rupiah(saldoTahunIni);
     }
 }
+
+// ======================================
+// Tampilkan Tabel Laporan
+// ======================================
+
+function tampilkanTabelLaporan() {
+
+    const tbody =
+        document.getElementById("dataPembayaran");
+
+    if (!tbody) return;
+
+    tbody.innerHTML = "";
+
+    const transaksi = [];
+
+    // PEMASUKAN
+    semuaPembayaran.forEach((data) => {
+
+        transaksi.push({
+            tanggal: bacaTanggal(data),
+
+            nama:
+                data.namaSantri ||
+                data.nama ||
+                data.santri ||
+                "-",
+
+            jenis:
+                data.jenis || "-",
+
+            jumlah:
+                Number(data.nominal || data.jumlah || 0),
+
+            tipe: "Pemasukan"
+        });
+
+    });
+
+    // PENGELUARAN
+    semuaPengeluaran.forEach((data) => {
+
+        transaksi.push({
+            tanggal: bacaTanggal(data),
+
+            nama:
+                data.namaSantri ||
+                data.nama ||
+                data.santri ||
+                "-",
+
+            jenis:
+                data.jenis || "-",
+
+            jumlah:
+                Number(data.jumlah || data.nominal || 0),
+
+            tipe: "Pengeluaran"
+        });
+
+    });
+
+    // URUTKAN TERBARU
+    transaksi.sort((a, b) => {
+
+        const tanggalA =
+            a.tanggal ? a.tanggal.getTime() : 0;
+
+        const tanggalB =
+            b.tanggal ? b.tanggal.getTime() : 0;
+
+        return tanggalB - tanggalA;
+
+    });
+
+    // JIKA KOSONG
+    if (transaksi.length === 0) {
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="4"
+                    class="text-center text-muted">
+                    Belum ada transaksi
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    // TAMPILKAN DATA
+    transaksi.forEach((item) => {
+
+        const tanggal =
+            item.tanggal
+                ? item.tanggal.toLocaleDateString("id-ID")
+                : "-";
+
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+            <td>${tanggal}</td>
+            <td>${item.nama}</td>
+            <td>${item.jenis}</td>
+            <td class="fw-bold">
+                ${rupiah(item.jumlah)}
+            </td>
+        `;
+
+        tbody.appendChild(tr);
+
+    });
+
+}
+
 // ======================================
 // Load Semua Halaman
 // ======================================
@@ -573,6 +720,8 @@ async function loadSemua() {
 
         tampilkanLaporan();
 
+        tampilkanTabelLaporan();
+      
     } catch (e) {
 
         console.error("Gagal memuat data:", e);
