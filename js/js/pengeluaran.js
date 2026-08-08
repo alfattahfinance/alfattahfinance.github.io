@@ -1,259 +1,287 @@
+// ======================================
+// Pengeluaran Pondok
+// js/pengeluaran.js
+// ======================================
+
 import { db } from "./firebase-config.js";
 
 import {
     collection,
     addDoc,
-    updateDoc,
     getDocs,
-    deleteDoc,
-    doc,
+    orderBy,
     query,
-    orderBy
-
+    serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
-const daftarPengeluaran = document.getElementById("daftarPengeluaran");
 
-// Variabel global untuk mode Edit pengeluaran
-let idEditPengeluaran = null;
+// ======================================
+// Simpan Pengeluaran
+// ======================================
+
+window.simpanPengeluaran = async function () {
+
+    const jenis =
+        document.getElementById("jenis").value;
+
+    const keterangan =
+        document.getElementById("keterangan").value.trim();
+
+    const tanggal =
+        document.getElementById("tanggal").value;
+
+    const jumlah =
+        Number(document.getElementById("jumlah").value);
+
+    const satuan =
+        document.getElementById("satuan").value;
 
 
-// ==========================
-// Tampilkan Pengeluaran
-// ==========================
-async function tampilkanPengeluaran() {
+    // ======================================
+    // Validasi
+    // ======================================
 
-    if (!daftarPengeluaran) return;
+    if (!jenis) {
+        alert("Pilih jenis pengeluaran terlebih dahulu.");
+        return;
+    }
 
-    daftarPengeluaran.innerHTML = "";
+    if (!keterangan) {
+        alert("Keterangan belum diisi.");
+        return;
+    }
+
+    if (!tanggal) {
+        alert("Tanggal belum dipilih.");
+        return;
+    }
+
+    if (!jumlah || jumlah <= 0) {
+        alert("Masukkan jumlah pengeluaran.");
+        return;
+    }
+
+
+    // ======================================
+    // Simpan ke Firebase
+    // ======================================
+
+    try {
+
+        await addDoc(
+            collection(db, "expenses"),
+            {
+                jenis: jenis,
+                keterangan: keterangan,
+                tanggal: tanggal,
+                jumlah: jumlah,
+                satuan: satuan,
+                createdAt: serverTimestamp()
+            }
+        );
+
+
+        alert("Pengeluaran berhasil disimpan ✅");
+
+
+        // ======================================
+        // Kosongkan Form
+        // ======================================
+
+        document.getElementById("jenis").value = "";
+        document.getElementById("keterangan").value = "";
+        document.getElementById("jumlah").value = "";
+
+        document.getElementById("satuan").value = "Rupiah";
+
+
+        // ======================================
+        // Tampilkan ulang riwayat
+        // ======================================
+
+        tampilkanRiwayatPengeluaran();
+
+
+    } catch (error) {
+
+        console.error(
+            "Gagal menyimpan pengeluaran:",
+            error
+        );
+
+        alert(
+            "Gagal menyimpan pengeluaran. Cek koneksi Firebase."
+        );
+
+    }
+
+};
+
+
+// ======================================
+// Tampilkan Riwayat Pengeluaran
+// ======================================
+
+async function tampilkanRiwayatPengeluaran() {
+
+    const daftar =
+        document.getElementById("daftarPengeluaran");
+
+    if (!daftar) return;
+
 
     try {
 
         const q = query(
-    collection(db, "expenses"),
-    orderBy("tanggal", "desc")
-);
-        const snapshot = await getDocs(q);
+            collection(db, "expenses"),
+            orderBy("createdAt", "desc")
+        );
+
+        const snapshot =
+            await getDocs(q);
+
+
+        daftar.innerHTML = "";
+
+
+        // ======================================
+        // Belum Ada Data
+        // ======================================
 
         if (snapshot.empty) {
 
-            daftarPengeluaran.innerHTML =
-                "<li class='list-group-item text-center text-muted'>Belum ada pengeluaran.</li>";
+            daftar.innerHTML = `
+                <li class="list-group-item text-center text-muted">
+                    Belum ada pengeluaran.
+                </li>
+            `;
 
             return;
-
         }
+
+
+        // ======================================
+        // Tampilkan Data
+        // ======================================
 
         snapshot.forEach((item) => {
 
             const data = item.data();
-            const idDoc = item.id;
 
-            daftarPengeluaran.innerHTML += `
 
-            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+            let jumlahTampil;
 
-                <div>
+            if (data.satuan === "Liter") {
 
-                    <strong>${data.jenis}</strong><br>
+                jumlahTampil =
+                    Number(data.jumlah || 0)
+                    .toLocaleString("id-ID")
+                    + " Liter";
 
-              <small class="text-muted">
-                    📅 ${data.tanggal || "-"}
-              </small><br>
+            } else {
 
-${data.keterangan}<br>
+                jumlahTampil =
+                    "Rp " +
+                    Number(data.jumlah || 0)
+                    .toLocaleString("id-ID");
 
-                    
+            }
 
-                    <span class="text-danger fw-bold">
-                        ${data.satuan == "Liter"
-                            ? data.jumlah + " Liter"
-                            : "Rp " + Number(data.jumlah).toLocaleString("id-ID")
-                        }
-                    </span>
 
-                </div>
+            daftar.innerHTML += `
 
-                <div>
-                    <button
-                       class="btn btn-outline-primary btn-sm mb-1 d-block"
-                       onclick="mulaiEditPengeluaran('${idDoc}','${data.jenis}','${data.keterangan}','${data.jumlah}','${data.tanggal}')">
-    Edit
-</button>
+                <li class="list-group-item">
 
-                   <button
-                      class="btn btn-danger btn-sm d-block"
-                      onclick="hapusPengeluaran('${idDoc}')">
-    Hapus
-</button>
-                        
-                </div>
+                    <div class="d-flex justify-content-between">
 
-            </li>
+                        <div>
+
+                            <strong>
+                                ${data.jenis || "-"}
+                            </strong>
+
+                            <br>
+
+                            <small class="text-muted">
+                                ${data.keterangan || "-"}
+                            </small>
+
+                            <br>
+
+                            <small class="text-muted">
+                                ${data.tanggal || "-"}
+                            </small>
+
+                        </div>
+
+
+                        <div class="text-danger fw-bold">
+
+                            ${jumlahTampil}
+
+                        </div>
+
+                    </div>
+
+                </li>
 
             `;
 
         });
 
+
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Gagal mengambil riwayat:",
+            error
+        );
 
-        alert("Gagal memuat pengeluaran.");
+        daftar.innerHTML = `
+            <li class="list-group-item text-center text-danger">
+                Gagal memuat riwayat pengeluaran.
+            </li>
+        `;
 
     }
 
 }
 
-tampilkanPengeluaran();
+
+// ======================================
+// Tanggal Hari Ini
+// ======================================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const tanggal =
+        document.getElementById("tanggal");
+
+    if (tanggal) {
+
+        const sekarang =
+            new Date();
+
+        const tahun =
+            sekarang.getFullYear();
+
+        const bulan =
+            String(
+                sekarang.getMonth() + 1
+            ).padStart(2, "0");
+
+        const hari =
+            String(
+                sekarang.getDate()
+            ).padStart(2, "0");
 
 
-// ==========================
-// Simpan atau Perbarui Pengeluaran
-// ==========================
-window.simpanPengeluaran = async function () {
-
-    const jenis = document.getElementById("jenis").value;
-    const keterangan = document.getElementById("keterangan").value.trim();
-    const jumlah = document.getElementById("jumlah").value;
-    const tanggal = document.getElementById("tanggal").value;
-   
-    if (
-    jenis === "" ||
-    keterangan === "" ||
-    jumlah === "" ||
-    tanggal === ""
-) {
-
-    alert("Lengkapi data pengeluaran.");
-
-    return;
-
-}
-
-    
-
-    let data = {
-        jenis: jenis,
-        keterangan: keterangan,
-        jumlah: Number(jumlah)
-    };
-
-    if (jenis === "Beras") {
-        data.satuan = "Liter";
-    } else {
-        data.satuan = "Rupiah";
-    }
-
-    try {
-
-if (idEditPengeluaran === null) {
-
-    // Mode Tambah Baru
-    const tgl = new Date(tanggal);
-
-    data.tanggal = tanggal;
-    data.bulan = tgl.getMonth() + 1;
-    data.tahun = tgl.getFullYear();
-
-    await addDoc(collection(db, "expenses"), data);
-
-    alert("Pengeluaran berhasil disimpan.");
-
-} else {
-
-    data.tanggal = tanggal;
-    data.bulan = new Date(tanggal).getMonth() + 1;
-    data.tahun = new Date(tanggal).getFullYear();
-
-    await updateDoc(doc(db, "expenses", idEditPengeluaran), data);
-
-    alert("Pengeluaran berhasil diperbarui.");
-}
-            // Reset mode edit
-            idEditPengeluaran = null;
-            const tombolSimpan = document.querySelector(
-
-        "button[onclick='simpanPengeluaran()']"
-
-    );
-
-    if (tombolSimpan) {
-
-        tombolSimpan.textContent = "Simpan Pengeluaran";
-
-    }
-        // Reset Form
-        document.getElementById("jenis").value = "";
-document.getElementById("keterangan").value = "";
-document.getElementById("jumlah").value = "";
-document.getElementById("tanggal").value = "";
-
-        ubahSatuan();
-        
-        tampilkanPengeluaran();
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert("Gagal menyimpan pengeluaran ke database.");
+        tanggal.value =
+            `${tahun}-${bulan}-${hari}`;
 
     }
 
-};
 
+    tampilkanRiwayatPengeluaran();
 
-// ==========================
-// Ambil Data untuk Diedit
-// ==========================
-window.mulaiEditPengeluaran = function (id, jenis, keterangan, jumlah, tanggal) {
-
-    idEditPengeluaran = id;
-
-    document.getElementById("jenis").value = jenis;
-    document.getElementById("keterangan").value = keterangan;
-    document.getElementById("jumlah").value = jumlah;
-    document.getElementById("tanggal").value = tanggal;
-
-    // Sesuaikan satuan jika Beras
-    ubahSatuan();
-
-    // Ubah teks tombol
-    const tombolSimpan = document.querySelector(
-        "button[onclick='simpanPengeluaran()']"
-    );
-
-    if (tombolSimpan) {
-        tombolSimpan.textContent = "Simpan Perubahan";
-    }
-
-    // Scroll ke atas
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-};
-
-// ==========================
-// Hapus Pengeluaran
-// ==========================
-window.hapusPengeluaran = async function (id) {
-
-    if (!confirm("Yakin ingin menghapus pengeluaran ini dari database?")) return;
-
-    try {
-
-        await deleteDoc(doc(db, "expenses", id));
-        alert("Data berhasil dihapus.");
-        tampilkanPengeluaran();
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert("Gagal menghapus.");
-
-    }
-
-};
+});
