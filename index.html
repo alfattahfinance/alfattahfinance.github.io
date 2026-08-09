@@ -107,19 +107,70 @@ body.dark-mode {
 
 <div class="row g-3 mb-4">
 
+    <!-- JENIS -->
     <div class="col-6">
+
         <label class="form-label fw-semibold">
             <i class="bi bi-funnel"></i> Jenis
         </label>
 
         <select class="form-select" id="jenisDashboard">
-            <option value="syahriyyah">Syahriyyah</option>
-            <option value="kas">Kas</option>
-            <option value="beras">Beras</option>
+
+            <option value="syahriyyah">
+                Syahriyyah
+            </option>
+
+            <option value="kas">
+                Kas
+            </option>
+
+            <option value="beras">
+                Beras
+            </option>
+
         </select>
+
     </div>
 
+
+    <!-- TAHUN -->
+    <div class="col-6">
+
+        <label class="form-label fw-semibold">
+            <i class="bi bi-calendar3"></i> Tahun
+        </label>
+
+        <select class="form-select" id="tahunDashboard">
+
+            <!-- otomatis diisi JavaScript -->
+
+        </select>
+
+    </div>
+
+
+    <!-- MODE BERAS -->
     <div class="col-6" id="modeBerasDiv" style="display:none;">
+
+        <label class="form-label fw-semibold">
+            <i class="bi bi-box-seam"></i> Mode Beras
+        </label>
+
+        <select class="form-select" id="modeBeras">
+
+            <option value="liter">
+                Liter
+            </option>
+
+            <option value="uang">
+                Uang (Rp)
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
         <label class="form-label fw-semibold">
             <i class="bi bi-box-seam"></i> Mode Beras
         </label>
