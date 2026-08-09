@@ -2273,9 +2273,7 @@ window.addEventListener(
 // ==================================
 // DASHBOARD - TAHUN
 // ==================================
-
-isiTahunDashboard();
-
+        
 document
     .getElementById("tahunDashboard")
     ?.addEventListener(
