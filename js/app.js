@@ -747,6 +747,187 @@ function hapusKartuJenis() {
 }
 
 // ======================================
+// HITUNG DASHBOARD BERDASARKAN TAHUN
+// ======================================
+
+function hitungDashboardTahun(tahun, jenis) {
+
+    let masuk = 0;
+    let keluar = 0;
+    let berasMasuk = 0;
+    let berasKeluar = 0;
+
+    // ================================
+    // PEMASUKAN
+    // ================================
+
+    semuaPembayaran.forEach(data => {
+
+        const tanggal = bacaTanggal(data);
+
+        if (!tanggal) return;
+
+        // Hanya tahun yang dipilih
+        if (tanggal.getFullYear() !== tahun) {
+            return;
+        }
+
+        // Beras
+        if (data.satuan === "Liter") {
+
+            if (jenis === "beras") {
+
+                berasMasuk += Number(
+                    data.jumlah || 0
+                );
+
+            }
+
+            return;
+        }
+
+        // Jenis transaksi
+        const jenisData =
+            data.jenis || "";
+
+        const nominal =
+            Number(
+                data.nominal ||
+                data.jumlah ||
+                0
+            );
+
+        if (
+            jenis === "syahriyyah" &&
+            jenisData === "Syahriyyah"
+        ) {
+
+            masuk += nominal;
+
+        }
+
+        else if (
+            jenis === "kas" &&
+            jenisData === "Kas"
+        ) {
+
+            masuk += nominal;
+
+        }
+
+        else if (
+            jenis === "beras" &&
+            jenisData === "Beras"
+        ) {
+
+            masuk += nominal;
+
+        }
+
+    });
+
+
+    // ================================
+    // PENGELUARAN
+    // ================================
+
+    semuaPengeluaran.forEach(data => {
+
+        const tanggal = bacaTanggal(data);
+
+        if (!tanggal) return;
+
+        // Hanya tahun yang dipilih
+        if (tanggal.getFullYear() !== tahun) {
+            return;
+        }
+
+        // Beras
+        if (data.satuan === "Liter") {
+
+            if (jenis === "beras") {
+
+                berasKeluar += Number(
+                    data.jumlah || 0
+                );
+
+            }
+
+            return;
+        }
+
+        const jenisData =
+            data.jenis || "";
+
+        const nominal =
+            Number(
+                data.jumlah ||
+                data.nominal ||
+                0
+            );
+
+        if (
+            jenis === "syahriyyah" &&
+            jenisData === "Syahriyyah"
+        ) {
+
+            keluar += nominal;
+
+        }
+
+        else if (
+            jenis === "kas" &&
+            jenisData === "Kas"
+        ) {
+
+            keluar += nominal;
+
+        }
+
+        else if (
+            jenis === "beras" &&
+            jenisData === "Beras"
+        ) {
+
+            keluar += nominal;
+
+        }
+
+    });
+
+
+    // ================================
+    // BERAS
+    // ================================
+
+    if (jenis === "beras") {
+
+        return {
+
+            masuk: berasMasuk,
+            keluar: berasKeluar,
+            saldo: berasMasuk - berasKeluar
+
+        };
+
+    }
+
+
+    // ================================
+    // UANG
+    // ================================
+
+    return {
+
+        masuk: masuk,
+        keluar: keluar,
+        saldo: masuk - keluar
+
+    };
+
+}
+
+// ======================================
 // TAMPILKAN DASHBOARD
 // ======================================
 
@@ -770,8 +951,18 @@ function tampilkanDashboard() {
         document
             .getElementById("modeBeras")
             ?.value || "liter";
+    
+    const tahunDipilih =
+    Number(
+        document.getElementById("tahunDashboard")?.value
+    ) || new Date().getFullYear();
 
-
+const hasilTahun =
+    hitungDashboardTahun(
+        tahunDipilih,
+        jenis
+    );
+    
     const totalSantriEl =
         document.getElementById("totalSantri");
 
@@ -900,8 +1091,7 @@ semuaPengeluaran.forEach(data => {
             if (totalMasukEl) {
 
                 totalMasukEl.textContent =
-                    pemasukan.Beras +
-                    " Liter";
+                    hasilTahun.masuk + " Liter"
 
             }
 
@@ -909,8 +1099,7 @@ semuaPengeluaran.forEach(data => {
             if (totalKeluarEl) {
 
                 totalKeluarEl.textContent =
-                    pengeluaran.Beras +
-                    " Liter";
+                    hasilTahun.keluar + " Liter"
 
             }
 
@@ -918,8 +1107,7 @@ semuaPengeluaran.forEach(data => {
             if (totalSaldoEl) {
 
                 totalSaldoEl.textContent =
-                    stokBeras +
-                    " Liter";
+                    hasilTahun.saldo + " Liter"
 
             }
 
@@ -1024,21 +1212,17 @@ semuaPengeluaran.forEach(data => {
     // DASHBOARD UANG
     // ==================================
 
-    const key =
-        namaJenis[jenis];
+const key =
+    namaJenis[jenis];
 
+const masuk =
+    hasilTahun.masuk;
 
-    const masuk =
-        pemasukan[key] || 0;
+const keluar =
+    hasilTahun.keluar;
 
-
-    const keluar =
-        pengeluaran[key] || 0;
-
-
-    const saldo =
-        masuk - keluar;
-
+const saldo =
+    hasilTahun.saldo;
 
     if (totalMasukEl) {
 
@@ -2337,7 +2521,20 @@ document
 
                 }
             );
+// ==================================
+// DASHBOARD - TAHUN
+// ==================================
 
+document
+    .getElementById("tahunDashboard")
+    ?.addEventListener(
+        "change",
+        () => {
+
+            tampilkanDashboard();
+
+        }
+    );
 
         // ==================================
         // FILTER JENIS
