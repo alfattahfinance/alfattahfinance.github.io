@@ -761,7 +761,11 @@ function tampilkanDashboard() {
             .getElementById("jenisDashboard")
             ?.value || "syahriyyah";
 
-
+    const tahunDashboard =
+    Number(
+        document.getElementById("tahunDashboard")?.value
+    ) || new Date().getFullYear();
+    
     const mode =
         document
             .getElementById("modeBeras")
@@ -822,6 +826,68 @@ function tampilkanDashboard() {
 
     };
 
+    // ======================================
+// FILTER DASHBOARD BERDASARKAN TAHUN
+// ======================================
+
+let masukTahunDashboard = 0;
+let keluarTahunDashboard = 0;
+let stokBerasTahun = 0;
+
+semuaPembayaran.forEach(data => {
+
+    const tanggal = bacaTanggal(data);
+
+    if (!tanggal) return;
+
+    if (tanggal.getFullYear() !== tahunDashboard) {
+        return;
+    }
+
+    if (data.satuan === "Liter") {
+
+        stokBerasTahun +=
+            Number(data.jumlah || 0);
+
+        return;
+    }
+
+    masukTahunDashboard +=
+        Number(
+            data.nominal ||
+            data.jumlah ||
+            0
+        );
+
+});
+
+
+semuaPengeluaran.forEach(data => {
+
+    const tanggal = bacaTanggal(data);
+
+    if (!tanggal) return;
+
+    if (tanggal.getFullYear() !== tahunDashboard) {
+        return;
+    }
+
+    if (data.satuan === "Liter") {
+
+        stokBerasTahun -=
+            Number(data.jumlah || 0);
+
+        return;
+    }
+
+    keluarTahunDashboard +=
+        Number(
+            data.jumlah ||
+            data.nominal ||
+            0
+        );
+
+});
 
     // ==================================
     // DASHBOARD BERAS
@@ -2204,7 +2270,23 @@ window.addEventListener(
                 }
             );
 
+// ==================================
+// DASHBOARD - TAHUN
+// ==================================
 
+isiTahunDashboard();
+
+document
+    .getElementById("tahunDashboard")
+    ?.addEventListener(
+        "change",
+        () => {
+
+            tampilkanDashboard();
+
+        }
+    );
+        
         // ==================================
         // DASHBOARD - MODE BERAS
         // ==================================
