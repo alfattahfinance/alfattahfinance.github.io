@@ -1131,6 +1131,41 @@ function isiFilter() {
 
 }
 
+// ======================================
+// ISI TAHUN DASHBOARD
+// ======================================
+
+function isiTahunDashboard() {
+
+    const tahunEl =
+        document.getElementById("tahunDashboard");
+
+    if (!tahunEl) {
+        return;
+    }
+
+    const sekarang =
+        new Date().getFullYear();
+
+    tahunEl.innerHTML = "";
+
+    for (
+        let tahun = sekarang - 2;
+        tahun <= sekarang + 2;
+        tahun++
+    ) {
+
+        tahunEl.innerHTML += `
+            <option value="${tahun}">
+                ${tahun}
+            </option>
+        `;
+
+    }
+
+    tahunEl.value = sekarang;
+
+}
 
 // ======================================
 // TAMPILKAN LAPORAN
