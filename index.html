@@ -133,36 +133,85 @@ body.dark-mode {
 </div>
     
         
-        <!-- Saldo Saat Ini -->
-        <div class="col-md-4">
-            <div class="card custom-card bg-success text-white h-100">
-                <div class="card-body p-3 text-center d-flex flex-column justify-content-center">
-                    <small class="text-white-50 text-uppercase fw-bold" style="letter-spacing: 1px;">Saldo Saat Ini</small>
-                    <h3 class="fw-bold my-2" id="totalSaldo">Rp0</h3>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Total Pemasukan -->
-        <div class="col-6 col-md-4">
-            <div class="card custom-card h-100">
-                <div class="card-body p-3 text-center d-flex flex-column justify-content-center">
-                    <small class="text-muted d-block mb-1">Total Pemasukan</small>
-                    <h5 class="mb-0 fw-bold text-success" id="totalMasuk">Rp0</h5>
-                </div>
-            </div>
-        </div>
+        <!-- ============================= -->
+<!-- RINGKASAN KEUANGAN -->
+<!-- ============================= -->
 
-        <!-- Total Pengeluaran -->
-        <div class="col-6 col-md-4">
-            <div class="card custom-card h-100">
-                <div class="card-body p-3 text-center d-flex flex-column justify-content-center">
-                    <small class="text-muted d-block mb-1">Total Pengeluaran</small>
-                    <h5 class="mb-0 fw-bold text-danger" id="totalKeluar">Rp0</h5>
-                </div>
+<div class="row g-3 mb-4">
+
+    <!-- SALDO SAAT INI -->
+    <div class="col-12">
+        <div class="card custom-card bg-success text-white">
+            <div class="card-body p-4 text-center">
+
+                <small class="text-white-50 text-uppercase fw-bold"
+                       style="letter-spacing: 1px;">
+                    Saldo Saat Ini
+                </small>
+
+                <h3 class="fw-bold mt-2 mb-0" id="totalSaldo">
+                    Rp 0
+                </h3>
+
             </div>
         </div>
     </div>
+
+
+    <!-- PEMASUKAN -->
+    <div class="col-6">
+
+        <div class="card custom-card h-100">
+
+            <div class="card-body p-3 text-center
+                        d-flex flex-column
+                        justify-content-center">
+
+                <small class="text-muted d-block mb-2">
+                    Total Pemasukan
+                </small>
+
+                <h5 class="mb-0 fw-bold text-success"
+                    id="totalMasuk">
+
+                    Rp 0
+
+                </h5>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PENGELUARAN -->
+    <div class="col-6">
+
+        <div class="card custom-card h-100">
+
+            <div class="card-body p-3 text-center
+                        d-flex flex-column
+                        justify-content-center">
+
+                <small class="text-muted d-block mb-2">
+                    Total Pengeluaran
+                </small>
+
+                <h5 class="mb-0 fw-bold text-danger"
+                    id="totalKeluar">
+
+                    Rp 0
+
+                </h5>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
     
     <!-- Menu Navigasi Bawah -->
