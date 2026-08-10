@@ -9,7 +9,6 @@ import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
-// Cek status login Firebase
 onAuthStateChanged(auth, (user) => {
 
     if (user) {
@@ -23,7 +22,6 @@ onAuthStateChanged(auth, (user) => {
 
         console.log("BELUM LOGIN");
 
-        // User belum login
         window.location.href = "login.html";
 
     }
