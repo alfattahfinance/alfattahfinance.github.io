@@ -418,7 +418,10 @@ import {
     signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
-
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+    
 /* =========================
    ELEMENT
 ========================= */
@@ -517,7 +520,16 @@ function tampilkanError(pesan) {
 
 }
 
+onAuthStateChanged(auth, (user) => {
 
+    if (user) {
+
+        window.location.replace("index.html");
+
+    }
+
+});
+    
 /* ENTER UNTUK LOGIN */
 
 password.addEventListener(
