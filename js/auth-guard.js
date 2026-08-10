@@ -9,18 +9,21 @@ import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
-alert("AUTH GUARD JALAN");
-
+// Cek status login Firebase
 onAuthStateChanged(auth, (user) => {
 
     if (user) {
 
-        alert("SUDAH LOGIN: " + user.email);
+        console.log("SUDAH LOGIN:", user.email);
+
+        // User sudah login
+        // Halaman boleh dilanjutkan
 
     } else {
 
-        alert("BELUM LOGIN");
+        console.log("BELUM LOGIN");
 
+        // User belum login
         window.location.href = "login.html";
 
     }
