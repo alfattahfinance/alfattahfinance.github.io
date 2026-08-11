@@ -3,7 +3,10 @@
 // app.js
 // ======================================
 
-import { db } from "./firebase-config.js";
+import {
+    db,
+    auth
+} from "./firebase-config.js";
 
 import {
     collection,
@@ -12,6 +15,9 @@ import {
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
 // ======================================
 // FORMAT RUPIAH
