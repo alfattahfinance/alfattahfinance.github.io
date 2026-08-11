@@ -16,14 +16,16 @@
 
     <link rel="stylesheet" href="css/theme.css">
     
-    <style>
+        <style>
+        /* Background Baru: Earth Tone Kalem & Profesional */
         body {
             margin: 0;
             min-height: 100vh;
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #A1C4FD, #C2E9FB, #E0C3FC);
+            /* Gradasi dari Cream Lembut ke Abu-abu Sangat Muda */
+            background: linear-gradient(135deg, #FDFCFB 0%, #E2D1C3 100%);
             background-size: 200% 200%;
-            animation: gradientShift 14s ease infinite;
+            animation: gradientShift 18s ease infinite; /* Animasi sangat lambat agar tenang */
         }
 
         @keyframes gradientShift {
@@ -33,7 +35,7 @@
         }
 
         body.dark-mode {
-            background-color: #121212 !important;
+            background: #121212 !important;
             animation: none;
         }
                   
@@ -48,12 +50,13 @@
             border: none;
             border-radius: 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background-color: rgba(255, 255, 255, 0.9); /* Sedikit transparan */
         }
         
         /* Styling Tombol Menu Utama */
         .menu-btn {
             background-color: white;
-            border: 1px solid #dee2e6;
+            border: 1px solid #e0e0e0;
             border-radius: 15px;
             padding: 20px 10px;
             width: 100%;
@@ -70,9 +73,9 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
         .menu-btn:hover {
-            background-color: #f1f8f5;
+            background-color: #fdf6f0; /* Warna hover senada earth tone */
             color: #198754;
-            border-color: #198754;
+            border-color: #a3cfbb;
             transform: translateY(-2px);
         }
         .menu-btn i {
@@ -88,6 +91,7 @@
             font-weight: 600;
         }
     </style>
+
 </head>
 
 <body>
