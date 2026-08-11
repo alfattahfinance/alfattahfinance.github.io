@@ -2411,112 +2411,185 @@ async function loadSemua() {
 // ======================================
 // EVENT GLOBAL
 // ======================================
-onAuthStateChanged(auth, (user) => {
-    if (!user) {
-        console.log("Menunggu login Firebase...");
-        return;
+
+function jalankanAplikasi() {
+
+    console.log("Aplikasi siap dijalankan");
+
+    // ==================================
+    // LOAD AWAL
+    // ==================================
+
+    loadSemua();
+
+
+    // ==================================
+    // TOMBOL SIMPAN PENGELUARAN
+    // ==================================
+
+    const tombolSimpan =
+        document.getElementById(
+            "simpanPengeluaran"
+        );
+
+    if (tombolSimpan) {
+
+        tombolSimpan.addEventListener(
+            "click",
+            simpanPengeluaran
+        );
+
     }
-    console.log(
-        "LOGIN TERDETEKSI:",
-        user.email
-    );
-    window.addEventListener(
-        "DOMContentLoaded",
-        () => {
-            // ==================================
-            // LOAD AWAL
-            // ==================================
-            loadSemua();
-            // ==================================
-            // TOMBOL SIMPAN PENGELUARAN
-            // ==================================
-            const tombolSimpan =
-                document.getElementById(
-                    "simpanPengeluaran"
-                );
-            if (tombolSimpan) {
-                tombolSimpan.addEventListener(
-                    "click",
-                    simpanPengeluaran
-                );
+
+
+    // ==================================
+    // DASHBOARD - JENIS
+    // ==================================
+
+    document
+        .getElementById("jenisDashboard")
+        ?.addEventListener(
+            "change",
+            () => {
+
+                tampilkanDashboard();
+
             }
-            // ==================================
-            // DASHBOARD - JENIS
-            // ==================================
-            document
-                .getElementById(
-                    "jenisDashboard"
-                )
-                ?.addEventListener(
-                    "change",
-                    () => {
-                        tampilkanDashboard();
-                    }
-                );
-            // ==================================
-            // DASHBOARD - TAHUN
-            // ==================================
-            document
-                .getElementById(
-                    "tahunDashboard"
-                )
-                ?.addEventListener(
-                    "change",
-                    () => {
-                        tampilkanDashboard();
-                    }
-                );
-            // ==================================
-            // DASHBOARD - MODE BERAS
-            // ==================================
-            document
-                .getElementById(
-                    "modeBeras"
-                )
-                ?.addEventListener(
-                    "change",
-                    () => {
-                        tampilkanDashboard();
-                    }
-                );
-            // ==================================
-            // FILTER BULAN
-            // ==================================
-            document
-                .getElementById("bulan")
-                ?.addEventListener(
-                    "change",
-                    () => {
-                        tampilkanLaporan();
-                        tampilkanTabelLaporan();
-                    }
-                );
-            // ==================================
-            // FILTER TAHUN
-            // ==================================
-            document
-                .getElementById("tahun")
-                ?.addEventListener(
-                    "change",
-                    () => {
-                        tampilkanLaporan();
-                        tampilkanTabelLaporan();
-                    }
-                );
-            // ==================================
-            // FILTER JENIS
-            // ==================================
-            document
-                .getElementById(
-                    "filterJenis"
-                )
-                ?.addEventListener(
-                    "change",
-                    () => {
-                        tampilkanLaporan();
-                        tampilkanTabelLaporan();
-                    }
-                );
+        );
+
+
+    // ==================================
+    // DASHBOARD - TAHUN
+    // ==================================
+
+    document
+        .getElementById("tahunDashboard")
+        ?.addEventListener(
+            "change",
+            () => {
+
+                tampilkanDashboard();
+
+            }
+        );
+
+
+    // ==================================
+    // DASHBOARD - MODE BERAS
+    // ==================================
+
+    document
+        .getElementById("modeBeras")
+        ?.addEventListener(
+            "change",
+            () => {
+
+                tampilkanDashboard();
+
+            }
+        );
+
+
+    // ==================================
+    // FILTER BULAN
+    // ==================================
+
+    document
+        .getElementById("bulan")
+        ?.addEventListener(
+            "change",
+            () => {
+
+                tampilkanLaporan();
+
+                tampilkanTabelLaporan();
+
+            }
+        );
+
+
+    // ==================================
+    // FILTER TAHUN
+    // ==================================
+
+    document
+        .getElementById("tahun")
+        ?.addEventListener(
+            "change",
+            () => {
+
+                tampilkanLaporan();
+
+                tampilkanTabelLaporan();
+
+            }
+        );
+
+
+    // ==================================
+    // FILTER JENIS
+    // ==================================
+
+    document
+        .getElementById("filterJenis")
+        ?.addEventListener(
+            "change",
+            () => {
+
+                tampilkanLaporan();
+
+                tampilkanTabelLaporan();
+
+            }
+        );
+
+}
+
+
+// ======================================
+// CEK LOGIN FIREBASE
+// ======================================
+
+onAuthStateChanged(
+    auth,
+    (user) => {
+
+        if (!user) {
+
+            console.log(
+                "Belum login Firebase."
+            );
+
+            return;
+
         }
-    );
-});
+
+        console.log(
+            "LOGIN TERDETEKSI:",
+            user.email
+        );
+
+
+        // Jika DOM sudah selesai
+        if (
+            document.readyState ===
+            "loading"
+        ) {
+
+            document.addEventListener(
+                "DOMContentLoaded",
+                jalankanAplikasi,
+                {
+                    once: true
+                }
+            );
+
+        } else {
+
+            // DOM sudah selesai
+            jalankanAplikasi();
+
+        }
+
+    }
+);
