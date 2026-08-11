@@ -22,7 +22,7 @@ onAuthStateChanged(auth, (user) => {
 
         console.log("BELUM LOGIN");
 
-        window.location.href = "login.html";
+        window.location.href = "Login.html";
 
     }
 
