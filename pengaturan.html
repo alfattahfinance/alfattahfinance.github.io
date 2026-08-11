@@ -1,438 +1,363 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Pengaturan | Syahriyyah App</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-
-    <link rel="stylesheet" href="css/style.css">
-
-     <link rel="stylesheet" href="css/theme.css">
-    
-    <style>
-
-        body {
-            background-color: #f8f9fa;
-            font-family: Arial, sans-serif;
-        }
-
-        .mobile-container {
-            max-width: 600px;
-            margin: auto;
-        }
-
-        .custom-card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        .setting-item {
-            border: none;
-            border-bottom: 1px solid #eee;
-            padding: 15px 0;
-        }
-
-        .setting-item:last-child {
-            border-bottom: none;
-        }
-
-        .back-btn {
-            text-decoration: none;
-            color: #198754;
-            font-weight: 600;
-        }
-
-    </style>
-
+<title>Pengaturan | Syahriyyah App</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/theme.css">
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: Arial, sans-serif;
+    }
+    .mobile-container {
+        max-width: 600px;
+        margin: auto;
+    }
+    .custom-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .setting-item {
+        border: none;
+        border-bottom: 1px solid #eee;
+        padding: 15px 0;
+    }
+    .setting-item:last-child {
+        border-bottom: none;
+    }
+    .back-btn {
+        text-decoration: none;
+        color: #198754;
+        font-weight: 600;
+    }
+    .account-email {
+        word-break: break-word;
+    }
+</style>
 </head>
-
 <body>
-
 <div class="container-fluid mobile-container py-4">
-
-    <!-- Header -->
-
-    <div class="d-flex align-items-center mb-4">
-
-        <a href="index.html" class="back-btn me-3">
-            <i class="bi bi-arrow-left fs-4"></i>
-        </a>
-
-        <div>
-            <h4 class="fw-bold mb-0">
-                Pengaturan Aplikasi
-            </h4>
-
-            <small class="text-muted">
-                Atur tampilan dan informasi aplikasi
-            </small>
-        </div>
-
-    </div>
-
-
-    <!-- INFORMASI PONDOK -->
-
-    <div class="card custom-card mb-4">
-
-        <div class="card-body">
-
-            <h5 class="fw-bold mb-3">
-                <i class="bi bi-building text-success"></i>
-                Informasi Pondok
-            </h5>
-
-
-            <div class="setting-item">
-
-                <label class="form-label fw-semibold">
-                    Nama Pondok
-                </label>
-
-                <input
-                    type="text"
-                    class="form-control"
-                    id="namaPondok"
-                    placeholder="Nama pondok">
-
-            </div>
-
-
-            <div class="setting-item">
-
-                <label class="form-label fw-semibold">
-                    Keterangan Dashboard
-                </label>
-
-                <input
-                    type="text"
-                    class="form-control"
-                    id="subJudul"
-                    placeholder="Contoh: Dashboard Keuangan Pondok">
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- PENGATURAN KEUANGAN -->
-
-    <div class="card custom-card mb-4">
-
-        <div class="card-body">
-
-            <h5 class="fw-bold mb-3">
-                <i class="bi bi-cash-coin text-success"></i>
-                Pengaturan Keuangan
-            </h5>
-
-
-            <div class="setting-item">
-
-                <label class="form-label fw-semibold">
-                    Mata Uang
-                </label>
-
-                <select class="form-select" id="mataUang">
-
-                    <option value="Rupiah">
-                        Rupiah (Rp)
-                    </option>
-
-                    <option value="USD">
-                        Dollar ($)
-                    </option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- TAMPILAN -->
-
-    <div class="card custom-card mb-4">
-
-        <div class="card-body">
-
-            <h5 class="fw-bold mb-3">
-                <i class="bi bi-palette text-success"></i>
-                Tampilan
-            </h5>
-
-
-            <div class="setting-item">
-
-                <label class="form-label fw-semibold">
-                    Tema Aplikasi
-                </label>
-
-                <select class="form-select" id="tema">
-
-    <option value="light">
-        ☀️ Terang
-    </option>
-
-    <option value="dark">
-        🌙 Gelap
-    </option>
-
-    <option value="system">
-        📱 Ikuti Sistem HP
-    </option>
-
-</select>
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- TOMBOL -->
-
-    <div class="d-grid gap-2 mb-4">
-
-        <button
-            class="btn btn-success btn-lg"
-            onclick="simpanPengaturan()">
-
-            <i class="bi bi-save"></i>
-            Simpan Pengaturan
-
-        </button>
-
-
-        <button
-            class="btn btn-outline-danger"
-            onclick="resetPengaturan()">
-
-            <i class="bi bi-arrow-counterclockwise"></i>
-            Kembalikan Pengaturan Awal
-
-        </button>
-
-    </div>
-
-
-    <!-- VERSI -->
-
-    <div class="text-center text-muted">
-
-        <small>
-            Syahriyyah App v2.0
+<!-- HEADER -->
+<div class="d-flex align-items-center mb-4">
+    <a href="index.html" class="back-btn me-3">
+        <i class="bi bi-arrow-left fs-4"></i>
+    </a>
+    <div>
+        <h4 class="fw-bold mb-0">
+            Pengaturan Aplikasi
+        </h4>
+        <small class="text-muted">
+            Atur tampilan dan informasi aplikasi
         </small>
-
     </div>
-
 </div>
-
-
+<!-- ================================= -->
+<!-- AKUN -->
+<!-- ================================= -->
+<div class="card custom-card mb-4">
+    <div class="card-body">
+        <h5 class="fw-bold mb-3">
+            <i class="bi bi-person-circle text-success"></i>
+            Akun
+        </h5>
+        <div class="setting-item">
+            <div class="d-flex align-items-center">
+                <div class="me-3">
+                    <i class="bi bi-envelope-fill fs-3 text-success"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <small class="text-muted d-block">
+                        Akun yang sedang digunakan
+                    </small>
+                    <strong
+                        id="emailAkun"
+                        class="account-email">
+                        Memuat akun...
+                    </strong>
+                </div>
+            </div>
+        </div>
+        <div class="d-grid mt-3">
+            <button
+                id="tombolLoginLogout"
+                class="btn btn-outline-danger">
+                <i class="bi bi-box-arrow-right"></i>
+                Keluar
+            </button>
+        </div>
+    </div>
+</div>
+<!-- ================================= -->
+<!-- INFORMASI PONDOK -->
+<!-- ================================= -->
+<div class="card custom-card mb-4">
+    <div class="card-body">
+        <h5 class="fw-bold mb-3">
+            <i class="bi bi-building text-success"></i>
+            Informasi Pondok
+        </h5>
+        <div class="setting-item">
+            <label class="form-label fw-semibold">
+                Nama Pondok
+            </label>
+            <input
+                type="text"
+                class="form-control"
+                id="namaPondok"
+                placeholder="Nama pondok">
+        </div>
+        <div class="setting-item">
+            <label class="form-label fw-semibold">
+                Keterangan Dashboard
+            </label>
+            <input
+                type="text"
+                class="form-control"
+                id="subJudul"
+                placeholder="Contoh: Dashboard Keuangan Pondok">
+        </div>
+    </div>
+</div>
+<!-- ================================= -->
+<!-- PENGATURAN KEUANGAN -->
+<!-- ================================= -->
+<div class="card custom-card mb-4">
+    <div class="card-body">
+        <h5 class="fw-bold mb-3">
+            <i class="bi bi-cash-coin text-success"></i>
+            Pengaturan Keuangan
+        </h5>
+        <div class="setting-item">
+            <label class="form-label fw-semibold">
+                Mata Uang
+            </label>
+            <select class="form-select" id="mataUang">
+                <option value="Rupiah">
+                    Rupiah (Rp)
+                </option>
+                <option value="USD">
+                    Dollar ($)
+                </option>
+            </select>
+        </div>
+    </div>
+</div>
+<!-- ================================= -->
+<!-- TAMPILAN -->
+<!-- ================================= -->
+<div class="card custom-card mb-4">
+    <div class="card-body">
+        <h5 class="fw-bold mb-3">
+            <i class="bi bi-palette text-success"></i>
+            Tampilan
+        </h5>
+        <div class="setting-item">
+            <label class="form-label fw-semibold">
+                Tema Aplikasi
+            </label>
+            <select class="form-select" id="tema">
+                <option value="light">
+                    ☀️ Terang
+                </option>
+                <option value="dark">
+                    🌙 Gelap
+                </option>
+                <option value="system">
+                    📱 Ikuti Sistem HP
+                </option>
+            </select>
+        </div>
+    </div>
+</div>
+<!-- ================================= -->
+<!-- TOMBOL -->
+<!-- ================================= -->
+<div class="d-grid gap-2 mb-4">
+    <button
+        class="btn btn-success btn-lg"
+        onclick="simpanPengaturan()">
+        <i class="bi bi-save"></i>
+        Simpan Pengaturan
+    </button>
+    <button
+        class="btn btn-outline-danger"
+        onclick="resetPengaturan()">
+        <i class="bi bi-arrow-counterclockwise"></i>
+        Kembalikan Pengaturan Awal
+    </button>
+</div>
+<!-- VERSI -->
+<div class="text-center text-muted">
+    <small>
+        Syahriyyah App v2.0
+    </small>
+</div>
+</div>
+<!-- ================================= -->
+<!-- PENGATURAN -->
+<!-- ================================= -->
 <script>
-
-
-// ======================================
-// PENGATURAN DEFAULT
-// ======================================
-
 const pengaturanDefault = {
-
     namaPondok:
         "Ribath Madrasah Al-Fattah",
-
     subJudul:
         "Dashboard Keuangan Pondok",
-
     mataUang:
         "Rupiah",
-
     tema:
         "light"
-
 };
-
-
-// ======================================
-// MUAT PENGATURAN
-// ======================================
-
 function muatPengaturan() {
-
     const data =
         JSON.parse(
             localStorage.getItem("pengaturanAplikasi")
         ) || pengaturanDefault;
-
-
     document.getElementById("namaPondok").value =
         data.namaPondok;
-
     document.getElementById("subJudul").value =
         data.subJudul;
-
     document.getElementById("mataUang").value =
         data.mataUang;
-
     document.getElementById("tema").value =
         data.tema;
-
 }
-
-
-// ======================================
-// SIMPAN PENGATURAN
-// ======================================
-
 function simpanPengaturan() {
-
     const data = {
-
         namaPondok:
             document.getElementById("namaPondok").value.trim(),
-
         subJudul:
             document.getElementById("subJudul").value.trim(),
-
         mataUang:
             document.getElementById("mataUang").value,
-
         tema:
             document.getElementById("tema").value
-
     };
-
-
     if (!data.namaPondok) {
-
         alert("Nama pondok belum diisi.");
-
         return;
-
     }
-
-
     localStorage.setItem(
         "pengaturanAplikasi",
         JSON.stringify(data)
     );
-
-
     terapkanTema(data.tema);
-
-
     alert(
         "✅ Pengaturan berhasil disimpan!"
     );
-
 }
-
-
-// ======================================
-// TEMA
-// ======================================
-
 function terapkanTema(tema) {
-
     let gunakanGelap = false;
-
     if (tema === "dark") {
-
         gunakanGelap = true;
-
     } else if (tema === "system") {
-
         gunakanGelap =
             window.matchMedia(
                 "(prefers-color-scheme: dark)"
             ).matches;
-
     }
-
-
     if (gunakanGelap) {
-
         document.body.classList.add("dark-mode");
-
     } else {
-
         document.body.classList.remove("dark-mode");
-
     }
-
 }
-
-
-// ======================================
-// RESET
-// ======================================
-
 function resetPengaturan() {
-
     const yakin =
         confirm(
             "Apakah kamu yakin ingin mengembalikan pengaturan awal?"
         );
-
-
     if (!yakin) return;
-
-
     localStorage.removeItem(
         "pengaturanAplikasi"
     );
-
-
     muatPengaturan();
-
     terapkanTema("light");
-
-
     alert(
         "✅ Pengaturan dikembalikan ke awal."
     );
-
 }
-
-
-// ======================================
-// JALANKAN
-// ======================================
-
 document.addEventListener(
     "DOMContentLoaded",
     () => {
-
         muatPengaturan();
-
         const data =
             JSON.parse(
                 localStorage.getItem(
                     "pengaturanAplikasi"
                 )
             ) || pengaturanDefault;
-
         terapkanTema(data.tema);
-
     }
 );
-
 </script>
-
+<!-- ================================= -->
+<!-- FIREBASE LOGIN / LOGOUT -->
+<!-- ================================= -->
+<script type="module">
+import { auth } from "./js/firebase-config.js";
+import {
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+const emailAkun =
+    document.getElementById("emailAkun");
+const tombol =
+    document.getElementById("tombolLoginLogout");
+onAuthStateChanged(
+    auth,
+    (user) => {
+        if (user) {
+            emailAkun.textContent =
+                user.email || "Akun Firebase";
+            tombol.innerHTML =
+                '<i class="bi bi-box-arrow-right"></i> Keluar';
+            tombol.className =
+                "btn btn-outline-danger";
+            tombol.onclick =
+                async () => {
+                    const yakin =
+                        confirm(
+                            "Apakah kamu yakin ingin keluar?"
+                        );
+                    if (!yakin) return;
+                    try {
+                        await signOut(auth);
+                        window.location.replace(
+                            "login.html"
+                        );
+                    } catch (error) {
+                        console.error(
+                            "Gagal logout:",
+                            error
+                        );
+                        alert(
+                            "Gagal keluar dari akun."
+                        );
+                    }
+                };
+        } else {
+            emailAkun.textContent =
+                "Belum login";
+            tombol.innerHTML =
+                '<i class="bi bi-box-arrow-in-right"></i> Login';
+            tombol.className =
+                "btn btn-success";
+            tombol.onclick =
+                () => {
+                    window.location.replace(
+                        "login.html"
+                    );
+                };
+        }
+    }
+);
+</script>
 <script src="js/theme.js"></script>
-    
 </body>
-
 </html>
