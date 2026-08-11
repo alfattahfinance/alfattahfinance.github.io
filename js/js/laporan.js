@@ -5,7 +5,54 @@ import {
     getDocs
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
+// ======================================
+// ANIMASI ANGKA BERHITUNG
+// ======================================
 
+function animasiAngka(elementId, nilaiAkhir, durasi = 1000) {
+
+    const element = document.getElementById(elementId);
+
+    if (!element) return;
+
+    const mulai = 0;
+    const waktuMulai = performance.now();
+
+    function jalankan(waktuSekarang) {
+
+        const progress =
+            Math.min((waktuSekarang - waktuMulai) / durasi, 1);
+
+        // Efek lebih halus di awal dan akhir
+        const easing =
+            1 - Math.pow(1 - progress, 3);
+
+        const nilaiSekarang =
+            Math.floor(
+                mulai + (nilaiAkhir - mulai) * easing
+            );
+
+        element.innerHTML =
+            "Rp " +
+            nilaiSekarang.toLocaleString("id-ID");
+
+        if (progress < 1) {
+
+            requestAnimationFrame(jalankan);
+
+        } else {
+
+            // Pastikan angka akhir tepat
+            element.innerHTML =
+                "Rp " +
+                nilaiAkhir.toLocaleString("id-ID");
+
+        }
+
+    }
+
+    requestAnimationFrame(jalankan);
+}
 
 window.hitungLaporan = async function(){
 
@@ -277,31 +324,27 @@ pengeluaran.Lainnya;
 
 
 
-document.getElementById("pemasukan").innerHTML =
+// ======================================
+// TAMPILKAN ANGKA DENGAN ANIMASI
+// ======================================
 
-"Rp "+
-totalMasuk.toLocaleString("id-ID");
+animasiAngka(
+    "pemasukan",
+    totalMasuk,
+    1200
+);
 
+animasiAngka(
+    "pengeluaran",
+    totalKeluar,
+    1200
+);
 
-
-document.getElementById("pengeluaran").innerHTML =
-
-"Rp "+
-totalKeluar.toLocaleString("id-ID");
-
-
-
-document.getElementById("saldo").innerHTML =
-
-"Rp "+
-(totalMasuk-totalKeluar)
-.toLocaleString("id-ID");
-
-
-
-
-
-
+animasiAngka(
+    "saldo",
+    totalMasuk - totalKeluar,
+    1200
+);
 
 // =====================
 // REKAP
