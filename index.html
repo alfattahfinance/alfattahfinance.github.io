@@ -351,8 +351,65 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <script type="module" src="js/app.js"></script>
 <script type="module" src="js/auth-guard.js"></script>
+
+
+<!-- ============================= -->
+<!-- LOGOUT -->
+<!-- ============================= -->
+
+<script type="module">
+
+import { auth } from "./js/firebase-config.js";
+
+import {
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+
+
+const logoutButton =
+    document.getElementById("logoutButton");
+
+
+if (logoutButton) {
+
+    logoutButton.addEventListener("click", async () => {
+
+        const yakin = confirm(
+            "Apakah kamu yakin ingin logout?"
+        );
+
+        if (!yakin) return;
+
+
+        try {
+
+            await signOut(auth);
+
+            // Kembali ke halaman login
+            window.location.replace("login.html");
+
+        } catch (error) {
+
+            console.error(
+                "Logout gagal:",
+                error
+            );
+
+            alert(
+                "Logout gagal. Silakan coba lagi."
+            );
+
+        }
+
+    });
+
+}
+
+</script>
+
+
 <script src="js/theme.js"></script>
-    
+
 </body>
 </html>
-    
+```
