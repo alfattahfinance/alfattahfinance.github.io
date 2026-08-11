@@ -191,6 +191,14 @@
         <i class="bi bi-arrow-counterclockwise"></i>
         Kembalikan Pengaturan Awal
     </button>
+    <!-- LOGOUT -->
+    <button
+        type="button"
+        class="btn btn-danger"
+        id="logoutButton">
+        <i class="bi bi-box-arrow-right"></i>
+        Logout
+    </button>
 </div>
 <!-- VERSI -->
 <div class="text-center text-muted">
@@ -350,13 +358,46 @@ onAuthStateChanged(
                 "btn btn-success";
             tombol.onclick =
                 () => {
-                    window.location.replace(
-                        "login.html"
-                    );
-                };
-        }
+                    <script type="module">
+
+import { auth } from "./js/firebase-config.js";
+
+import {
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+
+
+const logoutButton =
+    document.getElementById("logoutButton");
+
+
+logoutButton.addEventListener("click", async () => {
+
+    const yakin = confirm(
+        "Apakah kamu yakin ingin logout?"
+    );
+
+    if (!yakin) return;
+
+    try {
+
+        await signOut(auth);
+
+        // Arahkan ke file LOGIN yang benar
+        window.location.replace("Login.html");
+
+    } catch (error) {
+
+        console.error("Logout gagal:", error);
+
+        alert(
+            "Logout gagal. Silakan coba lagi."
+        );
+
     }
-);
+
+});
+
 </script>
 <script src="js/theme.js"></script>
 </body>
