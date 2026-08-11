@@ -9,21 +9,20 @@ import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
+
 onAuthStateChanged(auth, (user) => {
 
-    if (user) {
+    if (!user) {
 
-        console.log("SUDAH LOGIN:", user.email);
+        // Belum login
+        window.location.replace("login.html");
 
-        // User sudah login
-        // Halaman boleh dilanjutkan
-
-    } else {
-
-        console.log("BELUM LOGIN");
-
-        window.location.href = "Login.html";
-
+        return;
     }
+
+    console.log(
+        "Pengguna sudah login:",
+        user.email
+    );
 
 });
