@@ -21,6 +21,113 @@
 <!-- Theme -->
 <link rel="stylesheet" href="css/theme.css">
 
+<style>
+/* ==========================================
+   ANIMASI ANGKA LAPORAN
+   Muncul dari atas ke bawah
+========================================== */
+
+#totalSaldo,
+#hariIni,
+#pengeluaranHariIni,
+#bulanIni,
+#pengeluaranBulanIni,
+#tahunIni,
+#pengeluaranTahunIni {
+    display: inline-block;
+    animation: angkaTurun 0.7s ease-out;
+}
+
+/* Animasi dari atas ke posisi normal */
+@keyframes angkaTurun {
+    0% {
+        opacity: 0;
+        transform: translateY(-35px);
+    }
+
+    60% {
+        opacity: 1;
+        transform: translateY(5px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+
+<script>
+/* ==========================================
+   ULANGI ANIMASI SETIAP ANGKA BERUBAH
+========================================== */
+
+function animasiAngka(id) {
+
+    const element = document.getElementById(id);
+
+    if (!element) return;
+
+    element.classList.remove("animasi-angka");
+
+    // Paksa browser mengulang animasi
+    void element.offsetWidth;
+
+    element.classList.add("animasi-angka");
+}
+
+const styleAnimasi = document.createElement("style");
+
+styleAnimasi.textContent = `
+    .animasi-angka {
+        animation: angkaTurun 0.7s ease-out;
+    }
+
+    @keyframes angkaTurun {
+        0% {
+            opacity: 0;
+            transform: translateY(-35px);
+        }
+
+        60% {
+            opacity: 1;
+            transform: translateY(5px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+`;
+
+document.head.appendChild(styleAnimasi);
+
+
+/* Jalankan animasi saat halaman selesai dimuat */
+window.addEventListener("load", () => {
+
+    const daftarAngka = [
+        "totalSaldo",
+        "hariIni",
+        "pengeluaranHariIni",
+        "bulanIni",
+        "pengeluaranBulanIni",
+        "tahunIni",
+        "pengeluaranTahunIni"
+    ];
+
+    daftarAngka.forEach((id, index) => {
+
+        setTimeout(() => {
+            animasiAngka(id);
+        }, index * 100);
+
+    });
+
+});
+</script>
+      
 </head><body><div class="container py-4"><!-- ================================= -->
 <!-- JUDUL -->
 <!-- ================================= -->
