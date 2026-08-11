@@ -179,33 +179,39 @@
 <!-- TOMBOL -->
 <!-- ================================= -->
 <div class="d-grid gap-2 mb-4">
+
     <button
         class="btn btn-success btn-lg"
         onclick="simpanPengaturan()">
+
         <i class="bi bi-save"></i>
         Simpan Pengaturan
+
     </button>
+
+
     <button
         class="btn btn-outline-danger"
         onclick="resetPengaturan()">
+
         <i class="bi bi-arrow-counterclockwise"></i>
         Kembalikan Pengaturan Awal
+
     </button>
+
+
     <!-- LOGOUT -->
+
     <button
         type="button"
         class="btn btn-danger"
         id="logoutButton">
+
         <i class="bi bi-box-arrow-right"></i>
         Logout
+
     </button>
-</div>
-<!-- VERSI -->
-<div class="text-center text-muted">
-    <small>
-        Syahriyyah App v2.0
-    </small>
-</div>
+
 </div>
 <!-- ================================= -->
 <!-- PENGATURAN -->
@@ -400,5 +406,40 @@ logoutButton.addEventListener("click", async () => {
 
 </script>
 <script src="js/theme.js"></script>
+    <script type="module">
+import { auth } from "./js/firebase-config.js";
+import {
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+const logoutButton =
+    document.getElementById("logoutButton");
+if (logoutButton) {
+    logoutButton.addEventListener(
+        "click",
+        async () => {
+            const yakin = confirm(
+                "Apakah kamu yakin ingin logout?"
+            );
+            if (!yakin) return;
+            try {
+                await signOut(auth);
+                window.location.replace(
+                    "login.html"
+                );
+            } catch (error) {
+                console.error(
+                    "Logout gagal:",
+                    error
+                );
+                alert(
+                    "Logout gagal. Silakan coba lagi."
+                );
+            }
+        }
+    );
+}
+</script>
+<script src="js/theme.js"></script>
+
 </body>
 </html>
