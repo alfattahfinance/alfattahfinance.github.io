@@ -15,7 +15,7 @@ onAuthStateChanged(auth, (user) => {
     if (!user) {
 
         // Belum login
-        window.location.replace("login.html");
+        window.location.replace("Login.html");
 
         return;
     }
